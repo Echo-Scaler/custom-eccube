@@ -897,3 +897,220 @@ body {
     display: none;
   }
 }
+
+/* ==========================================================================
+   6. Shopcart Hero Carousel Section
+   ========================================================================== */
+.shopcart-hero-section {
+  padding: 24px 0 16px;
+  width: 100%;
+}
+
+.shopcart-hero-slider {
+  position: relative;
+}
+
+.shopcart-hero-slide {
+  border-radius: 20px;
+  overflow: hidden;
+  outline: none;
+}
+
+.shopcart-hero-slide--headphone {
+  background-color: #fbf0e4;
+}
+
+.shopcart-hero-slide--smartwatch {
+  background-color: #eaf1e8;
+}
+
+.shopcart-hero-slide--bestseller {
+  background-color: #f7eee4;
+}
+
+.shopcart-hero-slide__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 440px;
+  padding: 40px 60px 40px 70px;
+  position: relative;
+  gap: 32px;
+}
+
+.shopcart-hero-content {
+  flex: 1 1 54%;
+  max-width: 620px;
+  z-index: 2;
+}
+
+.shopcart-hero-title {
+  font-family: var(--sc-font-family);
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.14;
+  color: #003d29;
+  letter-spacing: -0.6px;
+  margin: 0 0 32px 0;
+}
+
+.shopcart-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #003d29;
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 15px 42px;
+  border-radius: var(--sc-radius-pill);
+  text-decoration: none !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 61, 41, 0.25);
+}
+
+.shopcart-hero-btn:hover {
+  background-color: #00291b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 61, 41, 0.35);
+  color: #ffffff !important;
+}
+
+.shopcart-hero-media {
+  flex: 1 1 46%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+.shopcart-hero-media img {
+  max-height: 380px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  mix-blend-mode: multiply;
+  transition: transform 0.4s ease;
+}
+
+.shopcart-hero-slide:hover .shopcart-hero-media img {
+  transform: scale(1.02);
+}
+
+/* Slick Dots Styling for Hero Slider */
+.shopcart-hero-slider .slick-dots {
+  position: absolute;
+  bottom: 24px;
+  left: 70px;
+  width: auto;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  z-index: 10;
+}
+
+.shopcart-hero-slider .slick-dots li {
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+
+.shopcart-hero-slider .slick-dots li button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  background: rgba(0, 61, 41, 0.25);
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0;
+  line-height: 0;
+}
+
+.shopcart-hero-slider .slick-dots li button:before {
+  display: none !important;
+}
+
+.shopcart-hero-slider .slick-dots li.slick-active button {
+  width: 28px;
+  background: #003d29;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .shopcart-hero-title {
+    font-size: 42px;
+  }
+  .shopcart-hero-slide__inner {
+    padding: 36px 44px;
+    min-height: 380px;
+  }
+  .shopcart-hero-media img {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 991px) {
+  .shopcart-hero-slide__inner {
+    padding: 32px 30px;
+    min-height: 340px;
+    gap: 20px;
+  }
+  .shopcart-hero-title {
+    font-size: 32px;
+    margin-bottom: 22px;
+  }
+  .shopcart-hero-btn {
+    padding: 12px 30px;
+    font-size: 15px;
+  }
+  .shopcart-hero-media img {
+    max-height: 260px;
+  }
+  .shopcart-hero-slider .slick-dots {
+    left: 30px;
+    bottom: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .shopcart-hero-slide__inner {
+    flex-direction: column-reverse;
+    padding: 28px 20px 40px;
+    text-align: center;
+    min-height: auto;
+  }
+  .shopcart-hero-content {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .shopcart-hero-title {
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+  }
+  .shopcart-hero-actions {
+    display: flex;
+    justify-content: center;
+  }
+  .shopcart-hero-media {
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .shopcart-hero-media img {
+    max-height: 200px;
+  }
+  .shopcart-hero-slider .slick-dots {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+  }
+}
+

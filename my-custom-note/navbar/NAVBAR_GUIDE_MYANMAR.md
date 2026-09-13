@@ -74,6 +74,15 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
 - Screen အရွယ်အစား သေးငယ်သွားပါက Navigation links များကို ဝှက်ထားပြီး Hamburger icon (`fas fa-bars`) အဖြစ် ပြောင်းလဲပေးသည်။
 - Hamburger ကို နှိပ်ပါက ဘယ်ဘက်မှ Slide ထွက်လာသော Drawer Menu ပွင့်လာပြီး Categories များကို Accordion ပုံစံဖြင့် ဖွင့်/ပိတ် ကြည့်ရှုနိုင်ပါသည်။
 
+### (၄) Hero Carousel / Banner Section (အလယ်ရှိ Slide Banner)
+- **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
+- **ဒီဇိုင်းနှင့် အရောင်**: Soft warm beige/cream background (`#faebe0`)၊ Rounded corners (`border-radius: 20px`)။
+- **ပါဝင်သော အကြောင်းအရာများ**:
+  - **Slide 1**: Headphone Promotion (`Grab Upto 50% Off On Selected Headphone` + `Buy Now` Button) နှင့် Headphone တပ်ထားသော Model ပုံ။
+  - **Slide 2**: Smartwatches & Audio Gear Deal (`Next-Gen Smartwatches & Audio Gear` + `Explore Deals` Button)။
+  - **Slide 3**: Seasonal Collections (`Discover Trending Items & Daily Best Deals` + `Shop Collection` Button)။
+- **Slider အလုပ်လုပ်ပုံ**: EC-CUBE ရှိ `Slick Slider` ကို အသုံးပြု၍ Autoplay, Smooth Fade Transitions နှင့် Custom Modern Dots Indicator များဖြင့် လှပစွာ ပြသထားပါသည်။
+
 ---
 
 ## ၄။ သိထားသင့်သည့် အရေးကြီး နည်းပညာ အချက်များ (Key Gotchas & Tips)
