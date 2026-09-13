@@ -106,6 +106,25 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
 - **Product Card Grid (4-Column Grid)**:
   - ကတ်တစ်ခုချင်းစီတွင် Wishlist Heart Toggle ခလုတ် (`<button class="shopcart-wishlist-btn">`)၊ Product Image၊ အမည်၊ ဈေးနှုန်း (`$89.00`, `$559.00`, စသဖြင့်)၊ Subtitle ဖော်ပြချက်၊ Green Star Ratings (`★★★★★ (121)`) နှင့် `Add to Cart` Pill Button များ ပါဝင်ပါသည်။
 
+### (၇) Similar Items You Might Like Section (သင်နှစ်သက်နိုင်သော အလားတူပစ္စည်းများ)
+- **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
+- **Section Heading**: `Similar Items You Might Like`
+- **Product Card Grid (4-Column Grid)**:
+  1. **Gaming Headphone** (`$239.00`) - Neon green & black gaming headset
+  2. **Macbook pro 13"** (`$1099.00`) - 256, 8 core GPU, 8 GB
+  3. **HomePod mini** (`$59.00`) - 5 Colors Available
+  4. **Laptop sleeve MacBook** (`$59.00`) - Organic Cotton, fairtrade certified
+- **Scroll Track Indicator**: ကဏ္ဍအောက်ခြေတွင် ခေတ်မီသော Indicator Scroll Track Bar ပါဝင်ပါသည်။
+
+### (၈) Recently Viewed Section (လတ်တလော ကြည့်ရှုခဲ့သော ပစ္စည်းများ)
+- **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
+- **Section Heading**: `Recently Viewed`
+- **Product Card Grid (4-Column Grid)**:
+  1. **Laptop sleeve MacBook** (`$59.00`)
+  2. **AirPods Max** (`$559.00`) - Solid green Add to Cart button
+  3. **Ipad Mini** (`$569.00`)
+  4. **Flower Laptop Sleeve** (`$39.00`)
+
 ---
 
 ## ၄။ သိထားသင့်သည့် အရေးကြီး နည်းပညာ အချက်များ (Key Gotchas & Tips)
@@ -119,6 +138,9 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
      ```bash
      docker compose exec ec-cube bin/console cache:clear
      ```
+
+3. **EC-CUBE Default Blocks များကို ရှင်းလင်းခြင်း**:
+   - မူလ EC-CUBE Default Sample Block များဖြစ်သော `eyecatch.twig` (CUBE Gelato Ice Feature), `new_item.twig` (FEATURED) နှင့် `topic.twig` တို့ကို Shopcart Custom Theme သန့်ရှင်းစေရန် `dtb_block_position` (Layout 1) နှင့် Block Templates များမှ ဖယ်ရှားရှင်းလင်းထားပါသည်။
 
 ---
 

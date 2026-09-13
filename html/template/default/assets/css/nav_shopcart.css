@@ -1669,4 +1669,42 @@ body {
   }
 }
 
+/* ==========================================================================
+   Similar Items & Recently Viewed Sections
+   ========================================================================== */
+.shopcart-similar-section,
+.shopcart-recent-section {
+  padding: 30px 0 50px;
+  width: 100%;
+}
+
+.shopcart-product-grid--4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.shopcart-section-track {
+  width: 100%;
+  height: 3px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin-top: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.shopcart-section-track__bar {
+  width: 32%;
+  height: 100%;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.shopcart-section-track:hover .shopcart-section-track__bar {
+  width: 45%;
+}
+
+
 
