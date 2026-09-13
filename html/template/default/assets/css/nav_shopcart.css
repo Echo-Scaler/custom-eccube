@@ -1115,10 +1115,111 @@ body {
 }
 
 /* ==========================================================================
+   Popular Categories Section
+   ========================================================================== */
+.shopcart-popular-categories-section {
+  padding: 40px 0 24px;
+  width: 100%;
+}
+
+.shopcart-popular-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.shopcart-popular-cat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f1f3f6;
+  border-radius: 16px;
+  padding: 16px 22px;
+  text-decoration: none !important;
+  color: inherit;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid transparent;
+}
+
+.shopcart-popular-cat-card:hover {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+}
+
+.shopcart-popular-cat-thumb {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 88px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.shopcart-popular-cat-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.shopcart-popular-cat-card:hover .shopcart-popular-cat-thumb img {
+  transform: scale(1.08);
+}
+
+.shopcart-popular-cat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shopcart-popular-cat-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.shopcart-popular-cat-card:hover .shopcart-popular-cat-title {
+  color: #003d29;
+}
+
+.shopcart-popular-cat-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .shopcart-popular-categories-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .shopcart-popular-cat-thumb {
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+  }
+  .shopcart-popular-cat-title {
+    font-size: 17px;
+  }
+}
+
+/* ==========================================================================
    7. Shopcart Product Catalog & Filter Pills Section
    ========================================================================== */
 .shopcart-products-section {
-  padding: 10px 0 60px;
+  padding: 30px 0 60px;
   width: 100%;
 }
 

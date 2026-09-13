@@ -83,7 +83,21 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
   - **Slide 3**: Seasonal Collections (`Discover Trending Items & Daily Best Deals` + `Shop Collection` Button)။
 - **Slider အလုပ်လုပ်ပုံ**: EC-CUBE ရှိ `Slick Slider` ကို အသုံးပြု၍ Autoplay, Smooth Fade Transitions နှင့် Custom Modern Dots Indicator များဖြင့် လှပစွာ ပြသထားပါသည်။
 
-### (၅) Headphones For You Section (Filter Pills & Product Grid)
+### (၅) Popular Categories Section (ခေတ်စားနေသော ကဏ္ဍများ စာရင်း)
+- **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
+- **Section Heading**: `Popular Categories`
+- **Card Grid (2-Column Responsive Grid)**:
+  1. **Furniture** - `cat_furniture.jpg` (240 Item Available)
+  2. **Headphone** - `cat_headphone.jpg` (240 Item Available)
+  3. **Shoe** - `cat_shoe.jpg` (240 Item Available)
+  4. **Bag** - `cat_bag.jpg` (240 Item Available)
+  5. **Laptop** - `cat_laptop.jpg` (240 Item Available)
+  6. **Book** - `cat_book.jpg` (240 Item Available)
+- **ဒီဇိုင်းနှင့် Micro-interactions**:
+  - ကတ်တစ်ခုချင်းစီသည် Rounded Pill Shape (`#f1f3f6`) ဖြစ်ပြီး အဖြူရောင် Thumbnail Box အတွင်း ပုံရိပ်များကို သပ်ရပ်စွာ ထည့်သွင်းထားပါသည်။
+  - Hover ပြုလုပ်ပါက Smooth Lift-up Animation, Soft Glow Shadow နှင့် Image Zoom Effect တို့ ပါဝင်ပါသည်။
+
+### (၆) Headphones For You Section (Filter Pills & Product Grid)
 - **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
 - **Filter Pills Bar**:
   - `Headphone Type ∨`, `Price ∨`, `Review ∨`, `Color ∨`, `Material ∨`, `Offer ∨`, `All Filters 🎛️` နှင့် ညာဘက်ရှိ `Sort by ∨` စသည့် Pill-shaped dropdown ခလုတ်များ ပါဝင်ပါသည်။
