@@ -1,0 +1,99 @@
+# Redesign Navigation Bar UI (Shopcart Style)
+
+This plan details the redesign of EC-CUBE's storefront navigation and header UI to match the modern "Shopcart" design provided in the user's screenshot.
+
+## Proposed Design Overview
+
+The new navigation header consists of two clean, modern tiers:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 📞 +001234567890       Get 50% Off on Selected Items | Shop Now          Eng ∨   Location ∨ │ (Top Bar - Deep Green)
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 🛒 Shopcart   Categories ∨   Deals   What's New   Delivery   [🔍 Search Product]   👤 Account  🛒 Cart  │ (Main Nav - White)
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 1. Top Announcement & Utility Bar (Forest Green `#003d29`)
+- **Left**: Phone contact (`+001234567890` with phone icon).
+- **Center**: Promotional banner (`Get 50% Off on Selected Items | Shop Now` linking to product catalog/sale).
+- **Right**:
+  - **Language Selector** (`Eng ∨`) with dropdown to switch between English (`en`), Japanese (`ja`), and Burmese (`my`).
+  - **Location Selector** (`Location ∨`) with dropdown to select region/country.
+
+### 2. Main Navigation Bar (Clean White `#ffffff` with subtle elevation)
+- **Left (Logo)**:
+  - Custom SVG vector logo (green shopping cart with fresh orange fruit/carrot and vibrant green leaves).
+  - Brand name **Shopcart** in bold modern typography.
+- **Center-Left (Navigation Links)**:
+  - **Categories ∨**: Dropdown menu showing dynamic categories from EC-CUBE database with smooth animations.
+  - **Deals**: Direct link to discounted products / catalog.
+  - **What's New**: Direct link to new arrivals (`/products/list?orderby=1`).
+  - **Delivery**: Direct link to delivery information / user guide.
+- **Center-Right (Search Bar)**:
+  - Pill-shaped input with light gray background (`#f3f4f6`) and smooth focus states.
+  - Placeholder: `"Search Product"`.
+  - Search magnifying glass icon button submitting directly to `/products/list?name=...`.
+- **Right (User Utilities)**:
+  - **Account**: User outline icon + "Account" label with interactive dropdown for Login, Register, My Page, and Logout.
+  - **Cart**: Shopping cart icon + floating count badge + "Cart" label with hover/click mini-cart summary and link to `/cart`.
+
+### 3. Mobile & Tablet Responsiveness
+- Collapses into a compact top bar and header with hamburger menu (`fas fa-bars`), logo, search toggle, account icon, and cart icon with badge.
+- Slide-out drawer menu with accordion categories and quick navigation links.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> - The top bar phone number (`+001234567890`) will be displayed by default, or fallback to the shop's configured phone number if present.
+> - The logo will display the "Shopcart" branding with custom vector icon as shown in the screenshot.
+> - The layout preserves all underlying EC-CUBE session, cart, authentication, and search functionalities.
+
+---
+
+## Proposed Changes
+
+### Template Components
+
+#### [MODIFY] [src/Eccube/Resource/template/default/Block/header.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/header.twig)
+- Overhaul `header.twig` to render the Top Utility Bar and Main Navigation Bar.
+- Integrate categories dropdown, search form, account menu, and cart dropdown.
+- Add language switcher integration (`?_locale=en`, `?_locale=ja`, `?_locale=my`).
+
+#### [MODIFY] [src/Eccube/Resource/template/default/Block/logo.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/logo.twig)
+- Streamline `logo.twig` so it does not render redundant duplicated logo markup when placed in the header section.
+
+#### [MODIFY] [src/Eccube/Resource/template/default/Block/category_nav_pc.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/category_nav_pc.twig)
+- Streamline `category_nav_pc.twig` to integrate with the header's navigation bar categories dropdown without creating an unnecessary extra row.
+
+#### [MODIFY] [src/Eccube/Resource/template/default/default_frame.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/default_frame.twig)
+- Ensure custom stylesheet and fonts are included cleanly.
+
+---
+
+### Styling & Interactivity
+
+#### [NEW] [html/user_data/assets/css/customize.css](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/user_data/assets/css/customize.css)
+- Implement comprehensive CSS for the new navbar design:
+  - Top bar typography, layout, dropdowns, and responsive styling.
+  - Main navbar layout, logo styling, pill search input, dropdown menus, cart badge, and hover animations.
+  - Mobile responsiveness (media queries for tablet & mobile drawer).
+
+#### [NEW] [html/user_data/assets/js/customize.js](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/user_data/assets/js/customize.js)
+- Handle dropdown toggle behaviors, location selection, and mobile drawer interactions.
+
+---
+
+## Verification Plan
+
+### Automated / Command Verification
+- Check Docker container health and restart if necessary.
+- Clear Symfony cache inside Docker container (`bin/console cache:clear`).
+- Fetch rendered HTML via `curl` to verify proper DOM structure, tags, links, and text content.
+
+### Manual / Browser Verification
+- Verify Top Bar: Phone number, promotion message, Language switcher, Location dropdown.
+- Verify Main Navbar: Shopcart logo, Categories dropdown with child items, Deals / What's New / Delivery links, Search bar submitting queries, Account dropdown (guest vs logged in), and Cart badge + mini-cart dropdown.
+- Verify Responsive layout on mobile/tablet viewports.

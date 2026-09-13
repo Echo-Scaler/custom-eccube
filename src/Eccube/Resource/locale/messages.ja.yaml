@@ -1874,3 +1874,19 @@ command.composer_require_already_installed.not_supported_plugin: "%name% %plugin
 #------------------------------------------------------------------------------------
 admin.list.sort.key: listSortKey # 検索条件の表示制御に利用
 admin.list.sort.type: listSortType # 検索条件の表示制御に利用
+
+#------------------------------------------------------------------------------------
+# カテゴリ
+#------------------------------------------------------------------------------------
+"category.Gelato": "ジェラート"
+"category.New Arrivals": "新入荷"
+"category.Color Desserts": "彩のデザート"
+"category.CUBE": "CUBE"
+"category.Ice Cream Sandwiches": "アイスサンド"
+"category.Fruits": "フルーツ"
+"category.ジェラート": "ジェラート"
+"category.新入荷": "新入荷"
+"category.彩のデザート": "彩のデザート"
+"category.アイスサンド": "アイスサンド"
+"category.フルーツ": "フルーツ"
+

@@ -32,7 +32,9 @@ file that was distributed with this source code.
     {% if Page.meta_robots is not empty %}
         <meta name="robots" content="{{ Page.meta_robots }}">
     {% endif %}
-    <link rel="icon" href="{{ asset('assets/img/common/favicon.ico', 'user_data') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('front.bundle.js', 'bundle') }}"></script>
@@ -52,6 +54,7 @@ file that was distributed with this source code.
     {% endif %}
     {# プラグイン用styleseetやmetatagなど #}
     {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
+    <link rel="stylesheet" href="{{ asset('assets/css/nav_shopcart.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}">
 </head>
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
@@ -188,6 +191,7 @@ file that was distributed with this source code.
 {% if plugin_snippets is defined %}
     {{ include('snippet.twig', { snippets: plugin_snippets }) }}
 {% endif %}
+    <script src="{{ asset('assets/js/nav_shopcart.js') }}"></script>
     <script src="{{ asset('assets/js/customize.js', 'user_data') }}"></script>
 </body>
 </html>

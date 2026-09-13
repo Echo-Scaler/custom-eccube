@@ -12,103 +12,878 @@ file that was distributed with this source code.
 
 {% set body_class = 'front_page' %}
 
-{% block stylesheet %}
-    <style>
-        .slick-slider {
-            margin-bottom: 30px;
-        }
-
-        .slick-dots {
-            position: absolute;
-            bottom: -45px;
-            display: block;
-            width: 100%;
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-
-        .slick-dots li {
-            position: relative;
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin: 0 5px;
-            padding: 0;
-
-            cursor: pointer;
-        }
-
-        .slick-dots li button {
-            font-size: 0;
-            line-height: 0;
-            display: block;
-            width: 20px;
-            height: 20px;
-            padding: 5px;
-            cursor: pointer;
-            color: transparent;
-            border: 0;
-            outline: none;
-            background: transparent;
-        }
-
-        .slick-dots li button:hover,
-        .slick-dots li button:focus {
-            outline: none;
-        }
-
-        .slick-dots li button:hover:before,
-        .slick-dots li button:focus:before {
-            opacity: 1;
-        }
-
-        .slick-dots li button:before {
-            content: " ";
-            line-height: 20px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 12px;
-            height: 12px;
-            text-align: center;
-            opacity: .25;
-            background-color: black;
-            border-radius: 50%;
-
-        }
-
-        .slick-dots li.slick-active button:before {
-            opacity: .75;
-            background-color: black;
-        }
-
-        .slick-dots li button.thumbnail img {
-            width: 0;
-            height: 0;
-        }
-    </style>
-{% endblock %}
-
 {% block javascript %}
     <script>
         $(function() {
-            $('.main_visual').slick({
+            $('.shopcart-hero-slider').slick({
                 dots: true,
                 arrows: false,
                 autoplay: true,
-                speed: 300
+                autoplaySpeed: 5000,
+                speed: 600,
+                fade: true,
+                cssEase: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                pauseOnHover: true
             });
         });
     </script>
 {% endblock javascript %}
 
 {% block main %}
-    <div class="ec-sliderRole">
-        <div class="main_visual">
-            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>
-            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>
-            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>
+    <!-- Hero Carousel Section -->
+    <section class="shopcart-hero-section">
+        <div class="shopcart-container">
+            <div class="shopcart-hero-slider">
+                <!-- Slide 1: Headphone Deal (Exact Match to Design) -->
+                <div class="shopcart-hero-slide shopcart-hero-slide--headphone">
+                    <div class="shopcart-hero-slide__inner">
+                        <div class="shopcart-hero-content">
+                            <h1 class="shopcart-hero-title">Grab Upto 50% Off On Selected Headphone</h1>
+                            <div class="shopcart-hero-actions">
+                                <a href="{{ url('product_list') }}" class="shopcart-hero-btn">Buy Now</a>
+                            </div>
+                        </div>
+                        <div class="shopcart-hero-media">
+                            <img src="{{ asset('assets/img/top/hero_headphone.jpg') }}" alt="Grab Upto 50% Off On Selected Headphone">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Smartwatch & Gadgets Deal -->
+                <div class="shopcart-hero-slide shopcart-hero-slide--smartwatch">
+                    <div class="shopcart-hero-slide__inner">
+                        <div class="shopcart-hero-content">
+                            <h2 class="shopcart-hero-title">Next-Gen Smartwatches & Audio Gear</h2>
+                            <div class="shopcart-hero-actions">
+                                <a href="{{ url('product_list') }}" class="shopcart-hero-btn">Explore Deals</a>
+                            </div>
+                        </div>
+                        <div class="shopcart-hero-media">
+                            <img src="{{ asset('assets/img/top/hero_smartwatch.jpg') }}" alt="Next-Gen Smartwatches & Audio Gear">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Seasonal Special Collection -->
+                <div class="shopcart-hero-slide shopcart-hero-slide--bestseller">
+                    <div class="shopcart-hero-slide__inner">
+                        <div class="shopcart-hero-content">
+                            <h2 class="shopcart-hero-title">Discover Trending Items & Daily Best Deals</h2>
+                            <div class="shopcart-hero-actions">
+                                <a href="{{ url('product_list') }}?orderby=1" class="shopcart-hero-btn">Shop Collection</a>
+                            </div>
+                        </div>
+                        <div class="shopcart-hero-media">
+                            <img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}" alt="Discover Trending Items">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- 1. Flash Sale / Deal of the Day Banner (High-Conversion User Attraction) -->
+    <section class="shopcart-flash-deal-section">
+        <div class="shopcart-container">
+            <div class="shopcart-flash-card">
+                <div class="shopcart-flash-card__glow"></div>
+                <div class="shopcart-flash-content">
+                    <div class="shopcart-flash-badge">
+                        <span class="pulse-dot"></span> 🔥 LIMITED TIME FLASH DEAL
+                    </div>
+                    <h2 class="shopcart-flash-title">Up to 60% Off Premium Noise-Cancelling Headphones</h2>
+                    <p class="shopcart-flash-desc">Experience studio-grade acoustics with active noise cancellation, 40-hour ultra battery life, and plush memory foam comfort.</p>
+                    
+                    <!-- Live Countdown Timer -->
+                    <div class="shopcart-countdown" id="shopcartCountdown">
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countDays">02</span>
+                            <span class="shopcart-countdown-lbl">Days</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countHours">14</span>
+                            <span class="shopcart-countdown-lbl">Hours</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countMins">38</span>
+                            <span class="shopcart-countdown-lbl">Mins</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countSecs">52</span>
+                            <span class="shopcart-countdown-lbl">Secs</span>
+                        </div>
+                    </div>
+
+                    <div class="shopcart-flash-actions">
+                        <a href="{{ url('product_list') }}?name=Headphone" class="shopcart-flash-btn shopcart-flash-btn--primary">
+                            Claim 60% Deal Now <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url('product_list') }}?orderby=1" class="shopcart-flash-btn shopcart-flash-btn--outline">
+                            Explore All Deals
+                        </a>
+                    </div>
+                </div>
+
+                <div class="shopcart-flash-media">
+                    <div class="shopcart-flash-img-wrap">
+                        <img src="{{ asset('assets/img/top/prod_gaming_headphone.jpg') }}" alt="Flash Deal Headphone">
+                        <div class="shopcart-flash-tag">
+                            <span class="shopcart-flash-tag__save">SAVE</span>
+                            <span class="shopcart-flash-tag__percent">60%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Categories Section -->
+    <section class="shopcart-popular-categories-section">
+        <div class="shopcart-container">
+            <h2 class="shopcart-section-title">Popular Categories</h2>
+            <div class="shopcart-popular-categories-grid">
+                <!-- 1. Furniture -->
+                <a href="{{ url('product_list') }}?name=Furniture" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_furniture.jpg') }}" alt="Furniture">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Furniture</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+
+                <!-- 2. Headphone -->
+                <a href="{{ url('product_list') }}?name=Headphone" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_headphone.jpg') }}" alt="Headphone">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Headphone</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+
+                <!-- 3. Shoe -->
+                <a href="{{ url('product_list') }}?name=Shoe" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_shoe.jpg') }}" alt="Shoe">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Shoe</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+
+                <!-- 4. Bag -->
+                <a href="{{ url('product_list') }}?name=Bag" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_bag.jpg') }}" alt="Bag">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Bag</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+
+                <!-- 5. Laptop -->
+                <a href="{{ url('product_list') }}?name=Laptop" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_laptop.jpg') }}" alt="Laptop">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Laptop</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+
+                <!-- 6. Book -->
+                <a href="{{ url('product_list') }}?name=Book" class="shopcart-popular-cat-card">
+                    <div class="shopcart-popular-cat-thumb">
+                        <img src="{{ asset('assets/img/top/cat_book.jpg') }}" alt="Book">
+                    </div>
+                    <div class="shopcart-popular-cat-info">
+                        <h3 class="shopcart-popular-cat-title">Book</h3>
+                        <p class="shopcart-popular-cat-count">240 Item Available</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. How Shopcart Works (Business Process Flow - 4 Steps) -->
+    <section class="shopcart-flow-section">
+        <div class="shopcart-container">
+            <div class="shopcart-section-header shopcart-section-header--center">
+                <span class="shopcart-badge-pill">SEAMLESS EXPERIENCE</span>
+                <h2 class="shopcart-section-title shopcart-section-title--center">How Shopcart Works</h2>
+                <p class="shopcart-section-subtitle">Experience a frictionless 4-step shopping journey designed for speed, security, and satisfaction.</p>
+            </div>
+
+            <div class="shopcart-flow-grid">
+                <!-- Step 1 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">01</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">1. Explore & Select</h3>
+                    <p class="shopcart-flow-desc">Browse through curated authentic audio, electronics, and lifestyle gear with smart filter tools.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">02</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">2. Instant Checkout</h3>
+                    <p class="shopcart-flow-desc">Pay securely in seconds with 256-bit SSL encrypted gateway via Visa, Apple Pay, or PayPal.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">03</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-truck-fast"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">3. Express Dispatch</h3>
+                    <p class="shopcart-flow-desc">Real-time package tracking with direct, insured express delivery straight to your doorstep.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">04</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-shield-heart"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">4. Enjoy & Guarantee</h3>
+                    <p class="shopcart-flow-desc">Enjoy your gear with 30-day money-back guarantee, full warranty, and 24/7 dedicated support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Headphones For You Section -->
+    <section class="shopcart-products-section">
+        <div class="shopcart-container">
+            <!-- Filter Pills Bar with Dropdown Menus -->
+            <div class="shopcart-filters-bar">
+                <div class="shopcart-filters-group">
+                    <!-- 1. Headphone Type -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="type">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Headphone Type</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu">
+                            <a href="javascript:void(0)" class="shopcart-filter-item is-active" data-value="all">All Types</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-value="earbuds">In-Ear / Earbuds</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-value="over-ear">Over-Ear Headphones</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-value="on-ear">On-Ear Headphones</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-value="bone-conduction">Bone Conduction</a>
+                        </div>
+                    </div>
+
+                    <!-- 2. Price -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="price">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Price</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu">
+                            <a href="javascript:void(0)" class="shopcart-filter-item is-active" data-min="0" data-max="99999">All Prices</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-min="0" data-max="50">Under $50</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-min="50" data-max="100">$50 to $100</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-min="100" data-max="300">$100 to $300</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-min="300" data-max="99999">Over $300</a>
+                        </div>
+                    </div>
+
+                    <!-- 3. Review -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="review">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Review</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu">
+                            <a href="javascript:void(0)" class="shopcart-filter-item is-active" data-rating="0">All Ratings</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-rating="4.8"><span class="stars">★★★★★</span> 4.8 & up</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-rating="4.5"><span class="stars">★★★★☆</span> 4.5 & up</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-rating="4.0"><span class="stars">★★★★☆</span> 4.0 & up</a>
+                        </div>
+                    </div>
+
+                    <!-- 4. Color -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="color">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Color</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu shopcart-color-options">
+                            <a href="javascript:void(0)" class="shopcart-color-item is-active" data-color="all"><span class="color-dot color-dot--all"></span> All Colors</a>
+                            <a href="javascript:void(0)" class="shopcart-color-item" data-color="black"><span class="color-dot" style="background:#0f172a;"></span> Black</a>
+                            <a href="javascript:void(0)" class="shopcart-color-item" data-color="pink"><span class="color-dot" style="background:#f472b6;"></span> Coral Pink</a>
+                            <a href="javascript:void(0)" class="shopcart-color-item" data-color="red"><span class="color-dot" style="background:#ef4444;"></span> Red</a>
+                            <a href="javascript:void(0)" class="shopcart-color-item" data-color="blue"><span class="color-dot" style="background:#3b82f6;"></span> Blue</a>
+                        </div>
+                    </div>
+
+                    <!-- 5. Material -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="material">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Material</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu">
+                            <a href="javascript:void(0)" class="shopcart-filter-item is-active" data-material="all">All Materials</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-material="leather">Leather / Foam</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-material="metal">Aluminum & Metal</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-material="plastic">Matte Plastic</a>
+                        </div>
+                    </div>
+
+                    <!-- 6. Offer -->
+                    <div class="shopcart-filter-dropdown" data-filter-group="offer">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-toggle">
+                            <span class="shopcart-filter-label">Offer</span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu">
+                            <a href="javascript:void(0)" class="shopcart-filter-item is-active" data-offer="all">All Offers</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-offer="50">50% Off & More</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-offer="30">30% Off & More</a>
+                            <a href="javascript:void(0)" class="shopcart-filter-item" data-offer="free-shipping">Free Delivery</a>
+                        </div>
+                    </div>
+
+                    <!-- 7. Reset Filters -->
+                    <div class="shopcart-filter-dropdown">
+                        <button type="button" class="shopcart-filter-pill" id="shopcartResetFiltersBtn" title="Reset all filters">
+                            <span>All Filters</span>
+                            <i class="fas fa-sliders"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 8. Sort By -->
+                <div class="shopcart-filters-sort">
+                    <div class="shopcart-filter-dropdown shopcart-sort-dropdown" data-filter-group="sort">
+                        <button type="button" class="shopcart-filter-pill shopcart-filter-pill--sort shopcart-filter-toggle">
+                            <span>Sort by: <strong id="currentSortLabel">Featured</strong></span>
+                            <i class="fas fa-chevron-down shopcart-chevron"></i>
+                        </button>
+                        <div class="shopcart-filter-menu shopcart-filter-menu--right">
+                            <a href="javascript:void(0)" class="shopcart-sort-item is-active" data-sort="featured">Featured</a>
+                            <a href="javascript:void(0)" class="shopcart-sort-item" data-sort="price-asc">Price: Low to High</a>
+                            <a href="javascript:void(0)" class="shopcart-sort-item" data-sort="price-desc">Price: High to Low</a>
+                            <a href="javascript:void(0)" class="shopcart-sort-item" data-sort="rating">Customer Rating</a>
+                            <a href="javascript:void(0)" class="shopcart-sort-item" data-sort="newest">Newest Arrivals</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Heading -->
+            <h2 class="shopcart-section-title">Headphones For You!</h2>
+
+            <!-- Products Grid (8 Items Matching Design with Filter Data) -->
+            <div class="shopcart-product-grid" id="shopcartProductGrid">
+                <!-- Product 1 -->
+                <div class="shopcart-product-card" data-type="earbuds" data-price="89.00" data-rating="4.9" data-color="black" data-material="plastic" data-offer="30" data-date="2026-09-10">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="Wireless Earbuds, IPX8">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Wireless Earbuds, IPX8</a>
+                            <span class="shopcart-product-price"><sup>$</sup>89<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="shopcart-product-card" data-type="over-ear" data-price="559.00" data-rating="5.0" data-color="pink" data-material="metal" data-offer="50" data-date="2026-09-12">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_2.jpg') }}" alt="AirPods Max">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">AirPods Max</a>
+                            <span class="shopcart-product-price"><sup>$</sup>559<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">A perfect balance of high-fidelity audio</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn shopcart-add-cart-btn--solid">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="shopcart-product-card" data-type="over-ear" data-price="289.00" data-rating="4.8" data-color="black" data-material="leather" data-offer="30" data-date="2026-09-08">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Bose BT Earphones">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Bose BT Earphones</a>
+                            <span class="shopcart-product-price"><sup>$</sup>289<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="shopcart-product-card" data-type="on-ear" data-price="39.00" data-rating="4.7" data-color="red" data-material="plastic" data-offer="50" data-date="2026-09-05">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="VIVEFOX Headphones">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">VIVEFOX Headphones</a>
+                            <span class="shopcart-product-price"><sup>$</sup>39<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Wired Stereo Headsets With Mic</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="shopcart-product-card" data-type="on-ear" data-price="59.00" data-rating="4.6" data-color="black" data-material="leather" data-offer="0" data-date="2026-09-01">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="JBL TUNE 600BTNC">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">JBL TUNE 600BTNC</a>
+                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Premium Bone Conduction Open Ear Bluetooth</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="shopcart-product-card" data-type="earbuds" data-price="109.00" data-rating="4.8" data-color="black" data-material="plastic" data-offer="30" data-date="2026-09-11">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="TAGRY Bluetooth">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">TAGRY Bluetooth</a>
+                            <span class="shopcart-product-price"><sup>$</sup>109<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">256, 8 core GPU, 8 GB</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="shopcart-product-card" data-type="bone-conduction" data-price="89.75" data-rating="4.7" data-color="black" data-material="metal" data-offer="50" data-date="2026-09-04">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Monster MNFLEX">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Monster MNFLEX</a>
+                            <span class="shopcart-product-price"><sup>$</sup>89<sup>.75</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Flex Active Noise Canceling Bluetooth</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="shopcart-product-card" data-type="on-ear" data-price="569.00" data-rating="5.0" data-color="blue" data-material="plastic" data-offer="0" data-date="2026-09-13">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="Mpow CH6">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Mpow CH6</a>
+                            <span class="shopcart-product-price"><sup>$</sup>569<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Kids Headphones</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Similar Items You Might Like Section -->
+    <section class="shopcart-similar-section">
+        <div class="shopcart-container">
+            <h2 class="shopcart-section-title">Similar Items You Might Like</h2>
+            
+            <div class="shopcart-product-grid shopcart-product-grid--4col">
+                <!-- Similar Item 1 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_gaming_headphone.jpg') }}" alt="Gaming Headphone">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Gaming Headphone</a>
+                            <span class="shopcart-product-price"><sup>$</sup>239<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Similar Item 2 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/cat_laptop.jpg') }}" alt="Macbook pro 13&quot;">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Macbook pro 13"</a>
+                            <span class="shopcart-product-price"><sup>$</sup>1099<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">256, 8 core GPU, 8 GB</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Similar Item 3 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/hero_smartwatch.jpg') }}" alt="HomePod mini">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">HomePod mini</a>
+                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">5 Colors Available</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Similar Item 4 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/cat_bag.jpg') }}" alt="Laptop sleeve MacBook">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Laptop sleeve MacBook</a>
+                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll / Progress Indicator Bar -->
+            <div class="shopcart-section-track">
+                <div class="shopcart-section-track__bar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Trust & Customer Social Proof Section (Stats & Reviews) -->
+    <section class="shopcart-trust-section">
+        <div class="shopcart-container">
+            <!-- Stats Counter Strip -->
+            <div class="shopcart-stats-banner">
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">50k+</div>
+                    <div class="shopcart-stat-label">Happy Shoppers</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">99.4%</div>
+                    <div class="shopcart-stat-label">On-Time Delivery</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">4.9 ★</div>
+                    <div class="shopcart-stat-label">Average Rating</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">24/7</div>
+                    <div class="shopcart-stat-label">Live Expert Support</div>
+                </div>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="shopcart-section-header shopcart-section-header--center" style="margin-top: 50px;">
+                <span class="shopcart-badge-pill">REAL FEEDBACK</span>
+                <h2 class="shopcart-section-title shopcart-section-title--center">Loved by Audio Enthusiasts & Daily Shoppers</h2>
+                <p class="shopcart-section-subtitle">Read what our verified customers have to say about their shopping experience with Shopcart.</p>
+            </div>
+
+            <div class="shopcart-reviews-grid">
+                <!-- Review 1 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"The sound fidelity and active noise-cancellation on the headphones exceeded all expectations. Fast 2-day delivery and premium packaging!"</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #22c55e, #15803d);">SM</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Sophia Martinez <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">Tokyo, Japan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"Customer support is exceptionally responsive. They assisted me in picking the right earbuds for running. The 30-day trial gives total peace of mind."</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #ff7a18, #ea580c);">AW</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Alexander Wright <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">San Francisco, USA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"Best e-commerce shopping experience I've had. Clean website navigation, instant checkout with Apple Pay, and original high-grade electronics."</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">MK</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Min Khant <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">Yangon, Myanmar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recently Viewed Section -->
+    <section class="shopcart-recent-section">
+        <div class="shopcart-container">
+            <h2 class="shopcart-section-title">Recently Viewed</h2>
+            
+            <div class="shopcart-product-grid shopcart-product-grid--4col">
+                <!-- Recent Item 1 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="Laptop sleeve MacBook">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Laptop sleeve MacBook</a>
+                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Recent Item 2 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_2.jpg') }}" alt="AirPods Max">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">AirPods Max</a>
+                            <span class="shopcart-product-price"><sup>$</sup>559<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">A perfect balance of high-fidelity audio</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn shopcart-add-cart-btn--solid">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Recent Item 3 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Ipad Mini">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Ipad Mini</a>
+                            <span class="shopcart-product-price"><sup>$</sup>569<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+
+                <!-- Recent Item 4 -->
+                <div class="shopcart-product-card">
+                    <div class="shopcart-product-thumb">
+                        <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="{{ url('product_list') }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="Flower Laptop Sleeve">
+                        </a>
+                    </div>
+                    <div class="shopcart-product-info">
+                        <div class="shopcart-product-head">
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Flower Laptop Sleeve</a>
+                            <span class="shopcart-product-price"><sup>$</sup>39<sup>.00</sup></span>
+                        </div>
+                        <div class="shopcart-product-desc">15 in. x 10 in. -Flap top closure</div>
+                        <div class="shopcart-product-rating">
+                            <span class="shopcart-stars">★★★★★</span>
+                            <span class="shopcart-rating-count">(121)</span>
+                        </div>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
+
