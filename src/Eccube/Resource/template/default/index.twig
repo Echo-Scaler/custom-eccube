@@ -82,6 +82,64 @@ file that was distributed with this source code.
         </div>
     </section>
 
+    <!-- 1. Flash Sale / Deal of the Day Banner (High-Conversion User Attraction) -->
+    <section class="shopcart-flash-deal-section">
+        <div class="shopcart-container">
+            <div class="shopcart-flash-card">
+                <div class="shopcart-flash-card__glow"></div>
+                <div class="shopcart-flash-content">
+                    <div class="shopcart-flash-badge">
+                        <span class="pulse-dot"></span> 🔥 LIMITED TIME FLASH DEAL
+                    </div>
+                    <h2 class="shopcart-flash-title">Up to 60% Off Premium Noise-Cancelling Headphones</h2>
+                    <p class="shopcart-flash-desc">Experience studio-grade acoustics with active noise cancellation, 40-hour ultra battery life, and plush memory foam comfort.</p>
+                    
+                    <!-- Live Countdown Timer -->
+                    <div class="shopcart-countdown" id="shopcartCountdown">
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countDays">02</span>
+                            <span class="shopcart-countdown-lbl">Days</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countHours">14</span>
+                            <span class="shopcart-countdown-lbl">Hours</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countMins">38</span>
+                            <span class="shopcart-countdown-lbl">Mins</span>
+                        </div>
+                        <span class="shopcart-countdown-colon">:</span>
+                        <div class="shopcart-countdown-item">
+                            <span class="shopcart-countdown-val" id="countSecs">52</span>
+                            <span class="shopcart-countdown-lbl">Secs</span>
+                        </div>
+                    </div>
+
+                    <div class="shopcart-flash-actions">
+                        <a href="{{ url('product_list') }}?name=Headphone" class="shopcart-flash-btn shopcart-flash-btn--primary">
+                            Claim 60% Deal Now <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url('product_list') }}?orderby=1" class="shopcart-flash-btn shopcart-flash-btn--outline">
+                            Explore All Deals
+                        </a>
+                    </div>
+                </div>
+
+                <div class="shopcart-flash-media">
+                    <div class="shopcart-flash-img-wrap">
+                        <img src="{{ asset('assets/img/top/prod_gaming_headphone.jpg') }}" alt="Flash Deal Headphone">
+                        <div class="shopcart-flash-tag">
+                            <span class="shopcart-flash-tag__save">SAVE</span>
+                            <span class="shopcart-flash-tag__percent">60%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Popular Categories Section -->
     <section class="shopcart-popular-categories-section">
         <div class="shopcart-container">
@@ -152,6 +210,67 @@ file that was distributed with this source code.
                         <p class="shopcart-popular-cat-count">240 Item Available</p>
                     </div>
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. How Shopcart Works (Business Process Flow - 4 Steps) -->
+    <section class="shopcart-flow-section">
+        <div class="shopcart-container">
+            <div class="shopcart-section-header shopcart-section-header--center">
+                <span class="shopcart-badge-pill">SEAMLESS EXPERIENCE</span>
+                <h2 class="shopcart-section-title shopcart-section-title--center">How Shopcart Works</h2>
+                <p class="shopcart-section-subtitle">Experience a frictionless 4-step shopping journey designed for speed, security, and satisfaction.</p>
+            </div>
+
+            <div class="shopcart-flow-grid">
+                <!-- Step 1 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">01</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">1. Explore & Select</h3>
+                    <p class="shopcart-flow-desc">Browse through curated authentic audio, electronics, and lifestyle gear with smart filter tools.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">02</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">2. Instant Checkout</h3>
+                    <p class="shopcart-flow-desc">Pay securely in seconds with 256-bit SSL encrypted gateway via Visa, Apple Pay, or PayPal.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">03</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-truck-fast"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">3. Express Dispatch</h3>
+                    <p class="shopcart-flow-desc">Real-time package tracking with direct, insured express delivery straight to your doorstep.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="shopcart-flow-step">
+                    <div class="shopcart-flow-icon-wrap">
+                        <span class="shopcart-flow-num">04</span>
+                        <div class="shopcart-flow-icon">
+                            <i class="fas fa-shield-heart"></i>
+                        </div>
+                    </div>
+                    <h3 class="shopcart-flow-title">4. Enjoy & Guarantee</h3>
+                    <p class="shopcart-flow-desc">Enjoy your gear with 30-day money-back guarantee, full warranty, and 24/7 dedicated support.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -586,6 +705,82 @@ file that was distributed with this source code.
         </div>
     </section>
 
+    <!-- 3. Trust & Customer Social Proof Section (Stats & Reviews) -->
+    <section class="shopcart-trust-section">
+        <div class="shopcart-container">
+            <!-- Stats Counter Strip -->
+            <div class="shopcart-stats-banner">
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">50k+</div>
+                    <div class="shopcart-stat-label">Happy Shoppers</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">99.4%</div>
+                    <div class="shopcart-stat-label">On-Time Delivery</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">4.9 ★</div>
+                    <div class="shopcart-stat-label">Average Rating</div>
+                </div>
+                <div class="shopcart-stat-divider"></div>
+                <div class="shopcart-stat-item">
+                    <div class="shopcart-stat-num">24/7</div>
+                    <div class="shopcart-stat-label">Live Expert Support</div>
+                </div>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="shopcart-section-header shopcart-section-header--center" style="margin-top: 50px;">
+                <span class="shopcart-badge-pill">REAL FEEDBACK</span>
+                <h2 class="shopcart-section-title shopcart-section-title--center">Loved by Audio Enthusiasts & Daily Shoppers</h2>
+                <p class="shopcart-section-subtitle">Read what our verified customers have to say about their shopping experience with Shopcart.</p>
+            </div>
+
+            <div class="shopcart-reviews-grid">
+                <!-- Review 1 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"The sound fidelity and active noise-cancellation on the headphones exceeded all expectations. Fast 2-day delivery and premium packaging!"</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #22c55e, #15803d);">SM</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Sophia Martinez <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">Tokyo, Japan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"Customer support is exceptionally responsive. They assisted me in picking the right earbuds for running. The 30-day trial gives total peace of mind."</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #ff7a18, #ea580c);">AW</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Alexander Wright <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">San Francisco, USA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="shopcart-review-card">
+                    <div class="shopcart-review-stars">★★★★★</div>
+                    <p class="shopcart-review-quote">"Best e-commerce shopping experience I've had. Clean website navigation, instant checkout with Apple Pay, and original high-grade electronics."</p>
+                    <div class="shopcart-review-author">
+                        <div class="shopcart-author-avatar" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">MK</div>
+                        <div class="shopcart-author-meta">
+                            <div class="shopcart-author-name">Min Khant <span class="shopcart-verified-badge"><i class="fas fa-check-circle"></i> Verified</span></div>
+                            <div class="shopcart-author-location">Yangon, Myanmar</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Recently Viewed Section -->
     <section class="shopcart-recent-section">
         <div class="shopcart-container">
@@ -691,3 +886,4 @@ file that was distributed with this source code.
         </div>
     </section>
 {% endblock %}
+

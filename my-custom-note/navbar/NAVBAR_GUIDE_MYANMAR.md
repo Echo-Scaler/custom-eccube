@@ -236,6 +236,35 @@ EC-CUBE ၏ မူလ Database (`dtb_category`) တွင် သိမ်းဆ�
 
 ---
 
-## ၈။ အနှစ်ချုပ် (Summary)
+## ၈။ Homepage UI/UX User Attraction & Business Flow Sections (အသုံးပြုသူ စိတ်ဝင်စားမှုနှင့် စီးပွားရေးလုပ်ငန်းစဉ် အပိုင်းများ)
 
-ဤ Storefront (Header, Hero Slider, Popular Categories, Filterable Product Section, Similar Items, Recently Viewed နှင့် Redesigned Footer) အားလုံးသည် EC-CUBE ၏ မူလ Session၊ Authentication၊ Shopping Cart နှင့် Multi-Language System များကို ထိခိုက်မှုမရှိစေဘဲ ခေတ်မီပြီး Premium ဆန်သော E-commerce User Experience (UX) ကို ရရှိစေရန် ရေးဆွဲထားခြင်း ဖြစ်ပါသည်။
+ဝယ်ယူသူများအား ဆွဲဆောင်ရန်နှင့် ဝယ်ယူမှုနှုန်း (Conversion Rate) မြှင့်တင်ရန်အတွက် အောက်ပါ UI/UX Sections (၃) ခုကို Home Page တွင် ထပ်မံထည့်သွင်းပေးထားပါသည် -
+
+### (၁) Flash Sale / Deal of the Day Banner (အချိန်ကန့်သတ် လျှော့စျေးနှင့် တိုက်ရိုက် Countdown Timer)
+- **ရည်ရွယ်ချက်**: စိတ်ဝင်စားမှုကို ချက်ချင်းဆွဲဆောင်ပြီး အမြန်ဆုံး ဝယ်ယူလိုစိတ်ဖြစ်ပေါ်စေရန် (FOMO & Urgency)။
+- **ပါဝင်သော အချက်များ**:
+  - `🔥 LIMITED TIME FLASH DEAL` Pulse Badge နှင့် Glowing Card Effect။
+  - **Live Interactive Countdown Timer**: ရက်၊ နာရီ၊ မိနစ်၊ စက္ကန့်အလိုက် တစ်စက္ကန့်ချင်းစီ ပုံမှန်အောက်သို့ လျော့ကျသွားသော Digital Timer Boxes။
+  - `Claim 60% Deal Now` Button နှင့် `SAVE 60%` Floating Circular Badge။
+
+### (၂) How Shopcart Works (စီးပွားရေး ဝယ်ယူမှု လုပ်ငန်းစဉ် ၄ ဆင့်)
+- **ရည်ရွယ်ချက်**: ဝယ်ယူသူများအနေဖြင့် အမှာစာတင်ခြင်းမှ ပစ္စည်းလက်ခံရရှိသည်အထိ လုပ်ငန်းစဉ် (Customer Journey) ကို ရှင်းလင်းစွာ သိရှိနားလည်စေရန်။
+- **၄ ဆင့် လုပ်ငန်းစဉ် (4-Step Flow)**:
+  1. **01. Explore & Select**: စမတ် Filter စနစ်များဖြင့် အရည်အသွေးမြင့် ပစ္စည်းများကို လွယ်ကူစွာ ရွေးချယ်ခြင်း။
+  2. **02. Instant Checkout**: 256-bit SSL လုံခြုံစိတ်ချရသော Gateway ဖြင့် ကတ်/Apple Pay/PayPal ချက်ချင်း ငွေပေးချေခြင်း။
+  3. **03. Express Dispatch**: အချိန်နှင့်တပြေးညီ Tracking ဖြင့် အိမ်အရောက် အမြန်ဆုံး ပို့ဆောင်ပေးခြင်း။
+  4. **04. Enjoy & Guarantee**: ရက် ၃၀ ငွေပြန်အမ်းမှု အာမခံချက်၊ အာမခံသက်တမ်းနှင့် ၂၄/၇ ဝန်ဆောင်မှုဖြင့် စိတ်အေးချမ်းသာစွာ သုံးစွဲနိုင်ခြင်း။
+- **ဒီဇိုင်း**: Process Card Grid၊ Step Badge နံပါတ်များ (`01`, `02`, `03`, `04`)၊ Hover Lift Animation များနှင့် Icon များ။
+
+### (၃) Trust & Social Proof / Customer Reviews (ယုံကြည်စိတ်ချရမှုနှင့် သုံးစွဲသူ မှတ်ချက်များ)
+- **ရည်ရွယ်ချက်**: အသစ်ရောက်လာသော ဝယ်ယူသူများအား ယုံကြည်မှု တည်ဆောက်ပေးရန် (Social Proof)။
+- **ပါဝင်သော အချက်များ**:
+  - **Stats Banner Bar**: `50k+ Happy Shoppers`၊ `99.4% On-Time Delivery`၊ `4.9 ★ Rating`၊ `24/7 Support`။
+  - **Verified Customer Testimonials**: ကြယ်ငါးပွင့် Ratings၊ သုံးစွဲသူများ၏ အကြံပြုချက်စကားများ၊ Avatar နှင့် `✓ Verified Buyer` Badges များ။
+
+---
+
+## ၉။ အနှစ်ချုပ် (Summary)
+
+ဤ Storefront (Header, Hero Slider, Flash Deal Countdown, Popular Categories, 4-Step Business Flow, Filterable Product Section, Similar Items, Social Proof & Reviews, Recently Viewed နှင့် Redesigned Footer) အားလုံးသည် EC-CUBE ၏ မူလ Session၊ Authentication၊ Shopping Cart နှင့် Multi-Language System များကို ထိခိုက်မှုမရှိစေဘဲ ခေတ်မီပြီး Premium ဆန်သော E-commerce User Experience (UX) ကို အပြည့်အဝ ပေးစွမ်းနိုင်ပြီ ဖြစ်ပါသည်။
+

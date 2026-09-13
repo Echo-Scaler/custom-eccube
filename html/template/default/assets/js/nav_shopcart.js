@@ -550,4 +550,47 @@ document.addEventListener('DOMContentLoaded', function () {
       }, 1400);
     });
   });
+
+  /* ========================================================================
+     8. Flash Deal Live Countdown Timer
+     ======================================================================== */
+  var countDaysEl = document.getElementById('countDays');
+  var countHoursEl = document.getElementById('countHours');
+  var countMinsEl = document.getElementById('countMins');
+  var countSecsEl = document.getElementById('countSecs');
+
+  if (countDaysEl && countHoursEl && countMinsEl && countSecsEl) {
+    // Set fixed target: 2 days 14 hours 38 mins from now or session
+    var countdownTarget = new Date();
+    countdownTarget.setDate(countdownTarget.getDate() + 2);
+    countdownTarget.setHours(countdownTarget.getHours() + 14);
+    countdownTarget.setMinutes(countdownTarget.getMinutes() + 38);
+
+    function tickCountdown() {
+      var now = new Date().getTime();
+      var distance = countdownTarget.getTime() - now;
+
+      if (distance < 0) {
+        // Reset 2 days for continuous demonstration
+        countdownTarget = new Date();
+        countdownTarget.setDate(countdownTarget.getDate() + 2);
+        countdownTarget.setHours(countdownTarget.getHours() + 14);
+        distance = countdownTarget.getTime() - now;
+      }
+
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countDaysEl.textContent = (days < 10 ? '0' : '') + days;
+      countHoursEl.textContent = (hours < 10 ? '0' : '') + hours;
+      countMinsEl.textContent = (mins < 10 ? '0' : '') + mins;
+      countSecsEl.textContent = (secs < 10 ? '0' : '') + secs;
+    }
+
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+  }
 });
+
