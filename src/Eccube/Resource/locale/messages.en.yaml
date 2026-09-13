@@ -1873,3 +1873,18 @@ command.composer_require_already_installed.not_supported_plugin: "%name% %plugin
 #------------------------------------------------------------------------------------
 admin.list.sort.key: listSortKey
 admin.list.sort.type: listSortType
+
+#------------------------------------------------------------------------------------
+# Categories
+#------------------------------------------------------------------------------------
+"category.Gelato": "Gelato"
+"category.New Arrivals": "New Arrivals"
+"category.Color Desserts": "Color Desserts"
+"category.CUBE": "CUBE"
+"category.Ice Cream Sandwiches": "Ice Cream Sandwiches"
+"category.Fruits": "Fruits"
+"category.ジェラート": "Gelato"
+"category.新入荷": "New Arrivals"
+"category.彩のデザート": "Color Desserts"
+"category.アイスサンド": "Ice Cream Sandwiches"
+"category.フルーツ": "Fruits"

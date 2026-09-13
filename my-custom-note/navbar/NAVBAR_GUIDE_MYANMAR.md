@@ -83,6 +83,15 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
   - **Slide 3**: Seasonal Collections (`Discover Trending Items & Daily Best Deals` + `Shop Collection` Button)။
 - **Slider အလုပ်လုပ်ပုံ**: EC-CUBE ရှိ `Slick Slider` ကို အသုံးပြု၍ Autoplay, Smooth Fade Transitions နှင့် Custom Modern Dots Indicator များဖြင့် လှပစွာ ပြသထားပါသည်။
 
+### (၅) Headphones For You Section (Filter Pills & Product Grid)
+- **ဖိုင်တည်နေရာ**: `src/Eccube/Resource/template/default/index.twig`
+- **Filter Pills Bar**:
+  - `Headphone Type ∨`, `Price ∨`, `Review ∨`, `Color ∨`, `Material ∨`, `Offer ∨`, `All Filters 🎛️` နှင့် ညာဘက်ရှိ `Sort by ∨` စသည့် Pill-shaped dropdown ခလုတ်များ ပါဝင်ပါသည်။
+- **Section Heading**:
+  - `Headphones For You!` ခေါင်းစဉ်။
+- **Product Card Grid (4-Column Grid)**:
+  - ကတ်တစ်ခုချင်းစီတွင် Wishlist Heart Toggle ခလုတ် (`<button class="shopcart-wishlist-btn">`)၊ Product Image၊ အမည်၊ ဈေးနှုန်း (`$89.00`, `$559.00`, စသဖြင့်)၊ Subtitle ဖော်ပြချက်၊ Green Star Ratings (`★★★★★ (121)`) နှင့် `Add to Cart` Pill Button များ ပါဝင်ပါသည်။
+
 ---
 
 ## ၄။ သိထားသင့်သည့် အရေးကြီး နည်းပညာ အချက်များ (Key Gotchas & Tips)
@@ -99,6 +108,59 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
 
 ---
 
-## ၅။ အနှစ်ချုပ် (Summary)
+## ၅။ Product Filter Pills & Dropdown JS အလုပ်လုပ်ပုံ (Interactive Features)
 
-ဤ Navbar အသစ်သည် EC-CUBE ၏ မူလ Session၊ Authentication၊ Shopping Cart နှင့် Multi-Language System များကို ထိခိုက်မှုမရှိစေဘဲ ခေတ်မီပြီး Premium ဆန်သော E-commerce User Experience (UX) ကို ရရှိစေရန် ရေးဆွဲထားခြင်း ဖြစ်ပါသည်။
+"Headphones For You!" အပိုင်းရှိ Filter Pills များအတွက် Interactive Dropdown Menu များနှင့် Live Product Filtering/Sorting စနစ်ကို [nav_shopcart.js](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/template/default/assets/js/nav_shopcart.js) တွင် အောက်ပါအတိုင်း အသေးစိတ် ထည့်သွင်းပေးထားပါသည်-
+
+1. **Dropdown Toggle & Outside Click**:
+   - `.shopcart-filter-toggle` ခလုတ်ကို နှိပ်ပါက သက်ဆိုင်ရာ `.shopcart-filter-dropdown` တွင် `.is-open` class ကို toggle လုပ်ပေးပါသည်။
+   - အခြား Dropdown တစ်ခုခု ဖွင့်ထားပါက အလိုအလျောက် ပိတ်သွားပြီး လက်ရှိနှိပ်လိုက်သော တစ်ခုတည်းသာ ပွင့်စေပါသည်။
+   - Dropdown ပြင်ပ (Outside) ကို နှိပ်လျှင်သော်လည်းကောင်း၊ ကီးဘုတ်မှ `Escape (ESC)` ခလုတ်ကို နှိပ်လျှင်သော်လည်းကောင်း ပွင့်နေသော Dropdown အားလုံး အလိုအလျောက် ပိတ်သွားစေပါသည်။
+
+2. **Real-time Product Filtering**:
+   - **Headphone Type** (Earbuds, Over-Ear, On-Ear, Bone Conduction)
+   - **Price** (Under $50, $50-$100, $100-$300, Over $300)
+   - **Review** (4.8 & up, 4.5 & up, 4.0 & up)
+   - **Color** (Black, Pink, Red, Blue)
+   - **Material** (Leather, Metal, Plastic)
+   - **Offer** (50% Off, 30% Off, Free Delivery)
+   - ရွေးချယ်လိုက်သော Filter အလိုက် Filter Pill ပေါ်ရှိ Text ပြောင်းလဲသွားပြီး Pill သည် Active Green Highlight ဖြစ်သွားပါသည်။ Product Grid ပေါ်ရှိ ပစ္စည်းများသည် Reload လုပ်စရာမလိုဘဲ တိုက်ရိုက် Filter လုပ်ပြပေးပါသည်။
+
+3. **Sorting & Reset All Filters**:
+   - **Sort by Dropdown**: Featured, Price: Low to High, Price: High to Low, Customer Rating, Newest Arrivals အလိုက် ချက်ချင်း အစဉ်လိုက် စီပေးပါသည်။
+   - **All Filters Button**: နှိပ်လိုက်ပါက Filter အားလုံးကို မူလအခြေအနေ (Default) သို့ ပြန်လည် Reset လုပ်ပေးပြီး ပစ္စည်းအားလုံးကို ပြန်ဖော်ပြပေးပါသည်။
+
+4. **Wishlist & Add to Cart Feedback**:
+   - Wishlist အသဲပုံလေးကို နှိပ်ပါက အနီရောင် solid heart သို့ toggle ဖြစ်သွားပါသည်။
+   - "Add to Cart" ခလုတ်ကို နှိပ်ပါက "✓ Added!" ဟူသော micro-interaction animation ပေါ်လာပါသည်။
+
+---
+
+## ၆။ Categories Multi-Language ဘာသာစကား ပြောင်းလဲခြင်း စနစ် (Category Localization)
+
+EC-CUBE ၏ မူလ Database (`dtb_category`) တွင် သိမ်းဆည်းထားသော Category Name များကို အသုံးပြုသူ ရွေးချယ်ထားသော ဘာသာစကား (English / 日本語 / မြန်မာ) အလိုက် အလိုအလျောက် ဘာသာပြန်ပြသပေးသော စနစ်ကို အောက်ပါအတိုင်း ဖွဲ့စည်းထားပါသည် -
+
+1. **Database (`dtb_category`) Update**:
+   - မူလ Default Language (English) အတွက် Category အမည်များကို English အဖြစ် သိမ်းဆည်းထားပါသည် (ဥပမာ - `New Arrivals`, `Gelato`, `Color Desserts`, `CUBE`, `Ice Cream Sandwiches`, `Fruits`)။
+
+2. **Multi-Language Mapping ([header.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/header.twig))**:
+   - `current_loc = app.request.get('_locale')|default(app.request.locale)` ဖြင့် လက်ရှိ Locale ကို ဖတ်ယူပါသည်။
+   - `category_en_map`၊ `category_ja_map` နှင့် `category_my_map` တို့ဖြင့် အောက်ပါအတိုင်း Dynamic Translate လုပ်ပေးပါသည်-
+
+| Category ID | English (en) | 日本語 (ja) | မြန်မာ (my) |
+| :--- | :--- | :--- | :--- |
+| **ID: 2** | New Arrivals | 新入荷 | ပစ္စည်းအသစ်များ |
+| **ID: 1** | Gelato | ジェラート | ဂျယ်လာတို |
+| **ID: 3** | Color Desserts | 彩のデザート | အချိုပွဲစုံ |
+| **ID: 4** | CUBE | CUBE | CUBE |
+| **ID: 5** | Ice Cream Sandwiches | アイスサンド | အအေးမုန့်ညှပ် |
+| **ID: 6** | Fruits | フルーツ | သစ်သီးများ |
+
+3. **Breadcrumbs Topicpath ([list.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Product/list.twig))**:
+   - Product list စာမျက်နှာရှိ လမ်းကြောင်းပြ Breadcrumbs (Topicpath) တွင်လည်း Category အမည်များကို ဘာသာစကားအလိုက် ချိတ်ဆက် ဘာသာပြန်ပေးထားပါသည်။
+
+---
+
+## ၇။ အနှစ်ချုပ် (Summary)
+
+ဤ Navbar နှင့် Storefront အသစ်သည် EC-CUBE ၏ မူလ Session၊ Authentication၊ Shopping Cart နှင့် Multi-Language System များကို ထိခိုက်မှုမရှိစေဘဲ ခေတ်မီပြီး Premium ဆန်သော E-commerce User Experience (UX) ကို ရရှိစေရန် ရေးဆွဲထားခြင်း ဖြစ်ပါသည်။

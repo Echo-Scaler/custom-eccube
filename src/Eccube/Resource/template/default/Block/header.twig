@@ -108,6 +108,46 @@ file that was distributed with this source code.
             <!-- Navigation Links -->
             <nav class="shopcart-nav-menu">
                 <!-- Categories Dropdown -->
+                {% set current_loc = app.request.get('_locale')|default(app.request.locale) %}
+                {% set category_en_map = {
+                    'Gelato': 'Gelato',
+                    'New Arrivals': 'New Arrivals',
+                    'Color Desserts': 'Color Desserts',
+                    'CUBE': 'CUBE',
+                    'Ice Cream Sandwiches': 'Ice Cream Sandwiches',
+                    'Fruits': 'Fruits',
+                    'ジェラート': 'Gelato',
+                    '新入荷': 'New Arrivals',
+                    '彩のデザート': 'Color Desserts',
+                    'アイスサンド': 'Ice Cream Sandwiches',
+                    'フルーツ': 'Fruits'
+                } %}
+                {% set category_ja_map = {
+                    'Gelato': 'ジェラート',
+                    'New Arrivals': '新入荷',
+                    'Color Desserts': '彩のデザート',
+                    'CUBE': 'CUBE',
+                    'Ice Cream Sandwiches': 'アイスサンド',
+                    'Fruits': 'フルーツ',
+                    'ジェラート': 'ジェラート',
+                    '新入荷': '新入荷',
+                    '彩のデザート': '彩のデザート',
+                    'アイスサンド': 'アイスサンド',
+                    'フルーツ': 'フルーツ'
+                } %}
+                {% set category_my_map = {
+                    'Gelato': 'ဂျယ်လာတို',
+                    'New Arrivals': 'ပစ္စည်းအသစ်များ',
+                    'Color Desserts': 'အချိုပွဲစုံ',
+                    'CUBE': 'CUBE',
+                    'Ice Cream Sandwiches': 'အအေးမုန့်ညှပ်',
+                    'Fruits': 'သစ်သီးများ',
+                    'ジェラート': 'ဂျယ်လာတို',
+                    '新入荷': 'ပစ္စည်းအသစ်များ',
+                    '彩のデザート': 'အချိုပွဲစုံ',
+                    'アイスサンド': 'အအေးမုန့်ညှပ်',
+                    'フルーツ': 'သစ်သီးများ'
+                } %}
                 <div class="shopcart-nav-item shopcart-dropdown shopcart-cat-dropdown">
                     <a href="{{ url('product_list') }}" class="shopcart-nav-link shopcart-dropdown__toggle">
                         <span>Categories</span>
@@ -116,16 +156,34 @@ file that was distributed with this source code.
                     <div class="shopcart-dropdown__menu shopcart-cat-menu">
                         {% if Categories|length > 0 %}
                             {% for Category in Categories %}
+                                {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
+                                    {% set cat_display_name = category_ja_map[Category.name] %}
+                                {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
+                                    {% set cat_display_name = category_my_map[Category.name] %}
+                                {% elseif category_en_map[Category.name] is defined %}
+                                    {% set cat_display_name = category_en_map[Category.name] %}
+                                {% else %}
+                                    {% set cat_display_name = Category.name %}
+                                {% endif %}
                                 <div class="shopcart-cat-group">
                                     <a href="{{ url('product_list') }}?category_id={{ Category.id }}" class="shopcart-cat-parent">
                                         <i class="fas fa-folder-open shopcart-cat-icon"></i>
-                                        <span>{{ Category.name }}</span>
+                                        <span>{{ cat_display_name }}</span>
                                     </a>
                                     {% if Category.children|length > 0 %}
                                         <div class="shopcart-cat-children">
                                             {% for ChildCategory in Category.children %}
+                                                {% if current_loc == 'ja' and category_ja_map[ChildCategory.name] is defined %}
+                                                    {% set child_display_name = category_ja_map[ChildCategory.name] %}
+                                                {% elseif current_loc == 'my' and category_my_map[ChildCategory.name] is defined %}
+                                                    {% set child_display_name = category_my_map[ChildCategory.name] %}
+                                                {% elseif category_en_map[ChildCategory.name] is defined %}
+                                                    {% set child_display_name = category_en_map[ChildCategory.name] %}
+                                                {% else %}
+                                                    {% set child_display_name = ChildCategory.name %}
+                                                {% endif %}
                                                 <a href="{{ url('product_list') }}?category_id={{ ChildCategory.id }}" class="shopcart-cat-child">
-                                                    {{ ChildCategory.name }}
+                                                    {{ child_display_name }}
                                                 </a>
                                             {% endfor %}
                                         </div>
@@ -310,8 +368,17 @@ file that was distributed with this source code.
                     </button>
                     <div class="shopcart-mobile-accordion__content">
                         {% for Category in Categories %}
+                            {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
+                                {% set cat_mob_name = category_ja_map[Category.name] %}
+                            {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
+                                {% set cat_mob_name = category_my_map[Category.name] %}
+                            {% elseif category_en_map[Category.name] is defined %}
+                                {% set cat_mob_name = category_en_map[Category.name] %}
+                            {% else %}
+                                {% set cat_mob_name = Category.name %}
+                            {% endif %}
                             <a href="{{ url('product_list') }}?category_id={{ Category.id }}" class="shopcart-mobile-cat-link">
-                                {{ Category.name }}
+                                {{ cat_mob_name }}
                             </a>
                         {% endfor %}
                     </div>
