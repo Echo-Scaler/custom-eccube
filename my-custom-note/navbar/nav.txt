@@ -1,6 +1,6 @@
-# Redesign Navigation Bar UI (Shopcart Style)
+# Redesign Navigation Bar UI (Offmarket Style)
 
-This plan details the redesign of EC-CUBE's storefront navigation and header UI to match the modern "Shopcart" design provided in the user's screenshot.
+This plan details the redesign of EC-CUBE's storefront navigation and header UI to match the modern "Offmarket" design.
 
 ## Proposed Design Overview
 
@@ -10,7 +10,7 @@ The new navigation header consists of two clean, modern tiers:
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
 │ 📞 +001234567890       Get 50% Off on Selected Items | Shop Now          Eng ∨   Location ∨ │ (Top Bar - Deep Green)
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🛒 Shopcart   Categories ∨   Deals   What's New   Delivery   [🔍 Search Product]   👤 Account  🛒 Cart  │ (Main Nav - White)
+│ 🛒 Offmarket   Categories ∨   Deals   What's New   Delivery   [🔍 Search Product]   👤 Account  🛒 Cart  │ (Main Nav - White)
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -24,7 +24,7 @@ The new navigation header consists of two clean, modern tiers:
 ### 2. Main Navigation Bar (Clean White `#ffffff` with subtle elevation)
 - **Left (Logo)**:
   - Custom SVG vector logo (green shopping cart with fresh orange fruit/carrot and vibrant green leaves).
-  - Brand name **Shopcart** in bold modern typography.
+  - Brand name **Offmarket** in bold modern typography.
 - **Center-Left (Navigation Links)**:
   - **Categories ∨**: Dropdown menu showing dynamic categories from EC-CUBE database with smooth animations.
   - **Deals**: Direct link to discounted products / catalog.

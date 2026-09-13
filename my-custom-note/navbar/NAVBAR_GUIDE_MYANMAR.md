@@ -1,6 +1,6 @@
-# EC-CUBE Navigation Bar UI ပြင်ဆင်ခြင်းဆိုင်ရာ လေ့လာရန် မှတ်တမ်း (Shopcart Style)
+# EC-CUBE Navigation Bar UI ပြင်ဆင်ခြင်းဆိုင်ရာ လေ့လာရန် မှတ်တမ်း (Offmarket Style)
 
-ဤစာတမ်းသည် EC-CUBE တွင် Navigation Bar / Header UI ကို **Shopcart Design** အဖြစ် ပြင်ဆင်ရေးသားခဲ့သည့် အဆင့်များနှင့် ဖိုင်များ၏ အလုပ်လုပ်ပုံကို အသေးစိတ် ရှင်းပြထားသော မြန်မာဘာသာ လမ်းညွှန်ဖြစ်ပါသည်။
+ဤစာတမ်းသည် EC-CUBE တွင် Navigation Bar / Header UI ကို **Offmarket Design** အဖြစ် ပြင်ဆင်ရေးသားခဲ့သည့် အဆင့်များနှင့် ဖိုင်များ၏ အလုပ်လုပ်ပုံကို အသေးစိတ် ရှင်းပြထားသော မြန်မာဘာသာ လမ်းညွှန်ဖြစ်ပါသည်။
 
 ---
 
@@ -50,9 +50,9 @@ EC-CUBE တွင် Page Layout များကို Section အလိုက�
   - နိုင်ငံ/ဒေသ ရွေးချယ်နိုင်သော Dropdown ဖြစ်ပြီး ရွေးချယ်မှုကို `localStorage` တွင် မှတ်ထားပေးပါသည်။
 
 ### (၂) Main Navigation Bar (အဖြူရောင် အောက်ဘား)
-- **Shopcart Brand Logo**:
+- **Offmarket Brand Logo**:
   - Shopping Cart နှင့် အသီးအရွက်/သစ်ရွက် အစိမ်းရောင် ပေါင်းစပ်ထားသော SVG Vector Icon ကို ရေးဆွဲထည့်သွင်းထားပါသည်။
-  - Font ကို `font-weight: 800` ဖြင့် Modern Sans Typeface အဖြစ် ဖန်တီးထားပါသည်။
+  - Brand Name ကို **Offmarket** အဖြစ် `font-weight: 800` ဖြင့် Modern Sans Typeface ဖန်တီးထားပါသည်။
 - **Categories Dropdown (အမျိုးအစား ခွဲခြားမှုများ)**:
   - `{% set Categories = repository('Eccube\\Entity\\Category').getList() %}` ကို အသုံးပြု၍ Database ထဲရှိ Category များနှင့် ၎င်းတို့၏ Sub-categories များကို Dynamic ထုတ်ပြထားပါသည်။
 - **Navigation Links**:
