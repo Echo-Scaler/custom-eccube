@@ -1,0 +1,118 @@
+# EC-CUBE 4 တွင် Custom Plugin အသစ်ဖန်တီးနည်း အဆင့်ဆင့် လမ်းညွှန် (Step-by-step Guide)
+
+EC-CUBE 4 သည် Symfony framework ကို အခြေခံထားသောကြောင့် Plugin များကို Symfony Bundle များကဲ့သို့ တည်ဆောက်ရပါသည်။ အောက်ပါအဆင့်များသည် EC-CUBE တွင် ကိုယ်ပိုင် Custom Plugin တစ်ခု စတင်ဖန်တီးရန် လိုအပ်သော အခြေခံအဆင့်များ ဖြစ်ပါသည်။
+
+## အဆင့် ၁။ Command Line (CLI) မှတစ်ဆင့် Plugin အသစ်ဖန်တီးခြင်း (အလွယ်ဆုံးနည်းလမ်း)
+
+EC-CUBE တွင် Plugin အသစ်တစ်ခုဖန်တီးရန် အလွယ်ကူဆုံးနည်းလမ်းမှာ EC-CUBE console command ကို အသုံးပြုခြင်းဖြစ်ပါသည်။
+
+သင်၏ EC-CUBE project root directory (ဥပမာ - `bin/console` ရှိသော နေရာ) တွင် terminal သို့မဟုတ် command prompt မှတဆင့် အောက်ပါ command ကို run ပါ-
+
+```bash
+php bin/console eccube:plugin:generate
+```
+
+ဤ command ကို run လိုက်သောအခါ အောက်ပါအချက်အလက်များကို တောင်းခံပါမည်-
+- **Plugin Code**: Plugin ၏ ကုဒ်အမည် (ဥပမာ: `MyCustomPlugin`) - ပထမစာလုံးအကြီးဖြင့် စတင်ရပါမည်။
+- **Plugin Name**: Plugin ၏ အမည် (ဥပမာ: `My Custom Plugin`)
+- **Plugin Version**: Version (ဥပမာ: `1.0.0`)
+
+အထက်ပါအချက်အလက်များကို ဖြည့်သွင်းပြီးပါက `app/Plugin/MyCustomPlugin` ဟူသော ဖိုင်တွဲ (folder) တစ်ခုကို အလိုအလျောက် တည်ဆောက်ပေးသွားမည် ဖြစ်ပါသည်။
+
+---
+
+## အဆင့် ၂။ Manual အားဖြင့် ကိုယ်တိုင်တည်ဆောက်ခြင်း (အသေးစိတ်နားလည်စေရန်)
+
+အကယ်၍ Command မသုံးဘဲ ကိုယ်တိုင်တည်ဆောက်လိုပါက အောက်ပါအဆင့်များအတိုင်း ပြုလုပ်နိုင်ပါသည်။
+
+### ၂.၁။ Plugin Directory တည်ဆောက်ခြင်း
+`app/Plugin/` အောက်တွင် သင်၏ Plugin Code အမည်ဖြင့် Folder အသစ်တစ်ခု တည်ဆောက်ပါ။
+ဥပမာ - `app/Plugin/MyCustomPlugin`
+
+### ၂.၂။ `composer.json` ဖိုင် ဖန်တီးခြင်း
+တည်ဆောက်လိုက်သော Folder အတွင်း၌ `composer.json` ဖိုင်ကို ဖန်တီးပါ။ ဤဖိုင်သည် Plugin တစ်ခုအတွက် မရှိမဖြစ် လိုအပ်ပါသည်။
+
+```json
+{
+    "name": "ec-cube/mycustomplugin",
+    "version": "1.0.0",
+    "description": "My Custom Plugin",
+    "type": "eccube-plugin",
+    "require": {
+        "ec-cube/plugin-installer": "~0.0.7"
+    },
+    "extra": {
+        "code": "MyCustomPlugin"
+    }
+}
+```
+*မှတ်ချက်: `extra.code` တွင် သင်ပေးထားသော Plugin folder အမည်နှင့် ထပ်တူညီရပါမည်။*
+
+### ၂.၃။ `PluginManager.php` ဖန်တီးခြင်း (လိုအပ်ပါက)
+Plugin ကို install လုပ်ချိန်၊ enable/disable လုပ်ချိန် သို့မဟုတ် update လုပ်ချိန်များတွင် Database table များဖန်တီးခြင်း စသည့် လုပ်ဆောင်ချက်များ လိုအပ်ပါက `PluginManager.php` ကို ဖန်တီးရပါမည်။
+
+```php
+<?php
+
+namespace Plugin\MyCustomPlugin;
+
+use Eccube\Plugin\AbstractPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+class PluginManager extends AbstractPluginManager
+{
+    // Plugin ကို Install လုပ်ချိန်တွင် အလုပ်လုပ်မည့် method
+    public function install(array $meta, ContainerInterface $container)
+    {
+        // ဥပမာ - Database table အသစ်တည်ဆောက်ခြင်း
+    }
+
+    // Plugin ကို Enable လုပ်ချိန်တွင် အလုပ်လုပ်မည့် method
+    public function enable(array $meta, ContainerInterface $container)
+    {
+    }
+}
+```
+
+---
+
+## အဆင့် ၃။ Plugin အား Install နှင့် Enable ပြုလုပ်ခြင်း
+
+Plugin အတွက် လိုအပ်သော ဖိုင်များ ဖန်တီးပြီးပါက EC-CUBE စနစ်ထဲသို့ ထည့်သွင်းရန် Command (သို့) Admin Panel မှတဆင့် ပြုလုပ်နိုင်ပါသည်။
+
+**Command မှတဆင့် ပြုလုပ်နည်း:**
+```bash
+# Plugin ကို Install လုပ်ရန်
+php bin/console eccube:plugin:install --code=MyCustomPlugin
+
+# Plugin ကို Enable (ဖွင့်) လုပ်ရန်
+php bin/console eccube:plugin:enable --code=MyCustomPlugin
+```
+
+**Admin Panel မှတဆင့် ပြုလုပ်နည်း:**
+1. EC-CUBE Admin Panel သို့ ဝင်ပါ။
+2. **Owners Store > Plugin > Plugin Management (ပလပ်အင်စီမံခန့်ခွဲမှု)** သို့သွားပါ။
+3. သင်ဖန်တီးထားသော `MyCustomPlugin` ကို တွေ့ရပါမည်။
+4. ညာဘက်ရှိ ခလုတ်များကို နှိပ်၍ **Install** နှင့် **Enable** ပြုလုပ်နိုင်ပါသည်။
+
+---
+
+## အဆင့် ၄။ Cache ရှင်းလင်းခြင်း (Clear Cache)
+
+Plugin အသစ် ထည့်သွင်းပြီးတိုင်း သို့မဟုတ် ကုဒ်အသစ်များ ရေးပြီးတိုင်း အပြောင်းအလဲများ အသက်ဝင်စေရန် Cache ရှင်းပေးရန် လိုအပ်ပါသည်။
+
+```bash
+php bin/console cache:clear --no-warmup
+```
+
+---
+
+## နောက်ထပ် လုပ်ဆောင်နိုင်သော အရာများ (Advanced features)
+
+Plugin အတွင်း၌ အောက်ပါတို့ကို ဆက်လက်တည်ဆောက်နိုင်ပါသည်-
+- **Controller/ & Twig Templates**: စာမျက်နှာအသစ်များ ဖန်တီးရန်။
+- **Event/ (Event Subscriber)**: EC-CUBE ၏ မူလလုပ်ဆောင်ချက်များကို ကြားဖြတ်ပြင်ဆင်ရန် (ဥပမာ - ဈေးခြင်းတောင်းထဲ ပစ္စည်းထည့်ချိန်တွင် ထပ်ဆောင်းလုပ်ဆောင်ချက်များထည့်ရန်)။
+- **Entity/ & Repository/**: Database Table အသစ်များ တည်ဆောက်ရန်နှင့် Data များကို ဆွဲထုတ်/သိမ်းဆည်းရန်။
+- **Nav.php**: Admin Panel ဘယ်ဘက် menu တွင် Menu အသစ်ထည့်ရန်။
+
+ဤအဆင့်များသည် EC-CUBE 4 တွင် Custom Plugin တစ်ခုတည်ဆောက်ရန်အတွက် အခြေခံအကျဆုံး အဆင့်များဖြစ်ပါသည်။

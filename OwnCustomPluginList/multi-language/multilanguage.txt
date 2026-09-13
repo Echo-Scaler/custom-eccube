@@ -1,0 +1,255 @@
+MultiLanguage Plugin အတွက် ဖန်တီးထားသော File များအားလုံး၏ လမ်းကြောင်း (File Paths) များနှင့် ၎င်းတို့၏ လုပ်ဆောင်ချက်များကို အောက်ပါအတိုင်း အသေးစိတ် ဖော်ပြပေးလိုက်ပါသည်-
+
+---
+
+### ၁။ Plugin အခြေခံနှင့် Lifecycle ဆိုင်ရာ ဖိုင်များ (Plugin Configuration & Lifecycle)
+
+*   [composer.json](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/composer.json)
+    *   **ဖော်ပြချက်:** Plugin ၏ metadata (အမည် `MultiLanguage`, version, namespace, author) နှင့် EC-CUBE plugin code definition ပါဝင်သော အဓိက configuration ဖိုင် ဖြစ်ပါသည်။
+*   [PluginManager.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/PluginManager.php)
+    *   **ဖော်ပြချက်:** Plugin ကို Install, Enable, Disable, Uninstall လုပ်သည့်အခါ လိုအပ်သော Database Migration များကို run ပေးပြီး default configuration data (ဥပမာ- default locale, enabled languages) များကို ထည့်သွင်းပေး/ဖျက်ထုတ်ပေးသည့် Class ဖြစ်ပါသည်။
+*   [Nav.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Nav.php)
+    *   **ဖော်ပြချက်:** EC-CUBE Admin Panel ၏ ဘယ်ဘက် Sidebar menu (`設定 > 店舗設定 > 多言語設定 / Multi-Language Settings`) တွင် plugin setting စာမျက်နှာ menu link ပေါ်လာစေရန် ချိတ်ဆက်ပေးသော ဖိုင် ဖြစ်ပါသည်။
+
+---
+
+### ၂။ Database / Entity & Migrations
+
+*   [Config.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Entity/Config.php)
+    *   **ဖော်ပြချက်:** Plugin setting များကို သိမ်းဆည်းရန် Doctrine ORM Entity Class ဖြစ်ပါသည်။ (ဥပမာ- `default_locale`, `enabled_locales`, `auto_detect`)
+*   [ConfigRepository.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Repository/ConfigRepository.php)
+    *   **ဖော်ပြချက်:** Database table (`plg_multi_language_config`) မှ config များကို query လုပ်ခြင်း၊ update လုပ်ခြင်းတို့ကို စီမံသော Repository Class ဖြစ်ပါသည်။
+*   [Plugin.MultiLanguage.Entity.Config.dcm.yml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/doctrine/Plugin.MultiLanguage.Entity.Config.dcm.yml)
+    *   **ဖော်ပြချက်:** `plg_multi_language_config` table ၏ field များ၊ data type များနှင့် primary key သတ်မှတ်ချက်များကို ဖော်ပြထားသော Doctrine YAML mapping ဖိုင် ဖြစ်ပါသည်။
+*   [Version20260906000000.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/DoctrineMigrations/Version20260906000000.php)
+    *   **ဖော်ပြချက်:** Plugin install လုပ်ချိန်တွင် `plg_multi_language_config` table ကို အလိုအလျောက် ဆောက်ပေးပြီး uninstall လုပ်ချိန်တွင် table ကို drop လုပ်ပေးသော Database Migration Script ဖြစ်ပါသည်။
+
+---
+
+### ၃။ Request Listener & Twig Helpers
+
+*   [LocaleListener.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/EventListener/LocaleListener.php)
+    *   **ဖော်ပြချက်:** User ဝင်ရောက်လာသော HTTP Request တိုင်းတွင် URL query parameter (`?_locale=my`)၊ Session သို့မဟုတ် Browser Accept-Language Header ကို စစ်ဆေးပြီး သက်ဆိုင်ရာဘာသာစကား (`ja`, `en`, `my`) သို့ ပြောင်းလဲပေးသည့် Core Event Listener ဖြစ်ပါသည်။
+*   [Twig/MultiLanguageExtension.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Twig/MultiLanguageExtension.php)
+    *   **ဖော်ပြချက်:** Twig template များထဲတွင် လက်ရှိဘာသာစကားနှင့် သုံးနိုင်သော ဘာသာစကားစာရင်းကို လွယ်ကူစွာ ခေါ်ယူအသုံးပြုနိုင်စေရန် `get_current_locale()` နှင့် `get_available_locales()` functions များကို ဖန်တီးပေးထားသော Twig Extension ဖြစ်ပါသည်။
+*   [MultiLanguageEvent.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/MultiLanguageEvent.php)
+    *   **ဖော်ပြချက်:** Frontend စာမျက်နှာ၏ header ထဲသို့ Language Switcher UI နှင့် Myanmar Font (Noto Sans Myanmar) CSS/JS assets များကို hook ထိုးထည့်ပေးသော Template Event Subscriber ဖြစ်ပါသည်။
+
+---
+
+### ၄။ Admin Controller & Templates
+
+*   [ConfigController.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Controller/Admin/ConfigController.php)
+    *   **ဖော်ပြချက်:** Admin Panel ရှိ Multi-Language Settings စာမျက်နှာကို render လုပ်ပေးခြင်းနှင့် Admin က ဘာသာစကားအဖွင့်/အပိတ်၊ Default Language သတ်မှတ်ချက်များကို ပြင်ဆင်ပြီး save သည့်အခါ database တွင် သိမ်းဆည်းပေးသော Controller ဖြစ်ပါသည်။
+*   [config.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/template/admin/config.twig)
+    *   **ဖော်ပြချက်:** Admin Panel အတွက် Settings UI form template ဖြစ်ပါသည်။
+
+---
+
+### ၅။ Frontend Templates & Assets
+
+*   [language_switcher.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/template/Block/language_switcher.twig)
+    *   **ဖော်ပြချက်:** User များ ဂျပန်၊ အင်္ဂလိပ်၊ မြန်မာဘာသာစကား ရွေးချယ်နိုင်သော Header ပေါ်ရှိ Language Switcher Dropdown UI component ဖြစ်ပါသည်။
+*   [language_switcher_asset.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/template/assets/language_switcher_asset.twig)
+    *   **ဖော်ပြချက်:** မြန်မာဘာသာစကားရွေးထားချိန်တွင် စာလုံးပေါင်းသန့်ရှင်းစေရန် Google Font (Noto Sans Myanmar) နှင့် သက်ဆိုင်ရာ CSS styling များကို load လုပ်ပေးသော ဖိုင် ဖြစ်ပါသည်။
+
+---
+
+### ၆။ ဘာသာပြန် စကားလုံးဖိုင်များ (Translation / Locale Files)
+
+*   [messages.my.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.my.yaml)
+    *   **ဖော်ပြချက်:** EC-CUBE Frontend တစ်ခုလုံး (Navigation, Products, Cart, Checkout/Shopping, MyPage, Login, Contact) ၏ UI စာသား စုစုပေါင်း ~327 ခုကို မြန်မာဘာသာသို့ တိကျစွာ ပြန်ဆိုထားသော အဓိက Translation ဖိုင် ဖြစ်ပါသည်။
+*   [validators.my.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/validators.my.yaml)
+    *   **ဖော်ပြချက်:** Form input အမှားများ (ဥပမာ- "ဤအကွက်ကို မဖြစ်မနေ ဖြည့်သွင်းရပါမည်") အတွက် မြန်မာဘာသာ validation error message ဖိုင် (~45 စာကြောင်း) ဖြစ်ပါသည်။
+*   [messages.ja.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.ja.yaml)
+    *   **ဖော်ပြချက်:** Plugin ဆိုင်ရာ UI စာသားများ (Switch Language, Admin Settings title စသည်) အတွက် ဂျပန်ဘာသာစကား ဖိုင် ဖြစ်ပါသည်။
+*   [messages.en.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.en.yaml)
+    *   **ဖော်ပြချက်:** Plugin ဆိုင်ရာ UI စာသားများအတွက် အင်္ဂလိပ်ဘာသာစကား ဖိုင် ဖြစ်ပါသည်။
+
+---
+
+### စုစုပေါင်း Directory ဖွဲ့စည်းပုံ အကျဉ်းချုပ် (Directory Tree)
+
+```
+app/Plugin/MultiLanguage/
+├── composer.json
+├── PluginManager.php
+├── Nav.php
+├── MultiLanguageEvent.php
+├── Controller/
+│   └── Admin/
+│       └── ConfigController.php
+├── DoctrineMigrations/
+│   └── Version20260906000000.php
+├── Entity/
+│   └── Config.php
+├── EventListener/
+│   └── LocaleListener.php
+├── Repository/
+│   └── ConfigRepository.php
+├── Twig/
+│   └── MultiLanguageExtension.php
+└── Resource/
+    ├── doctrine/
+    │   └── Plugin.MultiLanguage.Entity.Config.dcm.yml
+    ├── locale/
+    │   ├── messages.my.yaml
+    │   ├── messages.ja.yaml
+    │   ├── messages.en.yaml
+    │   └── validators.my.yaml
+    └── template/
+        ├── admin/
+        │   └── config.twig
+        ├── assets/
+        │   └── language_switcher_asset.twig
+        └── Block/
+            └── language_switcher.twig
+```
+
+
+******************
+
+
+Ran command: `docker compose exec ec-cube bin/console eccube:plugin:list`
+Ran command: `docker compose exec ec-cube bin/console doctrine:query:sql "SELECT id, code, enabled, name FROM dtb_plugin"`
+Ran command: `docker compose exec ec-cube bin/console eccube:plugin:install --code=MultiLanguage`
+Ran command: `docker compose exec ec-cube bin/console eccube:plugin:enable --code=MultiLanguage`
+Ran command: `curl -s "http://localhost:8080/?_locale=my" | grep -i -E "(language|မြန်မာ|login|cart)" | head -n 30`
+Viewed LocaleListener.php:1-60
+Viewed LocaleListener.php:61-130
+Viewed translation.yaml:1-9
+Ran command: `docker compose exec ec-cube bin/console debug:translation my`
+Viewed LocaleListener.php:131-166
+Searched for "setLocale"
+Ran command: `docker compose exec ec-cube bin/console debug:event-dispatcher kernel.request`
+Viewed services.yaml:1-60
+Searched for "Plugin"
+Ran command: `docker compose exec ec-cube bin/console debug:container "Plugin\MultiLanguage\EventListener\LocaleListener"`
+Searched for "implements EventSubscriberInterface"
+Viewed PluginGenerateCommand.php:300-340
+Searched for "services.yaml"
+Viewed Kernel.php:100-160
+Viewed Kernel.php:161-240
+Viewed PluginPass.php:1-60
+Ran command: `docker compose exec ec-cube bin/console debug:container "Plugin\MultiLanguage\EventListener\LocaleListener"`
+Ran command: `docker compose exec ec-cube bin/console debug:container --parameter=eccube.plugins.enabled`
+Ran command: `docker compose exec ec-cube bin/console doctrine:query:sql "SELECT id, code, enabled, name FROM dtb_plugin"`
+Searched for "eccube.plugins.enabled"
+Viewed EccubeExtension.php:120-185
+Ran command: `docker compose exec ec-cube bin/console cache:clear`
+Ran command: `docker compose exec ec-cube bin/console debug:container --parameter=eccube.plugins.enabled`
+Ran command: `docker compose exec ec-cube bin/console debug:event-dispatcher kernel.request`
+Ran command: `curl -s "http://localhost:8080/?_locale=my" | grep -E "(လော့ဂ်အင်|ခြင်းတောင်း|language-switcher|မြန်မာ)" | head -n 30`
+Ran command: `curl -s "http://localhost:8080/?_locale=my" | grep -n -C 5 "language-switcher"`
+Viewed MultiLanguageEvent.php:1-52
+Searched for "TemplateEvent"
+Ran command: `docker compose exec ec-cube find /var/www/html -name "header.twig"`
+Searched for "addSnippet"
+Viewed TemplateEvent.php:180-202
+Viewed Template.php:15-60
+Searched for ".twig' =\>"
+Searched for "TemplateEvent"
+Viewed TemplateEventListenerTest.php:1-40
+Viewed index.twig:1-40
+Viewed default_frame.twig:1-60
+Viewed default_frame.twig:170-194
+Viewed language_switcher.twig:1-60
+Viewed language_switcher.twig:120-163
+Viewed header.twig:1-29
+Edited MultiLanguageEvent.php
+Viewed language_switcher.twig:130-163
+Edited language_switcher.twig
+Ran command: `docker compose exec ec-cube bin/console cache:clear`
+Ran command: `curl -s "http://localhost:8080/?_locale=my" | grep -n "multi-language-switcher"`
+Ran command: `docker compose exec ec-cube bin/console debug:router | grep multi_language`
+Viewed Nav.php:1-36
+
+**MultiLanguage Plugin** ကို Frontend (သုံးစွဲသူများအတွက်) နှင့် Backend/Admin (စီမံခန့်ခွဲသူများအတွက်) မည်သို့ အသုံးပြုရမည်ကို အောက်တွင် အသေးစိတ် ရှင်းပြပေးထားပါသည်-
+
+---
+
+### ၁။ Plugin ကို စတင်ဖွင့်လှစ်ခြင်း (Activation)
+
+Plugin အား စနစ်ထဲတွင် အောင်မြင်စွာ တပ်ဆင်ပြီး (Install/Enable) ပြုလုပ်ပြီးဖြစ်ပါသည်-
+```bash
+docker compose exec ec-cube bin/console eccube:plugin:install --code=MultiLanguage
+docker compose exec ec-cube bin/console eccube:plugin:enable --code=MultiLanguage
+docker compose exec ec-cube bin/console cache:clear
+```
+
+---
+
+### ၂။ Frontend (Customer/ဝယ်ယူသူများ) အတွက် အသုံးပြုပုံ
+
+Frontend တွင် ဘာသာစကား ပြောင်းလဲအသုံးပြုနိုင်ရန် နည်းလမ်း (၃) မျိုး ရှိပါသည်-
+
+#### နည်းလမ်း (၁) - Header ရှိ Language Switcher Dropdown မှ ပြောင်းလဲခြင်း (အလွယ်ကူဆုံး)
+*   Website ၏ ညာဘက်အပေါ် Header နေရာတွင် **Language Switcher Dropdown** ခလုတ် ပေါ်နေပါမည်။
+*   ထိုခလုတ်ကို နှိပ်လိုက်ပါက ရွေးချယ်နိုင်သော ဘာသာစကားစာရင်း ပေါ်လာပါမည်-
+    *   🇯🇵 **日本語 (Japanese)**
+    *   🇬🇧 **English**
+    *   🇲🇲 **မြန်မာ (Burmese)**
+*   မိမိနှစ်သက်ရာ ဘာသာစကားကို နှိပ်လိုက်သည်နှင့် စာမျက်နှာတစ်ခုလုံး (Navigation, Cart, Login, Buttons, Messages) သည် ရွေးချယ်လိုက်သော ဘာသာစကားသို့ ချက်ချင်း ပြောင်းလဲသွားပါမည်။
+
+#### နည်းလမ်း (၂) - URL Query Parameter ဖြင့် ပြောင်းလဲခြင်း
+*   URL ၏ အဆုံးတွင် `?_locale=my` (သို့မဟုတ် `?_locale=en`, `?_locale=ja`) ဟု ရိုက်ထည့်၍ တိုက်ရိုက် ဝင်ရောက်နိုင်ပါသည်-
+    *   မြန်မာဘာသာ: `http://localhost:8080/?_locale=my`
+    *   အင်္ဂလိပ်ဘာသာ: `http://localhost:8080/?_locale=en`
+    *   ဂျပန်ဘာသာ: `http://localhost:8080/?_locale=ja`
+*   ဤနည်းလမ်းသည် Social Media သို့မဟုတ် Email များတွင် ဘာသာစကားအလိုက် Link များ မျှဝေရာတွင် အထူးအသုံးဝင်ပါသည်။
+
+#### နည်းလမ်း (၃) - Session မှ အလိုအလျောက် မှတ်သားထားခြင်း (Persistence)
+*   ဝယ်ယူသူက ဘာသာစကား တစ်ကြိမ် ရွေးချယ်ပြီးသွားပါက Browser Session ထဲတွင် အလိုအလျောက် မှတ်သားထားမည် ဖြစ်သောကြောင့် အခြား Product စာမျက်နှာများ၊ Cart သို့မဟုတ် Checkout စာမျက်နှာများသို့ သွားရောက်သော်လည်း ရွေးထားသော ဘာသာစကားအတိုင်း ဆက်လက်ပြသနေမည် ဖြစ်ပါသည်။
+
+> [!TIP]
+> မြန်မာဘာသာစကား ရွေးချယ်ထားချိန်တွင် ဖောင့်မကွဲစေရန်နှင့် စာလုံးပေါင်းသန့်ရှင်းစေရန် **Google Fonts (Noto Sans Myanmar)** ကို အလိုအလျောက် ချိတ်ဆက် load လုပ်ပေးထားပါသည်။
+
+---
+
+### ၃။ Backend / Admin Panel (စီမံခန့်ခွဲသူများ) အတွက် အသုံးပြုပုံ
+
+Admin Panel မှနေ၍ ဆိုင်တွင် အသုံးပြုမည့် ဘာသာစကား စနစ်များကို စီမံခန့်ခွဲနိုင်ပါသည်-
+
+#### အဆင့် (၁) - Setting စာမျက်နှာသို့ သွားရောက်ခြင်း
+1.  Admin Panel (`http://localhost:8080/admin/`) သို့ ဝင်ရောက်ပါ။
+2.  ဘယ်ဘက် Sidebar Menu မှ **設定 (Settings)** > **店舗設定 (Shop Settings)** > **多言語設定 (Multi-Language Settings)** သို့ သွားပါ။
+    *(သို့မဟုတ် URL: `http://localhost:8080/admin/multi_language/config` သို့ တိုက်ရိုက်သွားနိုင်ပါသည်)*
+
+#### အဆင့် (၂) - ပြင်ဆင်နိုင်သော Feature များ
+*   **Default Language (မူလဘာသာစကား):**
+    *   ဆိုင်သို့ ပထမဆုံး ဝင်ရောက်လာသော User တိုင်းကို မည်သည့်ဘာသာစကားဖြင့် စတင်ပြသမလဲ ရွေးချယ်နိုင်ပါသည် (ဥပမာ- `ja`, `en`, သို့မဟုတ် `my`)။
+*   **Enabled Languages (အသုံးပြုခွင့်ပြုမည့် ဘာသာစကားများ):**
+    *   Frontend တွင် ပြသပေးလိုသော ဘာသာစကားများကို Checkbox ပေး၍ ဖွင့်/ပိတ် ပြုလုပ်နိုင်ပါသည်။ (ဥပမာ- English နှင့် မြန်မာ နှစ်မျိုးတည်းသာ ဖွင့်ထားလိုပါက ဂျပန်ဘာသာစကားကို အမှန်ခြစ် ဖြုတ်ထားနိုင်ပါသည်)။
+*   **Auto-Detect Language (စက်၏ ဘာသာစကားအလိုက် အလိုအလျောက် ပြောင်းလဲပေးခြင်း):**
+    *   User အသုံးပြုနေသော ဖုန်း/ကွန်ပျူတာ၏ Browser Language ကို ဖတ်ပြီး သင့်တော်သော ဘာသာစကားသို့ အလိုအလျောက် ပြောင်းပေးမည့် စနစ်ကို Enable/Disable ပြုလုပ်နိုင်ပါသည်။
+3.  ပြင်ဆင်ပြီးပါက **登録 (Save Settings)** ခလုတ်ကို နှိပ်၍ သိမ်းဆည်းပါ။
+
+---
+
+### ၄။ Developer များအတွက် Code ထဲတွင် အသုံးပြုပုံ
+
+#### (က) Twig Template ထဲတွင် စာသားများ ဘာသာပြန်ခြင်း
+Frontend twig ဖိုင်များထဲတွင် ဘာသာစကားအလိုက် စာသားပြောင်းလိုပါက Symfony ၏ `|trans` filter ကို အသုံးပြုနိုင်ပါသည်-
+```twig
+{# Core EC-CUBE translation keys #}
+<p>{{ 'common.cart'|trans }}</p>
+<button>{{ 'common.login'|trans }}</button>
+```
+
+#### (ခ) Controller (PHP) ထဲတွင် ဘာသာပြန်ခြင်း
+PHP Code ထဲတွင် Message များ ဘာသာပြန်လိုပါက `TranslatorInterface` ကို Inject လုပ်၍ အသုံးပြုနိုင်ပါသည်-
+```php
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+public function someAction(TranslatorInterface $translator)
+{
+    $message = $translator->trans('front.cart.empty');
+}
+```
+
+#### (ဂ) ဘာသာပြန် စကားလုံးအသစ်များ ထပ်တိုးလိုပါက
+စကားလုံးအသစ်များ ထပ်မံဖြည့်စွက်လိုပါက အောက်ပါဖိုင်များတွင် key နှင့် စာသားများကို လွတ်လပ်စွာ ဝင်ရောက် ထည့်သွင်းနိုင်ပါသည်-
+*   မြန်မာဘာသာ: [messages.my.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.my.yaml)
+*   ဂျပန်ဘာသာ: [messages.ja.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.ja.yaml)
+*   အင်္ဂလိပ်ဘာသာ: [messages.en.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/messages.en.yaml)
+*   Validation Error မက်ဆေ့ခ်ျများ: [validators.my.yaml](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/MultiLanguage/Resource/locale/validators.my.yaml)

@@ -1,0 +1,339 @@
+SiteAnnouncement Plugin အတွက် ဖန်တီးထားသော File များအားလုံး၏ လမ်းကြောင်း (File Paths) များနှင့် ၎င်းတို့၏ လုပ်ဆောင်ချက်များကို အောက်ပါအတိုင်း အသေးစိတ် ဖော်ပြပေးလိုက်ပါသည်-
+
+---
+
+### ၁။ Plugin အခြေခံနှင့် Lifecycle ဆိုင်ရာ ဖိုင်များ (Plugin Configuration & Lifecycle)
+
+*   [composer.json](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/composer.json)
+    *   **ဖိုင်လမ်းကြောင်း:** `app/Plugin/SiteAnnouncement/composer.json`
+    *   **ဖော်ပြချက်:** Plugin ၏ metadata (အမည် `ec-cube/SiteAnnouncement`, version `1.0.0`, type `eccube-plugin`) နှင့် EC-CUBE Plugin code definition (`code: SiteAnnouncement`) ပါဝင်သော အဓိက configuration ဖိုင် ဖြစ်ပါသည်။
+
+*   [PluginManager.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/PluginManager.php)
+    *   **ဖိုင်လမ်းကြောင်း:** `app/Plugin/SiteAnnouncement/PluginManager.php`
+    *   **ဖော်ပြချက်:** Plugin ကို Install, Enable, Disable, Uninstall ပြုလုပ်ချိန်တွင် လိုအပ်သော Lifecycle hooks များကို စီမံခန့်ခွဲသည့် Manager Class ဖြစ်ပါသည်။
+
+---
+
+### ၂။ Event Subscriber & Twig Injection ဆိုင်ရာ ဖိုင်များ (Event & Twig Injection)
+
+*   [SiteAnnouncementEvent.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/SiteAnnouncementEvent.php)
+    *   **ဖိုင်လမ်းကြောင်း:** `app/Plugin/SiteAnnouncement/SiteAnnouncementEvent.php`
+    *   **ဖော်ပြချက်:** Frontend စာမျက်နှာအားလုံး၏ အခြေခံ Frame ဖြစ်သော `default_frame.twig` ကို Hook ထိုးပြီး Banner HTML Snippet နှင့် CSS/JS Assets များကို Inject လုပ်ပေးသည့် အဓိက Event Subscriber Class ဖြစ်ပါသည်။
+
+---
+
+### ၃။ Frontend Templates & Snippets (UI Components)
+
+*   [banner.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/Resource/template/banner.twig)
+    *   **ဖိုင်လမ်းကြောင်း:** `app/Plugin/SiteAnnouncement/Resource/template/banner.twig`
+    *   **ဖော်ပြချက်:** Storefront မျက်နှာပြင်တွင် အသုံးပြုသူများ မြင်တွေ့ရမည့် Notice Badge၊ သတင်းစကား စာသားနှင့် ပိတ်နိုင်သော Close Button (`&times;`) ပါဝင်သည့် Banner HTML Component ဖိုင် ဖြစ်ပါသည်။
+
+*   [banner_asset.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/Resource/template/assets/banner_asset.twig)
+    *   **ဖိုင်လမ်းကြောင်း:** `app/Plugin/SiteAnnouncement/Resource/template/assets/banner_asset.twig`
+    *   **ဖော်ပြချက်:** Banner ဒီဇိုင်းအတွက် Gradient CSS Styling၊ Banner ကို စာမျက်နှာ Header အပေါ်ဆုံးသို့ ရွှေ့ပေးခြင်းနှင့် အသုံးပြုသူက Close Button နှိပ်ပြီး ပိတ်လိုက်ပါက LocalStorage တွင် မှတ်သားပေးမည့် JavaScript logic ဖိုင် ဖြစ်ပါသည်။
+
+---
+
+### စုစုပေါင်း Directory ဖွဲ့စည်းပုံ (Directory Tree)
+
+```
+app/Plugin/SiteAnnouncement/
+├── composer.json
+├── PluginManager.php
+├── SiteAnnouncementEvent.php
+└── Resource/
+    └── template/
+        ├── banner.twig
+        └── assets/
+            └── banner_asset.twig
+```
+
+---
+
+### ဖိုင်တစ်ခုချင်းစီ၏ အပြည့်အစုံ Source Code များ (Full Source Codes)
+
+#### ၁။ [composer.json](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/composer.json)
+```json
+{
+  "name": "ec-cube/SiteAnnouncement",
+  "version": "1.0.0",
+  "description": "Site Announcement Banner Plugin for EC-CUBE 4 (Hello World / Twig Injection Demo)",
+  "type": "eccube-plugin",
+  "require": {
+    "ec-cube/plugin-installer": "^2.0"
+  },
+  "extra": {
+    "code": "SiteAnnouncement"
+  }
+}
+```
+
+#### ၂။ [PluginManager.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/PluginManager.php)
+```php
+<?php
+
+namespace Plugin\SiteAnnouncement;
+
+use Eccube\Plugin\AbstractPluginManager;
+use Psr\Container\ContainerInterface;
+
+/**
+ * Class PluginManager
+ *
+ * Plugin Lifecycle (install, uninstall, enable, disable) ကို စီမံခန့်ခွဲသော Class
+ */
+class PluginManager extends AbstractPluginManager
+{
+    /**
+     * Plugin install လုပ်ချိန်တွင် ခေါ်ယူသည့် Hook
+     *
+     * @param array $meta
+     * @param ContainerInterface $container
+     */
+    public function install(array $meta, ContainerInterface $container)
+    {
+        // အခြေခံ Plugin ဖြစ်သဖြင့် install ချိန်တွင် သီးခြား database migration ပြုလုပ်ရန် မလိုအပ်ပါ
+    }
+
+    /**
+     * Plugin enable လုပ်ချိန်တွင် ခေါ်ယူသည့် Hook
+     *
+     * @param array $meta
+     * @param ContainerInterface $container
+     */
+    public function enable(array $meta, ContainerInterface $container)
+    {
+        // Plugin ကို စတင်ဖွင့်လှစ်ချိန်
+    }
+
+    /**
+     * Plugin disable လုပ်ချိန်တွင် ခေါ်ယူသည့် Hook
+     *
+     * @param array $meta
+     * @param ContainerInterface $container
+     */
+    public function disable(array $meta, ContainerInterface $container)
+    {
+        // Plugin ကို ပိတ်သိမ်းချိန်
+    }
+
+    /**
+     * Plugin uninstall လုပ်ချိန်တွင် ခေါ်ယူသည့် Hook
+     *
+     * @param array $meta
+     * @param ContainerInterface $container
+     */
+    public function uninstall(array $meta, ContainerInterface $container)
+    {
+        // Plugin ကို ဖျက်ထုတ်ချိန်တွင် cleanup ပြုလုပ်ခြင်း
+    }
+}
+```
+
+#### ၃။ [SiteAnnouncementEvent.php](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/SiteAnnouncementEvent.php)
+```php
+<?php
+
+namespace Plugin\SiteAnnouncement;
+
+use Eccube\Event\TemplateEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+/**
+ * Class SiteAnnouncementEvent
+ *
+ * Frontend စာမျက်နှာတွင် Announcement Banner ကို Twig Injection ဖြင့် ထည့်သွင်းပေးသည့် Event Subscriber
+ */
+class SiteAnnouncementEvent implements EventSubscriberInterface
+{
+    /**
+     * Listen ပြုလုပ်မည့် Template Events စာရင်း
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            // default_frame.twig (Frontend Frame Layout) ကို Hook ထိုးခြင်း
+            'default_frame.twig' => 'onDefaultFrameRender',
+        ];
+    }
+
+    /**
+     * default_frame.twig ကို render မလုပ်မီ Banner Snippet နှင့် Assets များကို Inject လုပ်ခြင်း
+     *
+     * @param TemplateEvent $event
+     */
+    public function onDefaultFrameRender(TemplateEvent $event)
+    {
+        // ၁။ Banner အတွက် CSS နှင့် JavaScript Assets များကို <head> ထဲသို့ inject လုပ်ခြင်း
+        $event->addAsset('@SiteAnnouncement/assets/banner_asset.twig');
+
+        // ၂။ Banner HTML Snippet ကို body အစ/အဆုံးသို့ inject လုပ်ခြင်း
+        $event->addSnippet('@SiteAnnouncement/banner.twig');
+
+        // ၃။ Twig template ထဲသို့ announcement message variable ပေးပို့ခြင်း
+        $event->setParameter(
+            'announcement_message',
+            '🎉 မင်္ဂလာပါ! ယခုအပတ် အထူးပရိုမိုးရှင်း - ဝယ်ယူမှုတိုင်းကို အခမဲ့ ပို့ဆောင်ပေးနေပါပြီ (Free Delivery)။'
+        );
+    }
+}
+```
+
+#### ၄။ [banner.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/Resource/template/banner.twig)
+```twig
+{# Site Announcement Banner Component #}
+<div id="site-announcement-banner" class="site-announcement-bar" role="alert" style="display: none;">
+    <div class="site-announcement-inner">
+        <div class="site-announcement-content">
+            <span class="announcement-badge">
+                <i class="fas fa-bullhorn" aria-hidden="true"></i> အသိပေးချက်
+            </span>
+            <span class="announcement-text">
+                {{ announcement_message|default('📢 Welcome to our store! Check out our latest products and deals.') }}
+            </span>
+        </div>
+        <button type="button" class="announcement-close-btn" id="close-announcement-btn" title="ပိတ်မည်" aria-label="Close Announcement">
+            &times;
+        </button>
+    </div>
+</div>
+```
+
+#### ၅။ [banner_asset.twig](file:///Users/kyawwaiyan/Documents/my-unique-tech/custom-ec-cube/app/Plugin/SiteAnnouncement/Resource/template/assets/banner_asset.twig)
+```twig
+{# Announcement Banner CSS Styling & JavaScript Asset #}
+<style>
+    .site-announcement-bar {
+        position: relative;
+        width: 100%;
+        background: linear-gradient(135deg, #0d324d 0%, #7f5a83 100%);
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Pyidaungsu", sans-serif;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+        z-index: 10000;
+        font-size: 14px;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .site-announcement-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .site-announcement-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-grow: 1;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .announcement-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 5px rgba(255, 75, 43, 0.35);
+        white-space: nowrap;
+    }
+
+    .announcement-text {
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.2px;
+    }
+
+    .announcement-close-btn {
+        background: rgba(255, 255, 255, 0.18);
+        border: none;
+        color: #ffffff;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-size: 20px;
+        line-height: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex-shrink: 0;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .announcement-close-btn:hover {
+        background: rgba(255, 255, 255, 0.38);
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .site-announcement-inner {
+            padding: 8px 12px;
+        }
+        .site-announcement-content {
+            font-size: 12px;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        function initAnnouncementBanner() {
+            const banner = document.getElementById('site-announcement-banner');
+            if (!banner) return;
+
+            // Move the banner to the top of body or header so it stays cleanly at the top of the webpage
+            const header = document.querySelector('.ec-layoutRole__header') || document.querySelector('header') || document.body.firstChild;
+            if (header && header.parentNode && banner.parentNode !== header.parentNode) {
+                header.parentNode.insertBefore(banner, header);
+            } else if (banner.parentNode !== document.body) {
+                document.body.insertBefore(banner, document.body.firstChild);
+            }
+
+            const storageKey = 'ec_site_announcement_closed_v1';
+            const isClosed = localStorage.getItem(storageKey);
+
+            if (!isClosed) {
+                banner.style.display = 'block';
+            }
+
+            const closeBtn = document.getElementById('close-announcement-btn');
+            if (closeBtn) {
+                closeBtn.onclick = function () {
+                    banner.style.opacity = '0';
+                    banner.style.transform = 'translateY(-100%)';
+                    setTimeout(function () {
+                        banner.style.display = 'none';
+                        try {
+                            localStorage.setItem(storageKey, 'true');
+                        } catch (e) {}
+                    }, 300);
+                };
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAnnouncementBanner);
+        } else {
+            initAnnouncementBanner();
+        }
+    })();
+</script>
+```

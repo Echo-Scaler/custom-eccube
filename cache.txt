@@ -1,0 +1,14 @@
+docker compose exec ec-cube bin/console cache:clear
+
+
+docker compose exec ec-cube bin/console cache:clear
+
+
+docker compose exec ec-cube bin/console cache:clear --no-warmup
+docker compose exec ec-cube bin/console cache:warmup
+
+#Run Composer:
+docker compose exec ec-cube composer <command>
+
+
+docker compose exec ec-cube bin/console <command>

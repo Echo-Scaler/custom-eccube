@@ -1,0 +1,121 @@
+# EC-CUBE တွင် User Login Form အား Bootstrap အသုံးပြု၍ ပြင်ဆင်နည်း အဆင့်ဆင့် (Step-by-step Guide)
+
+EC-CUBE 4 ၏ မူလ template သည် Bootstrap 4 ကို အခြေခံထားပြီးသား ဖြစ်ပါသည်။ သို့သော် User Login Form ၏ ဒီဇိုင်းကို မိမိစိတ်ကြိုက် Bootstrap classes များအသုံးပြု၍ ပြောင်းလဲချင်ပါက အောက်ပါအဆင့်များအတိုင်း ပြုလုပ်နိုင်ပါသည်။
+
+## လိုအပ်သော ဖိုင်လမ်းကြောင်းများ (File Paths)
+
+EC-CUBE တွင် Core ဖိုင်များကို တိုက်ရိုက်မပြင်ဘဲ Override (အစားထိုး) ပြုလုပ်မည့် ဖိုင်တွဲများတွင်သာ ပြင်ဆင်သင့်ပါသည်။
+
+* **မူလ Core ဖိုင်လမ်းကြောင်း (မပြင်သင့်ပါ):** 
+  `src/Eccube/Resource/template/default/Front/login.twig`
+* **သင် ပြင်ဆင်ရမည့် Custom ဖိုင်လမ်းကြောင်း (Override ပြုလုပ်ရန်):** 
+  `app/template/default/Front/login.twig`
+  *(မှတ်ချက် - အကယ်၍ သင်သည် ကိုယ်ပိုင် Theme သုံးနေပါက `default` နေရာတွင် သင့် Theme အမည် ဖြစ်ပါမည်။)*
+
+---
+
+## ပြင်ဆင်ခြင်း လုပ်ငန်းစဉ် အဆင့်ဆင့်
+
+### အဆင့် ၁။ မူလဖိုင်ကို ကူးယူခြင်း (Copy the original template)
+Core ထဲမှ `login.twig` ဖိုင်ကို `app/template/default/Front/` အောက်သို့ ကူးယူပါ။ အကယ်၍ `Front` folder မရှိသေးပါက အသစ်တည်ဆောက်ပေးပါ။
+
+```bash
+# Terminal/Command Line မှ ကူးယူရန် ဥပမာ -
+mkdir -p app/template/default/Front
+cp src/Eccube/Resource/template/default/Front/login.twig app/template/default/Front/login.twig
+```
+
+### အဆင့် ၂။ `login.twig` ဖိုင်အား ဖွင့်၍ ပြင်ဆင်ခြင်း
+`app/template/default/Front/login.twig` ဖိုင်ကို Code Editor (ဥပမာ VS Code) ဖြင့်ဖွင့်ပါ။ 
+ထို့နောက် Form အပိုင်းကို မိမိစိတ်ကြိုက် Bootstrap Classes များ (ဥပမာ - `container`, `card`, `form-control`, `btn-primary`) အသုံးပြု၍ အောက်ပါအတိုင်း ပြင်ဆင်ရေးသားနိုင်ပါသည်။
+
+**ဥပမာ Bootstrap Login Form ကုဒ် (Template အတွင်း အစားထိုးရန်):**
+
+```twig
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'front_page' %}
+
+{% block main %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">အကောင့်ဝင်ရန် (Login)</h4>
+                </div>
+                <div class="card-body p-4">
+                    
+                    {# Error Messages ပြသရန် #}
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {# Login Form စတင်ခြင်း #}
+                    <form method="post" action="{{ url('mypage_login') }}">
+                        
+                        {# Email ထည့်ရန်နေရာ #}
+                        <div class="form-group mb-3">
+                            <label for="login_email" class="form-label">အီးမေးလ် (Email)</label>
+                            <input type="email" id="login_email" name="login_email" class="form-control" value="{{ last_username|default('') }}" placeholder="your@email.com" required autofocus>
+                        </div>
+
+                        {# Password ထည့်ရန်နေရာ #}
+                        <div class="form-group mb-3">
+                            <label for="login_pass" class="form-label">လျှို့ဝှက်နံပါတ် (Password)</label>
+                            <input type="password" id="login_pass" name="login_pass" class="form-control" placeholder="••••••••" required>
+                        </div>
+
+                        {# မှတ်သားထားရန် (Remember me) #}
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false %}
+                            <div class="form-group form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="login_memory" name="login_memory" value="1">
+                                <label class="form-check-label" for="login_memory">မှတ်သားထားမည်</label>
+                            </div>
+                        {% endif %}
+
+                        {# CSRF Token (လုံခြုံရေးအတွက် မရှိမဖြစ်လိုအပ်ပါသည်) #}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        {# Login Button #}
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">အကောင့်ဝင်မည်</button>
+                        </div>
+                    </form>
+
+                    {# Password မေ့သွားပါက #}
+                    <div class="text-center mt-3">
+                        <a href="{{ url('forgot') }}" class="text-decoration-none">လျှို့ဝှက်နံပါတ် မေ့သွားပါသလား?</a>
+                    </div>
+                    
+                    {# အကောင့်အသစ်ဖွင့်ရန် #}
+                    <hr>
+                    <div class="text-center mt-3">
+                        <span>အကောင့်မရှိသေးဘူးလား?</span>
+                        <a href="{{ url('entry') }}" class="btn btn-outline-secondary btn-sm ml-2">အကောင့်သစ်ဖွင့်မည်</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
+
+**အရေးကြီးသော အချက်များ (Important Notes):**
+- `<form method="post" action="{{ url('mypage_login') }}">` ဟူသော action လမ်းကြောင်း မှန်ကန်ရပါမည်။
+- Input name များဖြစ်သော `login_email` နှင့် `login_pass` တို့ကို မဖြစ်မနေ အသုံးပြုရပါမည်။
+- လုံခြုံရေးအတွက် `<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">` ထည့်ပေးရန် လိုအပ်ပါသည်။
+
+### အဆင့် ၃။ Cache ရှင်းလင်းခြင်း (Clear Cache)
+Twig template ကို ပြင်ဆင်ပြီးပါက အပြောင်းအလဲများ အသက်ဝင်စေရန် Cache ရှင်းလင်းပေးရန် လိုအပ်ပါသည်။
+Terminal တွင် အောက်ပါ command ကို run ပါ-
+
+```bash
+php bin/console cache:clear --no-warmup
+```
+
+### အဆင့် ၄။ စစ်ဆေးခြင်း (Test the changes)
+Website ၏ Login စာမျက်နှာ (ဥပမာ - `http://yourdomain.com/mypage/login`) သို့ သွားရောက်၍ သင်ပြင်ဆင်ထားသော Bootstrap ဒီဇိုင်း အသစ်ပြောင်းလဲသွားခြင်း ရှိမရှိ စစ်ဆေးပါ။
