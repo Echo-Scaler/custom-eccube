@@ -1,0 +1,46 @@
+Listed directory my-custom-note
+Listed directory navbar
+Viewed nav.txt:1-100
+Created NAVBAR_GUIDE_MYANMAR.md
+
+Navbar UI အသစ် ပြင်ဆင်ရေးသားမှုအတွက် အသုံးပြု/ပြင်ဆင်ခဲ့သော **ဖိုင်လမ်းကြောင်းများ စာရင်း** နှင့် **လေ့လာရန် မြန်မာဘာသာ Documentation** ကို အောက်တွင် ဖော်ပြပေးထားပါသည် -
+
+---
+
+### ၁။ ပြင်ဆင်/ဖန်တီးခဲ့သော ဖိုင်လမ်းကြောင်းများ (File Paths List)
+
+#### 🔹 Twig Template ဖိုင်များ
+1. **[Block/header.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/header.twig)**
+   - Top Bar (ဖုန်း၊ ပရိုမိုးရှင်း၊ ဘာသာစကား၊ Location) နှင့် Main Navbar (Logo၊ Categories Dropdown၊ Search၊ Account၊ Cart) အားလုံးကို တည်ဆောက်ထားသော အဓိက Template ဖိုင်ဖြစ်ပါသည်။
+2. **[Block/logo.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/logo.twig)**
+   - မူလ Logo block အား `header.twig` အတွင်းသို့ ပေါင်းစည်းလိုက်သည့်အတွက် ပိုနေသော code များကို ရှင်းလင်းထားသည့် ဖိုင်ဖြစ်ပါသည်။
+3. **[Block/category_nav_pc.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/Block/category_nav_pc.twig)**
+   - မူလ Category menu bar အား `header.twig` ၏ Categories dropdown အတွင်းသို့ ပေါင်းစည်းထားသဖြင့် redundant block မဖြစ်စေရန် ရှင်းလင်းထားသည့် ဖိုင်ဖြစ်ပါသည်။
+4. **[default_frame.twig](file:///Users/kyawwaiyan/Downloads/ec-cube-main/src/Eccube/Resource/template/default/default_frame.twig)**
+   - Header အတွက် လိုအပ်သော Google Fonts (`Plus Jakarta Sans`) နှင့် `nav_shopcart.css`၊ `nav_shopcart.js` တို့ကို ချိတ်ဆက်ပေးထားသော Main Layout Frame ဖိုင်ဖြစ်ပါသည်။
+
+#### 🔹 Styling & Javascript ဖိုင်များ
+5. **[nav_shopcart.css](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/template/default/assets/css/nav_shopcart.css)**
+   - Top Bar၊ Logo၊ Pill Search Input၊ Categories Menu၊ Cart Preview၊ Account Dropdown နှင့် Mobile Drawer တို့၏ Modern CSS ဒီဇိုင်း အားလုံးကို ရေးသားထားသော ဖိုင်ဖြစ်ပါသည်။
+6. **[nav_shopcart.js](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/template/default/assets/js/nav_shopcart.js)**
+   - Mobile Drawer ဖွင့်/ပိတ်ခြင်း၊ Location ရွေးချယ်မှုအား `localStorage` တွင် မှတ်သားခြင်းနှင့် Dropdown အပြန်အလှန် အလုပ်လုပ်မှုများကို ထိန်းချုပ်ထားသော Javascript ဖိုင်ဖြစ်ပါသည်။
+7. **[customize.css](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/user_data/assets/css/customize.css)** & **[customize.js](file:///Users/kyawwaiyan/Downloads/ec-cube-main/html/user_data/assets/js/customize.js)**
+   - User-data အဆင့် Customization အတွက် အရန်ထားရှိသော CSS နှင့် JS ဖိုင်များ ဖြစ်ပါသည်။
+
+---
+
+### ၂။ လေ့လာရန် မြန်မာဘာသာ မှတ်တမ်းစာတမ်း (Documentation Guide)
+
+အသေးစိတ် လေ့လာဖတ်ရှုနိုင်ရန် မြန်မာဘာသာဖြင့် ပြည့်စုံသော လမ်းညွှန်မှတ်တမ်းဖိုင်ကို အောက်ပါနေရာတွင် ဖန်တီးသိမ်းဆည်းပေးထားပါသည် -
+
+📄 **Documentation File**: [NAVBAR_GUIDE_MYANMAR.md](file:///Users/kyawwaiyan/Downloads/ec-cube-main/my-custom-note/navbar/NAVBAR_GUIDE_MYANMAR.md)
+
+#### 📖 စာတမ်းတွင် ပါဝင်သော အဓိက အကြောင်းအရာများ:
+1. **EC-CUBE Layout & Section 3 (Header)** ၏ အလုပ်လုပ်ပုံ သဘောတရား
+2. **Top Bar** (အစိမ်းရောင်အပေါ်ဘား) ရှိ ဖုန်းနံပါတ်၊ ဘာသာစကား (Eng, 日本語, မြန်မာ) နှင့် Location ရွေးချယ်မှု ချိတ်ဆက်ပုံ
+3. **Shopcart Vector Logo (SVG)** ရေးဆွဲတည်ဆောက်ပုံ
+4. **Categories Dropdown** ကို EC-CUBE Database Category Entity မှ Dynamic ဆွဲထုတ်ပုံ
+5. **Pill Search Bar** မှတစ်ဆင့် `/products/list?name=...` သို့ ရှာဖွေမှု ပို့ဆောင်ပုံ
+6. **Account & Cart Dropdowns** တွင် Guest နှင့် Login ဝင်ထားသော Member အခြေအနေအလိုက် ပြသပုံ
+7. **Mobile Drawer & Accordion Menu** ဖုန်းမျက်နှာပြင်အတွက် Responsive ပြုလုပ်ပုံ
+8. **သတိပြုရမည့် အချက်များ** (Route Parameters ဥပမာ - `mypage` vs `mypage_history` နှင့် Cache Clear ပြုလုပ်ခြင်း)
