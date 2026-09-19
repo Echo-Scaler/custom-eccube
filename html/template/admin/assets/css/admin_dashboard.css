@@ -1,1329 +1,1057 @@
 /* ============================================================
-   EC-CUBE Admin Dashboard – Pulse Clinic Style Redesign
-   ============================================================
-   Matches the reference design exactly:
-   - White header with breadcrumb navigation
-   - Clean white sidebar with category labels
-   - Dark active nav state
-   - Light welcome banner
-   - KPI stat cards with icons and 3-dot menus
-   - Section titles between card groups
+   EC-CUBE Admin Dashboard & Admin Pages
+   Pulse Clinic Pixel-Exact Design System
    ============================================================ */
 
 /* ----------------------------------------------------------
-   0. CSS Custom Properties (Design Tokens)
+   0. Design Tokens
    ---------------------------------------------------------- */
 :root {
-  --bg-page:             #f7f7f8;
+  --bg-page:             #f3f4f6;
+  --bg-canvas:           #ffffff;
   --bg-white:            #ffffff;
-  --bg-card:             #ffffff;
-  --bg-hover:            #f5f5f7;
+  --bg-hover:            #f8fafc;
+  --bg-active:           #f1f5f9;
 
-  --border-color:        #e8e8ec;
-  --border-light:        #f0f0f3;
+  --border-color:        #e5e7eb;
+  --border-light:        #f1f5f9;
+  --border-subtle:       #f8fafc;
 
-  --shadow-card:         0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-card-hover:   0 4px 12px rgba(0,0,0,0.08);
+  --text-primary:        #0f172a;
+  --text-secondary:      #475569;
+  --text-muted:          #64748b;
+  --text-dim:            #94a3b8;
 
-  --text-primary:        #1a1a1a;
-  --text-secondary:      #6b6b6b;
-  --text-muted:          #999999;
-  --text-label:          #888888;
-
-  --accent:              #1a1a1a;
-  --accent-active-bg:    #1a1a1a;
-  --accent-active-text:  #ffffff;
-  --accent-blue:         #3b82f6;
-  --accent-green:        #10b981;
-  --accent-red:          #ef4444;
-  --accent-orange:       #f59e0b;
-  --accent-purple:       #8b5cf6;
-
+  --radius-xs:           4px;
   --radius-sm:           8px;
   --radius-md:           12px;
   --radius-lg:           16px;
+  --radius-xl:           20px;
+  --radius-pill:         9999px;
 
-  --font-family:         'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --transition:          0.15s ease;
+  --font-sans:           'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition:          all 0.15s ease;
 }
 
 /* ----------------------------------------------------------
-   1. Global
+   1. Base & Global Reset
    ---------------------------------------------------------- */
 html, body {
   background: var(--bg-page) !important;
-  font-family: var(--font-family) !important;
-  font-size: 14px;
+  font-family: var(--font-sans) !important;
+  font-size: 13.5px;
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a { color: var(--text-primary); }
-a:hover { text-decoration: none; color: var(--text-primary); }
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: var(--text-primary);
+}
 
 /* ----------------------------------------------------------
-   2. Header Bar
+   2. Top Bar Header (.c-headerBar)
    ---------------------------------------------------------- */
 .c-headerBar {
   background: var(--bg-white) !important;
   border-bottom: 1px solid var(--border-color) !important;
-  box-shadow: none !important;
   height: 56px !important;
-}
-
-.c-headerBar a,
-.c-headerBar a:hover {
-  color: var(--text-primary) !important;
-  text-decoration: none !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: none !important;
 }
 
 .c-headerBar__container {
-  max-width: none !important;
-}
-
-.c-headerBar__logo {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
   height: 56px !important;
-  width: 220px !important;
-  padding: 0 20px !important;
-  border-right: 1px solid var(--border-color);
+  padding: 0 24px !important;
+  max-width: 100% !important;
+  margin-left: 230px;
+  transition: margin-left 0.2s ease;
 }
 
-.c-headerBar__logo h1 {
-  margin: 0;
+.c-headerBar__left {
   display: flex;
   align-items: center;
-  height: 100%;
-}
-
-.c-headerBar__logo img {
-  filter: brightness(0) saturate(100%);
-  height: 20px;
-  width: auto;
-}
-
-.c-headerBar__shopTitle {
-  height: 56px !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: var(--text-secondary) !important;
-  padding: 0 16px !important;
-}
-
-.c-headerBar__shopTitle:hover {
-  background: var(--bg-hover) !important;
-}
-
-.c-headerBar__shopTitle .fa-angle-right {
-  color: var(--text-muted) !important;
-  font-size: 14px !important;
-  padding-left: 8px !important;
+  gap: 14px;
 }
 
 .c-headerBar__toggleBtn {
-  height: 56px !important;
-  color: var(--text-primary) !important;
-  font-size: 20px !important;
-}
-
-.c-headerBar__toggleBtn:hover {
-  background: var(--bg-hover) !important;
-}
-
-.c-headerBar__userMenu {
-  height: 56px !important;
-  color: var(--text-primary) !important;
-  padding: 0 16px !important;
-}
-
-.c-headerBar__userMenu:hover {
-  background: var(--bg-hover) !important;
-}
-
-.c-headerBar__userMenu .fa-user-circle {
-  font-size: 28px !important;
-  color: var(--text-muted) !important;
-}
-
-.c-headerBar__userMenu span {
-  font-weight: 500 !important;
-  font-size: 13px !important;
-}
-
-.c-headerBar__userMenu .fa-angle-down {
-  font-size: 16px !important;
-}
-
-/* ----------------------------------------------------------
-   3. Sidebar Navigation (Pulse Clinic Style)
-   ---------------------------------------------------------- */
-.c-mainNavArea {
-  padding-top: 56px !important;
-  width: 220px !important;
-  background: var(--bg-white) !important;
-  border-right: 1px solid var(--border-color) !important;
-}
-
-/* Category labels */
-.c-mainNavArea .nav-category-label {
-  display: block;
-  padding: 24px 20px 8px 20px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  line-height: 1;
-}
-
-.c-mainNavArea .nav-category-label:first-child {
-  padding-top: 16px;
-}
-
-/* Nav item title */
-.c-mainNavArea__navItemTitle {
-  border-bottom: none !important;
-  padding: 8px 20px !important;
-  font-size: 13.5px !important;
-  color: var(--text-primary) !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-  transition: background var(--transition) !important;
-  position: relative !important;
-}
-
-.c-mainNavArea__navItemTitle:hover {
-  background: var(--bg-hover) !important;
-}
-
-.c-mainNavArea__navItemTitle i {
-  color: var(--text-secondary) !important;
-  font-size: 14px !important;
-  width: 20px !important;
-  text-align: center !important;
-  margin-right: 10px !important;
-}
-
-.c-mainNavArea__navItemTitle span {
-  color: inherit !important;
-  font-weight: 400 !important;
-  font-size: 13.5px !important;
-}
-
-.c-mainNavArea__navItemTitle::after {
-  color: var(--text-muted) !important;
-  font-size: 14px !important;
-  top: 8px !important;
-  right: 16px !important;
-}
-
-/* Active (Home) nav item — dark background like Pulse Clinic */
-.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
-  background: var(--accent-active-bg) !important;
-  color: var(--accent-active-text) !important;
-  border-radius: 8px !important;
-  margin: 2px 10px !important;
-  padding: 8px 12px !important;
-}
-
-.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle i {
-  color: var(--accent-active-text) !important;
-}
-
-.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle span {
-  font-weight: 500 !important;
-  color: var(--accent-active-text) !important;
-}
-
-/* Expanded nav section */
-.c-mainNavArea__navItemTitle[aria-expanded="true"] {
-  font-weight: 500 !important;
-}
-
-/* Sub-nav items */
-.c-mainNavArea__navItem ul {
-  background: transparent !important;
-  font-size: 13px !important;
-}
-
-.c-mainNavArea__navItem li a {
-  padding: 6px 20px 6px 50px !important;
-  color: var(--text-secondary) !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-  font-size: 13px !important;
-  transition: background var(--transition), color var(--transition) !important;
-}
-
-.c-mainNavArea__navItem li a:hover {
-  background: var(--bg-hover) !important;
-  color: var(--text-primary) !important;
-}
-
-.c-mainNavArea__navItem li a.is-active {
-  background: var(--accent-active-bg) !important;
-  color: var(--accent-active-text) !important;
-  font-weight: 500 !important;
-  border-radius: 8px !important;
-  margin: 2px 10px !important;
-  padding: 6px 12px 6px 40px !important;
-}
-
-/* Sub-title (e.g., Basic settings, System settings) */
-.c-mainNavArea__navItemSubTitle {
-  background: transparent !important;
-  border-bottom: none !important;
-  padding: 6px 20px 6px 50px !important;
-  font-size: 13px !important;
-  color: var(--text-secondary) !important;
-  font-weight: 500 !important;
-  margin: 0 !important;
-}
-
-.c-mainNavArea__navItemSubTitle:hover {
-  background: var(--bg-hover) !important;
-}
-
-.c-mainNavArea__navItemSubTitle span {
-  color: inherit !important;
-}
-
-.c-mainNavArea__navItemSubTitle:after {
-  color: var(--text-muted) !important;
-  font-size: 14px !important;
-  right: 16px !important;
-}
-
-/* ----------------------------------------------------------
-   4. Content Area
-   ---------------------------------------------------------- */
-.c-contentsArea {
-  padding: 24px 32px !important;
-}
-
-/* Hide the default page title on dashboard — we use welcome banner instead */
-#page_admin_homepage .c-pageTitle {
-  display: none !important;
-}
-
-/* ----------------------------------------------------------
-   5. Welcome Banner (Light style matching reference)
-   ---------------------------------------------------------- */
-.dashboard-welcome {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 28px 32px;
-  margin-bottom: 24px;
-  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.c-headerBar__toggleBtn:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
 }
 
-.dashboard-welcome__content {
-  flex: 1;
+.c-headerBar__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.dashboard-welcome__label {
+.breadcrumb-root {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.breadcrumb-sep {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.breadcrumb-leaf {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.c-headerBar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.c-headerBar__searchPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px 0 10px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+}
+.c-headerBar__searchPill:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.c-headerBar__searchPill kbd {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.dashboard-welcome__title {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 6px;
+  color: var(--text-dim);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1px 5px;
   line-height: 1.2;
 }
 
-.dashboard-welcome__subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-.dashboard-welcome__actions {
+.c-headerBar__notificationBtn {
   display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-  margin-left: 24px;
-}
-
-.dashboard-welcome__actions .btn-outline {
-  background: var(--bg-white);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none;
-  display: inline-block;
-}
-
-.dashboard-welcome__actions .btn-outline:hover {
-  background: var(--bg-hover);
-  border-color: #ccc;
-}
-
-.dashboard-welcome__actions .btn-solid {
-  background: var(--accent-active-bg);
-  border: 1px solid var(--accent-active-bg);
-  border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #fff;
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none;
-  display: inline-block;
-}
-
-.dashboard-welcome__actions .btn-solid:hover {
-  opacity: 0.9;
-}
-
-/* ----------------------------------------------------------
-   6. KPI Stat Cards (Exact Pulse Clinic Style)
-   ---------------------------------------------------------- */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-@media (max-width: 992px) {
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.kpi-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 20px 20px 16px 20px;
-  transition: box-shadow var(--transition), transform var(--transition);
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
   position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.c-headerBar__notificationBtn:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
 }
 
-.kpi-card:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
-}
-
-.kpi-card a {
-  text-decoration: none !important;
-  color: inherit !important;
-}
-
-.kpi-card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.kpi-card__title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.kpi-card__icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  background: var(--bg-hover);
-  color: var(--text-secondary);
+  border: 2px solid #ffffff;
 }
 
-.kpi-card__label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
+/* ----------------------------------------------------------
+   3. Sidebar Navigation (.c-mainNavArea)
+   ---------------------------------------------------------- */
+.c-mainNavArea {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 230px !important;
+  height: 100vh !important;
+  background: var(--bg-white) !important;
+  border-right: 1px solid var(--border-color) !important;
+  z-index: 1050;
+  padding: 0 !important;
+  overflow: hidden;
 }
 
-.kpi-card__menu {
-  color: var(--text-muted);
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
+.c-mainNavArea__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
 }
 
-.kpi-card__value {
-  font-size: 32px;
+.c-mainNavArea__brand {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.pulse-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.pulse-brand-icon {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.pulse-brand-title {
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.1;
-  margin-bottom: 4px;
+  letter-spacing: -0.3px;
 }
 
-.kpi-card__desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 400;
+.c-mainNavArea__menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+  scrollbar-width: thin;
 }
 
-/* ----------------------------------------------------------
-   7. Section Title (e.g., "LAST 30 DAYS")
-   ---------------------------------------------------------- */
-.section-title {
+.c-mainNavArea__nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-category-label {
+  display: block;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-  margin-top: 4px;
-}
-
-/* ----------------------------------------------------------
-   8. Metric Cards (3-column row like reference)
-   ---------------------------------------------------------- */
-.metric-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-@media (max-width: 992px) {
-  .metric-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.metric-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  transition: box-shadow var(--transition), transform var(--transition);
-}
-
-.metric-card:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
-}
-
-.metric-card a {
-  text-decoration: none !important;
-  color: inherit !important;
-}
-
-.metric-card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.metric-card__title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.metric-card__icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  background: var(--bg-hover);
-  color: var(--text-secondary);
-}
-
-.metric-card__label {
-  font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-dim);
+  padding: 18px 18px 6px 18px;
 }
 
-.metric-card__menu {
-  color: var(--text-muted);
-  font-size: 16px;
-  cursor: pointer;
+.c-mainNavArea__navItem {
+  list-style: none;
+  margin: 0;
 }
 
-.metric-card__value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.1;
-  margin-bottom: 4px;
-}
-
-.metric-card__change {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 12px;
-  font-weight: 500;
-  margin-left: 8px;
-  vertical-align: middle;
-}
-
-.metric-card__change--down {
-  color: var(--accent-red);
-}
-
-.metric-card__change--up {
-  color: var(--accent-green);
-}
-
-.metric-card__desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* ----------------------------------------------------------
-   9. Chart Card
-   ---------------------------------------------------------- */
-.chart-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  margin-bottom: 28px;
-}
-
-.chart-card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.chart-card__title {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.chart-card__summary {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.chart-card__summary strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* Chart tabs */
-.chart-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
-}
-
-.chart-tab {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 6px 16px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition);
-  text-decoration: none !important;
-}
-
-.chart-tab:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.chart-tab.active,
-.nav-link.active.chart-tab {
-  background: var(--accent-active-bg);
-  border-color: var(--accent-active-bg);
-  color: #fff;
-}
-
-/* Override default btn-ec-tab */
-.btn-ec-tab {
-  background: transparent !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 20px !important;
-  padding: 6px 16px !important;
-  font-size: 12px !important;
+.c-mainNavArea__navItemTitle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 14px !important;
+  margin: 2px 10px !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   color: var(--text-secondary) !important;
-  transition: all var(--transition) !important;
-  margin: 0 2px !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  transition: var(--transition);
 }
-
-.btn-ec-tab:hover {
+.c-mainNavArea__navItemTitle:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
 }
 
-.btn-ec-tab.active,
-.nav-link.active.btn-ec-tab {
-  background: var(--accent-active-bg) !important;
-  border-color: var(--accent-active-bg) !important;
-  color: #fff !important;
+.c-mainNavArea__navItemTitle.is-active {
+  background: var(--bg-active) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.c-mainNavArea__navItemTitle svg {
+  flex-shrink: 0;
+}
+
+.c-mainNavArea__subLink {
+  display: block;
+  padding: 6px 14px 6px 40px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.c-mainNavArea__subLink:hover {
+  color: var(--text-primary);
+}
+
+/* Bottom Profile */
+.c-mainNavArea__userProfile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 12px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.c-mainNavArea__userProfile:hover {
+  background: var(--bg-active);
+  border-color: #cbd5e1;
+}
+
+.user-avatar-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.user-chevron {
+  color: var(--text-dim);
 }
 
 /* ----------------------------------------------------------
-   10. Override default Bootstrap cards for dashboard
+   4. Main Content Area Canvas
    ---------------------------------------------------------- */
-#page_admin_homepage .card {
-  border-radius: var(--radius-md) !important;
+.c-container {
+  margin-top: 56px !important;
+  min-width: 0 !important;
+}
+
+.c-contentsArea {
+  margin-left: 230px !important;
+  padding: 20px 24px !important;
+  background: var(--bg-page) !important;
+  min-height: calc(100vh - 56px);
+  box-sizing: border-box;
+}
+
+/* Dashboard White Outer Rounded Canvas */
+.pulse-dashboard-container {
+  background: var(--bg-canvas);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* Page Title on sub-pages (Products, Orders, Settings) */
+.c-pageTitle {
+  background: transparent !important;
+  padding: 0 0 20px 0 !important;
+  margin-bottom: 0 !important;
+  border: none !important;
+}
+
+.c-pageTitle__title {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.4px;
+}
+
+/* ----------------------------------------------------------
+   5. Dashboard Hero Header (Real System Context)
+   ---------------------------------------------------------- */
+.pulse-hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pulse-hero-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pulse-hero-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.pulse-hero-time-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.pulse-live-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  display: inline-block;
+}
+
+.pulse-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-pulse-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.btn-pulse-outline:hover {
+  background: var(--bg-hover);
+  border-color: #cbd5e1;
+  color: var(--text-primary);
+}
+
+.btn-pulse-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  background: #0f172a;
+  border: 1px solid #0f172a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.btn-pulse-primary:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* ----------------------------------------------------------
+   6. 4 Top KPI Cards (Real System Metrics)
+   ---------------------------------------------------------- */
+.pulse-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pulse-kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: block;
+  cursor: pointer;
+}
+.pulse-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+}
+
+.kpi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.kpi-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-icon-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kpi-more-btn {
+  color: var(--text-dim);
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.kpi-subtext {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------
+   7. Sales Performance Metrics (3 Cards)
+   ---------------------------------------------------------- */
+.pulse-section-header {
+  margin-bottom: 12px;
+}
+
+.pulse-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pulse-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pulse-metric-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.metric-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.metric-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-active);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.metric-footer {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------
+   8. Main Split Panels: Chart & Real Order Status List
+   ---------------------------------------------------------- */
+.pulse-panel-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pulse-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pulse-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pulse-panel-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+.pulse-panel-link:hover {
+  text-decoration: underline;
+}
+
+.pulse-pill-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  padding: 3px;
+  border-radius: var(--radius-pill);
+}
+
+.pulse-pill-tab {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.pulse-pill-tab:hover {
+  color: var(--text-primary);
+}
+.pulse-pill-tab.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pulse-panel-body {
+  padding: 20px;
+  flex: 1;
+}
+
+/* Real Order Status Queue List */
+.pulse-order-status-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.pulse-order-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+.pulse-order-status-row:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.pulse-order-status-row:last-child {
+  border-bottom: none;
+}
+
+.status-name-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulse-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+.pulse-status-dot.active-dot {
+  background: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.status-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.pulse-count-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+.pulse-count-pill.has-orders {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.pulse-panel-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-light);
+  background: #fafbfc;
+}
+
+/* Recommended Plugins */
+.pulse-plugin-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.pulse-plugin-item:last-child {
+  border-bottom: none;
+}
+
+.pulse-plugin-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.pulse-plugin-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pulse-plugin-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pulse-plugin-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.pulse-plugin-name:hover {
+  text-decoration: underline;
+}
+
+.pulse-plugin-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.pulse-news-iframe {
+  width: 100%;
+  min-height: 380px;
+  border: 0;
+}
+
+/* Storefront Link in Header */
+.c-headerBar__storefrontLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.c-headerBar__storefrontLink:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.user-avatar-badge-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-online-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  margin-left: auto;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+/* ----------------------------------------------------------
+   8. Global Components for All Other Admin Pages
+   ---------------------------------------------------------- */
+.card {
+  border-radius: var(--radius-lg) !important;
   border: 1px solid var(--border-color) !important;
   box-shadow: none !important;
-  transition: box-shadow var(--transition), transform var(--transition) !important;
+  background: #ffffff !important;
+  overflow: hidden;
 }
 
-#page_admin_homepage .card:hover {
-  box-shadow: var(--shadow-card-hover) !important;
-  transform: translateY(-1px);
-}
-
-#page_admin_homepage .card-header {
-  background: transparent !important;
+.card-header {
+  background: #ffffff !important;
   border-bottom: 1px solid var(--border-light) !important;
   padding: 16px 20px !important;
 }
 
-#page_admin_homepage .card-title {
-  font-size: 10px !important;
+.card-title {
+  font-size: 14px !important;
   font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1.2px !important;
-  color: var(--text-muted) !important;
-}
-
-#page_admin_homepage .card-body {
-  padding: 16px 20px !important;
-}
-
-#page_admin_homepage .card-footer {
-  background: transparent !important;
-  border-top: 1px solid var(--border-light) !important;
-  padding: 12px 20px !important;
-}
-
-/* Order Status list items */
-#order-status .d-block a {
-  transition: background var(--transition) !important;
-}
-
-#order-status .d-block a:hover {
-  background: var(--bg-hover) !important;
-}
-
-#order-status .h4 {
-  font-weight: 700 !important;
-}
-
-/* Sales chart numbers */
-#chart-statistics .h3 {
-  font-size: 18px !important;
-  font-weight: 700 !important;
   color: var(--text-primary) !important;
 }
 
-#chart-statistics small {
-  color: var(--text-muted) !important;
-  font-size: 11px !important;
+.card-body {
+  padding: 20px !important;
 }
 
-/* ----------------------------------------------------------
-   11. Recommended Plugins
-   ---------------------------------------------------------- */
-#ec-cube-plugin .card-body {
-  scrollbar-width: thin;
-  scrollbar-color: #ddd transparent;
-}
-
-#ec-cube-plugin .card-body::-webkit-scrollbar {
-  width: 3px;
-}
-
-#ec-cube-plugin .card-body::-webkit-scrollbar-thumb {
-  background: #ddd;
-  border-radius: 3px;
-}
-
-#ec-cube-plugin img {
-  border-radius: 6px;
-}
-
-/* ----------------------------------------------------------
-   12. Alerts
-   ---------------------------------------------------------- */
-.alert-warning {
-  background: #fffbeb !important;
-  border: 1px solid #fcd34d !important;
-  color: #92400e !important;
-  border-radius: var(--radius-md) !important;
-}
-
-/* ----------------------------------------------------------
-   13. Popover (User Menu)
-   ---------------------------------------------------------- */
-.popover {
-  border-radius: var(--radius-md) !important;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+.form-control,
+.form-select {
   border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  color: var(--text-primary) !important;
+  background: #ffffff !important;
+  transition: var(--transition) !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #94a3b8 !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06) !important;
+  outline: none !important;
 }
 
-.popover-header {
-  background: var(--bg-page) !important;
-  border-bottom: 1px solid var(--border-color) !important;
-  font-weight: 600 !important;
-  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+/* Search Panels */
+.c-subContents {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 20px !important;
+  margin-top: 14px !important;
+  margin-bottom: 20px !important;
+}
+.c-subContents::before {
+  display: none !important;
+}
+
+/* Order Status Filter Pills */
+#admin_search_order_status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+#admin_search_order_status .form-check {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#admin_search_order_status .form-check-input {
+  display: none;
+}
+#admin_search_order_status .form-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+#admin_search_order_status .form-check-input:checked + .form-check-label {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+/* Buttons */
+.btn-ec-conversion {
+  background: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 8px 20px !important;
+}
+.btn-ec-conversion:hover {
+  background: #1e293b !important;
+}
+
+.btn-ec-regular {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 8px 18px !important;
+}
+.btn-ec-regular:hover {
+  background: var(--bg-hover) !important;
+  border-color: #cbd5e1 !important;
+}
+
+.btn-ec-sub {
+  background: transparent !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+  border-radius: var(--radius-pill) !important;
+}
+
+/* Fixed Conversion Area */
+.c-conversionArea {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(10px) !important;
+  border-top: 1px solid var(--border-color) !important;
+  height: 64px !important;
+}
+.c-conversionArea__container {
+  height: 64px;
+  max-width: 100%;
 }
 
 /* ----------------------------------------------------------
-   14. Responsive — Large Tablet (1280px and below)
-   Sidebar collapses to narrow, content adjusts
+   9. Responsive Media Queries
    ---------------------------------------------------------- */
-@media only screen and (min-width: 768px) and (max-width: 1279px) {
-  .c-mainNavArea {
-    width: 180px !important;
+@media only screen and (max-width: 1280px) {
+  .frontdesk-main-grid {
+    grid-template-columns: 1fr;
   }
-
-  .c-mainNavArea__navItemTitle {
-    font-size: 13px !important;
-    padding: 8px 12px !important;
-  }
-
-  .c-mainNavArea__navItemTitle i {
-    font-size: 13px !important;
-    margin-right: 6px !important;
-  }
-
-  .c-mainNavArea__navItemTitle::after {
-    right: 8px !important;
-  }
-
-  .c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
-    margin: 2px 6px !important;
-    padding: 8px 10px !important;
-  }
-
-  .c-mainNavArea__navItem li a {
-    padding: 6px 12px 6px 36px !important;
-    font-size: 12px !important;
-  }
-
-  .c-mainNavArea__navItemSubTitle {
-    padding: 6px 12px 6px 36px !important;
-    font-size: 12px !important;
-  }
-
-  .c-mainNavArea .nav-category-label {
-    padding: 20px 12px 6px 12px;
-    font-size: 9px;
-  }
-
-  .c-contentsArea {
-    margin-left: 180px !important;
-    padding: 20px 20px !important;
-  }
-
-  .c-conversionArea {
-    width: calc(100% - 180px) !important;
-  }
-
-  .kpi-grid {
+  .frontdesk-kpi-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .kpi-card__value {
-    font-size: 26px;
-  }
-
-  .metric-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .metric-card__value {
-    font-size: 22px;
-  }
-
-  .dashboard-welcome {
-    padding: 22px 24px;
-  }
-
-  .dashboard-welcome__title {
-    font-size: 22px;
-  }
-
-  .chart-card {
-    padding: 20px;
   }
 }
 
-/* ----------------------------------------------------------
-   15. Responsive — Tablet (992px and below)
-   KPI becomes 2 columns, metrics stack
-   ---------------------------------------------------------- */
-@media only screen and (max-width: 992px) {
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px;
-  }
-
-  .metric-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-  }
-
-  .dashboard-welcome {
-    flex-direction: column;
-  }
-
-  .dashboard-welcome__actions {
-    margin-left: 0;
-    margin-top: 16px;
-  }
-
-  .chart-card__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  /* Bottom cards stack on tablet */
-  #page_admin_homepage .col-lg-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-}
-
-/* ----------------------------------------------------------
-   16. Responsive — Small Tablet / Landscape Phone (768px)
-   Sidebar becomes overlay, curtain backdrop
-   ---------------------------------------------------------- */
 @media only screen and (max-width: 767px) {
-  /* Header */
-  .c-headerBar {
-    height: 52px !important;
-  }
-
-  .c-headerBar__logo {
-    display: none !important;
-  }
-
-  .c-headerBar__toggleBtn {
-    display: table-cell !important;
-    height: 52px !important;
-    width: 52px !important;
-    font-size: 22px !important;
+  .c-headerBar__container {
+    margin-left: 0 !important;
     padding: 0 14px !important;
   }
-
-  .c-headerBar__shopTitle {
-    height: 52px !important;
-    font-size: 13px !important;
-    padding: 0 12px !important;
-  }
-
-  .c-headerBar__userMenu {
-    height: 52px !important;
-    padding: 0 12px !important;
-  }
-
-  .c-headerBar__userMenu span {
-    display: none !important;
-  }
-
-  .c-headerBar__userMenu .fa-angle-down {
-    display: none !important;
-  }
-
-  .c-headerBar__userMenu .fa-user-circle {
-    font-size: 24px !important;
-  }
-
-  /* Sidebar overlay */
-  .c-mainNavArea {
-    padding-top: 52px !important;
-    left: -260px !important;
-    width: 260px !important;
-    height: 100% !important;
-    opacity: 0;
-    transition: left 0.3s ease, opacity 0.3s ease !important;
-    z-index: 600 !important;
-  }
-
-  .c-mainNavArea.is-active {
-    left: 0 !important;
-    width: 260px !important;
-    opacity: 1 !important;
-  }
-
-  .c-mainNavArea__navItemTitle {
-    font-size: 14px !important;
-    padding: 10px 20px !important;
-  }
-
-  .c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
-    margin: 2px 10px !important;
-    padding: 10px 14px !important;
-  }
-
-  /* Curtain overlay */
-  .c-curtain.is-active {
-    display: block !important;
-    width: 100% !important;
-    height: 100vh !important;
-    opacity: 1 !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    z-index: 500 !important;
-    position: fixed !important;
-  }
-
-  /* Content */
   .c-contentsArea {
     margin-left: 0 !important;
-    padding: 16px !important;
+    padding: 14px !important;
   }
-
-  .c-conversionArea {
-    width: 100% !important;
+  .pulse-dashboard-container {
+    padding: 16px;
+    border-radius: var(--radius-lg);
   }
-
-  /* Welcome Banner */
-  .dashboard-welcome {
-    padding: 20px;
+  .frontdesk-hero {
     flex-direction: column;
-  }
-
-  .dashboard-welcome__title {
-    font-size: 20px;
-  }
-
-  .dashboard-welcome__subtitle {
-    font-size: 13px;
-  }
-
-  .dashboard-welcome__actions {
-    margin-left: 0;
-    margin-top: 14px;
-    flex-wrap: wrap;
-  }
-
-  /* KPI Cards */
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .kpi-card {
-    padding: 16px;
-  }
-
-  .kpi-card__value {
-    font-size: 24px;
-  }
-
-  .kpi-card__icon {
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
-  }
-
-  /* Metric Cards */
-  .metric-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .metric-card {
-    padding: 16px;
-  }
-
-  .metric-card__value {
-    font-size: 22px;
-  }
-
-  /* Chart */
-  .chart-card {
-    padding: 16px;
-    margin-bottom: 20px;
-  }
-
-  .chart-card__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-
-  .btn-ec-tab {
-    padding: 5px 12px !important;
-    font-size: 11px !important;
-  }
-
-  /* Section titles */
-  .section-title {
-    margin-bottom: 10px;
-  }
-
-  /* Bottom cards stack */
-  #page_admin_homepage .col-lg-4 {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-/* ----------------------------------------------------------
-   17. Responsive — Mobile (576px and below)
-   Single column everything, compact spacing
-   ---------------------------------------------------------- */
-@media only screen and (max-width: 576px) {
-  .c-contentsArea {
-    padding: 12px !important;
-  }
-
-  /* Welcome stacks fully */
-  .dashboard-welcome {
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 16px;
-  }
-
-  .dashboard-welcome__label {
-    font-size: 9px;
-    margin-bottom: 6px;
-  }
-
-  .dashboard-welcome__title {
-    font-size: 18px;
-  }
-
-  .dashboard-welcome__subtitle {
-    font-size: 12px;
-  }
-
-  .dashboard-welcome__actions {
-    width: 100%;
-  }
-
-  .dashboard-welcome__actions .btn-outline,
-  .dashboard-welcome__actions .btn-solid {
-    flex: 1;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 12px;
-  }
-
-  /* KPI single column */
-  .kpi-grid {
-    grid-template-columns: 1fr !important;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .kpi-card {
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     gap: 14px;
   }
-
-  .kpi-card a {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
+  .frontdesk-kpi-row {
+    grid-template-columns: 1fr;
   }
-
-  .kpi-card__header {
-    margin-bottom: 0;
-    flex-shrink: 0;
+  .c-mainNavArea {
+    left: -230px !important;
+    transition: left 0.25s ease;
   }
-
-  .kpi-card__title-row {
-    flex-direction: column;
-    gap: 4px;
+  .c-mainNavArea.is-active {
+    left: 0 !important;
   }
-
-  .kpi-card__icon {
-    width: 36px;
-    height: 36px;
-    font-size: 15px;
-  }
-
-  .kpi-card__label {
-    font-size: 8px;
-    text-align: center;
-  }
-
-  .kpi-card__menu {
-    display: none;
-  }
-
-  .kpi-card__value {
-    font-size: 22px;
-    margin-bottom: 0;
-  }
-
-  .kpi-card__desc {
-    font-size: 11px;
-  }
-
-  /* Metric cards compact */
-  .metric-grid {
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .metric-card {
-    padding: 14px 16px;
-  }
-
-  .metric-card__value {
-    font-size: 20px;
-  }
-
-  .metric-card__desc {
-    font-size: 11px;
-  }
-
-  .metric-card__menu {
-    display: none;
-  }
-
-  /* Chart compact */
-  .chart-card {
-    padding: 14px;
-    margin-bottom: 16px;
-    border-radius: 10px;
-  }
-
-  .chart-card__header {
-    margin-bottom: 10px;
-  }
-
-  .btn-group.nav {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .btn-ec-tab {
-    padding: 5px 10px !important;
-    font-size: 10px !important;
-    margin-bottom: 4px !important;
-  }
-
-  /* Section title */
-  .section-title {
-    font-size: 9px;
-    margin-bottom: 8px;
-  }
-
-  /* Cards */
-  #page_admin_homepage .card {
-    border-radius: 10px !important;
-  }
-
-  #page_admin_homepage .card-header {
-    padding: 12px 14px !important;
-  }
-
-  #page_admin_homepage .card-body {
-    padding: 12px 14px !important;
-  }
-
-  /* Order status compact */
-  #order-status .d-block a {
-    padding: 10px 14px !important;
-  }
-
-  /* Plugins compact */
-  #ec-cube-plugin .card-body {
-    max-height: 280px !important;
-  }
-
-  /* News iframe smaller */
-  #ec-cube-news iframe {
-    min-height: 280px !important;
+  .table-responsive {
+    overflow-x: auto !important;
   }
 }
-
-/* ----------------------------------------------------------
-   18. Responsive — Small Mobile (400px and below)
-   Extra compact for very small screens
-   ---------------------------------------------------------- */
-@media only screen and (max-width: 400px) {
-  .c-headerBar__shopTitle span {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .c-contentsArea {
-    padding: 8px !important;
-  }
-
-  .dashboard-welcome {
-    padding: 14px;
-  }
-
-  .dashboard-welcome__title {
-    font-size: 16px;
-  }
-
-  .kpi-card {
-    padding: 12px 14px;
-  }
-
-  .kpi-card__value {
-    font-size: 20px;
-  }
-
-  .metric-card__value {
-    font-size: 18px;
-  }
-
-  .chart-card {
-    padding: 12px;
-  }
-}
-

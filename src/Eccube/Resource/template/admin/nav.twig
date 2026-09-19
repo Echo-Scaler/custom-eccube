@@ -8,100 +8,138 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-<nav>
-    <ul class="c-mainNavArea__nav">
-        <!-- Home -->
-        <span class="nav-category-label">Overview</span>
-        <li class="c-mainNavArea__navItem">
-            <a class="c-mainNavArea__navItemTitle" href="{{ url('admin_homepage') }}">
-                <i class="fa fa-home fa-fw" aria-hidden="true"></i>
-                <span>{{ 'admin.home'|trans }}</span>
-            </a>
-        </li>
-        {% set navIndex = 0 %}
-        {% for key1, level1 in eccubeNav %}
-            {# Insert category labels at logical positions #}
-            {% if navIndex == 0 %}
-                <span class="nav-category-label">Management</span>
-            {% endif %}
-            {% if navIndex == 4 %}
-                <span class="nav-category-label">Settings</span>
-            {% endif %}
+<div class="c-mainNavArea__inner">
+    <!-- Brand Logo -->
+    <div class="c-mainNavArea__brand">
+        <a href="{{ url('admin_homepage') }}" class="pulse-brand-link">
+            <span class="pulse-brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </span>
+            <span class="pulse-brand-title">{{ BaseInfo.shop_name }}</span>
+        </a>
+        <span class="pulse-online-badge" title="System Online"></span>
+    </div>
+
+    <!-- Navigation Menu Items -->
+    <nav class="c-mainNavArea__menu">
+        <ul class="c-mainNavArea__nav">
+            <!-- Home -->
+            <span class="nav-category-label">OVERVIEW</span>
             <li class="c-mainNavArea__navItem">
-                {% if level1.children is defined and level1.children|length > 0 %}
-                    <a class="c-mainNavArea__navItemTitle{{ active_menus(menus)[0] != key1 ? ' collapsed' }}"
-                       data-bs-toggle="collapse" href="#nav-{{ key1 }}"
-                       aria-expanded="{{ active_menus(menus)[0] == key1 ? 'true' : 'false' }}"
-                       aria-controls="nav-{{ key1 }}">
-                        <i class="fa {{ level1.icon }} fa-fw" aria-hidden="true"></i>
-                        <span>{{ level1.name|trans }}</span>
-                    </a>
-                    <ul class="collapse {% if active_menus(menus)[0] == key1 %} show{% endif %}" id="nav-{{ key1 }}">
-                        {% for key2, level2 in level1.children %}
-                            <li>
-                                {% if level2.children is defined and level2.children|length > 0 %}
-                                    <a class="c-mainNavArea__navItemSubTitle{{ active_menus(menus)[1] != key2 ? ' collapsed' }}"
-                                       data-bs-toggle="collapse" href="#nav-{{ key2 }}"
-                                       aria-expanded="{{ active_menus(menus)[1] != key2 ? 'true' : 'false' }}"
-                                       aria-controls="nav-{{ key2 }}">
-                                        <span>{{ level2.name|trans }}</span>
-                                    </a>
-                                    <ul class="collapse{{ active_menus(menus)[1] == key2 ? ' show' }}" id="nav-{{ key2 }}">
-                                        {% for key3, level3 in level2.children %}
-                                            <li>
-                                                <a href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}"{{ active_menus(menus)[2] == key3 ? ' class="is-active"' }}>
-                                                    <span>{{ level3.name|trans }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <a href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}"{{ active_menus(menus)[1] == key2 ? ' class="is-active"' }}>
-                                        <span>{{ level2.name|trans }}</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <a class="c-mainNavArea__navItemTitle" href="{{ url(level1.url, level1.param is defined ? level1.param : []) }}">
-                        <i class="fa {{ level1.icon }}" aria-hidden="true"></i>
-                        <span>{{ level1.name|trans }}</span>
-                    </a>
-                {% endif %}
+                <a class="c-mainNavArea__navItemTitle{% if app.request.get('_route') == 'admin_homepage' %} is-active{% endif %}" href="{{ url('admin_homepage') }}">
+                    <i class="fa fa-home fa-fw" aria-hidden="true"></i>
+                    <span>{{ 'admin.home'|trans }}</span>
+                </a>
             </li>
-            {% set navIndex = navIndex + 1 %}
-        {% endfor %}
-        <!-- Info -->
-        <span class="nav-category-label">Information</span>
-        <li class="c-mainNavArea__navItem">
-            <a class="c-mainNavArea__navItemTitle collapsed" data-bs-toggle="collapse" href="#others" aria-expanded="false"
-               aria-controls="others">
-                <i class="fa fa-info-circle fa-fw" aria-hidden="true"></i>
-                <span>{{ 'admin.info'|trans }}</span>
-            </a>
-            <ul class="collapse" id="others">
-                <li>
-                    <a href="{{ eccube_config.eccube_official_site_url }}" target="_blank">
-                        <span>{{ 'admin.info.official_site'|trans }}</span>
-                    </a>
+
+            <!-- All Real EC-CUBE Menus -->
+            {% for key1, level1 in eccubeNav %}
+                {% if loop.first %}
+                    <span class="nav-category-label">MANAGEMENT</span>
+                {% elseif key1 == 'setting' %}
+                    <span class="nav-category-label">SETTINGS</span>
+                {% elseif key1 == 'store' %}
+                    <span class="nav-category-label">STORE &amp; PLUGINS</span>
+                {% endif %}
+                <li class="c-mainNavArea__navItem">
+                    {% if level1.children is defined and level1.children|length > 0 %}
+                        <a class="c-mainNavArea__navItemTitle{{ active_menus(menus)[0] != key1 ? ' collapsed' }}"
+                           data-bs-toggle="collapse" href="#nav-{{ key1 }}"
+                           aria-expanded="{{ active_menus(menus)[0] == key1 ? 'true' : 'false' }}"
+                           aria-controls="nav-{{ key1 }}">
+                            <i class="fa {{ level1.icon }} fa-fw" aria-hidden="true"></i>
+                            <span>{{ level1.name|trans }}</span>
+                        </a>
+                        <ul class="collapse {% if active_menus(menus)[0] == key1 %} show{% endif %}" id="nav-{{ key1 }}">
+                            {% for key2, level2 in level1.children %}
+                                <li>
+                                    {% if level2.children is defined and level2.children|length > 0 %}
+                                        <a class="c-mainNavArea__navItemSubTitle{{ active_menus(menus)[1] != key2 ? ' collapsed' }}"
+                                           data-bs-toggle="collapse" href="#nav-{{ key2 }}"
+                                           aria-expanded="{{ active_menus(menus)[1] != key2 ? 'true' : 'false' }}"
+                                           aria-controls="nav-{{ key2 }}">
+                                            <span>{{ level2.name|trans }}</span>
+                                        </a>
+                                        <ul class="collapse{{ active_menus(menus)[1] == key2 ? ' show' }}" id="nav-{{ key2 }}">
+                                            {% for key3, level3 in level2.children %}
+                                                <li>
+                                                    <a href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}"{{ active_menus(menus)[2] == key3 ? ' class="is-active"' }}>
+                                                        <span>{{ level3.name|trans }}</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <a href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}"{{ active_menus(menus)[1] == key2 ? ' class="is-active"' }}>
+                                            <span>{{ level2.name|trans }}</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <a class="c-mainNavArea__navItemTitle{% if active_menus(menus)[0] == key1 %} is-active{% endif %}" href="{{ url(level1.url, level1.param is defined ? level1.param : []) }}">
+                            <i class="fa {{ level1.icon }} fa-fw" aria-hidden="true"></i>
+                            <span>{{ level1.name|trans }}</span>
+                        </a>
+                    {% endif %}
                 </li>
-                <li>
-                    <a href="{{ eccube_config.eccube_community_site_url }}" target="_blank">
-                        <span>{{ 'admin.info.community'|trans }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ eccube_config.eccube_document_url }}" target="_blank">
-                        <span>{{ 'admin.info.document'|trans }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ eccube_config.eccube_manual_url }}" target="_blank">
-                        <span>{{ 'admin.info.manual'|trans }}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</nav>
+            {% endfor %}
+
+            <!-- Information -->
+            <span class="nav-category-label">INFORMATION</span>
+            <li class="c-mainNavArea__navItem">
+                <a class="c-mainNavArea__navItemTitle collapsed" data-bs-toggle="collapse" href="#others" aria-expanded="false"
+                   aria-controls="others">
+                    <i class="fa fa-info-circle fa-fw" aria-hidden="true"></i>
+                    <span>{{ 'admin.info'|trans }}</span>
+                </a>
+                <ul class="collapse" id="others">
+                    <li>
+                        <a href="{{ eccube_config.eccube_official_site_url }}" target="_blank">
+                            <span>{{ 'admin.info.official_site'|trans }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ eccube_config.eccube_community_site_url }}" target="_blank">
+                            <span>{{ 'admin.info.community'|trans }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ eccube_config.eccube_document_url }}" target="_blank">
+                            <span>{{ 'admin.info.document'|trans }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ eccube_config.eccube_manual_url }}" target="_blank">
+                            <span>{{ 'admin.info.manual'|trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Bottom User Profile Card -->
+    <div class="c-mainNavArea__userProfile"
+         data-bs-container="body"
+         data-bs-toggle="popover"
+         data-bs-placement="top"
+         title="{{ 'admin.header.last_login'|trans }}"
+         data-bs-content="&lt;p&gt;{{ app.user.login_date|date_min }}&lt;/p&gt;&lt;a href='{{ url("admin_change_password") }}' class='btn btn-ec-regular w-100 mb-2'&gt;{{ 'admin.header.change_password'|trans }}&lt;/a&gt;{% if app.user.two_factor_auth_enabled %}&lt;a href='{{ url("admin_setting_system_two_factor_auth_edit") }}' class='btn btn-ec-regular w-100 mb-2'&gt;{{ 'admin.header.two_factor_auth'|trans }}&lt;/a&gt;{% endif %}&lt;a href='{{ url("admin_logout") }}' class='btn btn-ec-sub w-100'&gt;{{ 'admin.header.logout'|trans }}&lt;/a&gt;"
+         data-bs-html="true">
+        <div class="user-avatar-badge">{{ app.user.name|slice(0, 2)|upper }}</div>
+        <div class="user-info-text">
+            <div class="user-name">{{ app.user.name }}</div>
+            <div class="user-role">{{ app.user.login_id }}</div>
+        </div>
+        <div class="user-chevron">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="7 15 12 20 17 15"></polyline>
+                <polyline points="7 9 12 4 17 9"></polyline>
+            </svg>
+        </div>
+    </div>
+</div>

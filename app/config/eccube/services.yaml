@@ -5,7 +5,7 @@ parameters:
     container.dumper.inline_class_loader: true
 
     # ec-cube parameters
-    env(ECCUBE_LOCALE): 'ja'
+    env(ECCUBE_LOCALE): 'en'
     env(ECCUBE_TIMEZONE): 'Asia/Tokyo'
     env(ECCUBE_CURRENCY): 'JPY'
     locale: '%env(ECCUBE_LOCALE)%'
