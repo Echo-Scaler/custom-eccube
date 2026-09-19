@@ -152,6 +152,20 @@ class TwigInitializeListener implements EventSubscriberInterface
             return;
         }
 
+        // Ensure HTMLPurifier cache directories exist to prevent serializer warnings
+        try {
+            $projectDir = $this->eccubeConfig['kernel.project_dir'] ?? null;
+            $cacheDir = $this->eccubeConfig['kernel.cache_dir'] ?? null;
+            if ($cacheDir && !is_dir($cacheDir.'/htmlpurifier')) {
+                @mkdir($cacheDir.'/htmlpurifier', 0777, true);
+            }
+            if ($projectDir && !is_dir($projectDir.'/var/htmlpurifier')) {
+                @mkdir($projectDir.'/var/htmlpurifier', 0777, true);
+            }
+        } catch (\Throwable $e) {
+            // ignore filesystem permission errors if any
+        }
+
         $this->twig->addGlobal('BaseInfo', $this->baseInfoRepository->get());
 
         if ($this->requestContext->isAdmin()) {

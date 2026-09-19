@@ -196,6 +196,24 @@ docker compose exec ec-cube php bin/console cache:clear
 1. `app/config/eccube/services.yaml` - Default Locale အား `en` အဖြစ် သတ်မှတ်ခဲ့ခြင်း။
 2. `docker-compose.override.yml` & `.env` - `ECCUBE_LOCALE=en` ပတ်ဝန်းကျင်ကိန်းရှင် သတ်မှတ်ခဲ့ခြင်း။
 3. `src/Eccube/Resource/template/admin/default_frame.twig` - Inter Fonts နှင့် `admin_dashboard.css` ကို Admin စာမျက်နှာတိုင်းသို့ Global ချိတ်ဆက်ခဲ့ခြင်း။
-4. `src/Eccube/Resource/template/admin/nav.twig` - Overview, Management, Settings, Information ခေါင်းစဉ်ခွဲ အုပ်စုများ ထည့်သွင်းခဲ့ခြင်း။
-5. `src/Eccube/Resource/template/admin/index.twig` - Admin Dashboard ပင်မစာမျက်နှာအား Next-Gen E-Commerce Hub ပုံစံသစ်ဖြင့် အစားထိုးရေးဆွဲခဲ့ခြင်း။
-6. `html/template/admin/assets/css/admin_dashboard.css` - Dashboard၊ စာမျက်နှာအားလုံးဆိုင်ရာ Global Cards၊ Inputs၊ Tables၊ Filter Chips၊ Multi-column Layouts၊ Bottom Conversion Bar နှင့် 5-Breakpoint Responsive CSS စနစ်တစ်ခုလုံးကို အပြည့်အစုံ ရေးသားတည်ဆောက်ခဲ့ခြင်း။
+4. `src/Eccube/Resource/template/admin/nav.twig` - စတိုးဆိုင် မူရင်းမီနူးများအားလုံးကို Dropdown Accordion စနစ်ဖြင့် ထိန်းသိမ်းပြီး Admin User အချက်အလက်များ ချိတ်ဆက်ခဲ့ခြင်း။
+5. `src/Eccube/Resource/template/admin/index.twig` - EC-CUBE စနစ်ဒေတာအစစ်အမှန်များ (Products, Out of Stock, Customers, Sales, Order Statuses) ဖြင့် ခေတ်မီ Pulse Dashboard တည်ဆောက်ခဲ့ခြင်း။
+6. `html/template/admin/assets/css/admin_dashboard.css` - Dashboard နှင့် စာမျက်နှာအားလုံးဆိုင်ရာ Global Design System၊ Card၊ Table၊ Pill Badge နှင့် Responsive CSS များ ရေးသားခဲ့ခြင်း။
+7. `app/config/eccube/packages/exercise_html_purifier.yaml` - HTMLPurifier Serializer Cache လမ်းကြောင်းအား Persistent Directory သို့ သတ်မှတ်ပေးခဲ့ခြင်း။
+8. `src/Eccube/EventListener/TwigInitializeListener.php` - HTMLPurifier Cache Directory အား Template Rendering မတိုင်မီ အလိုအလျောက် စစ်ဆေးဖန်တီးပေးသည့် Safeguard ထည့်သွင်းခဲ့ခြင်း။
+
+---
+
+## ၈။ တွေ့ကြုံရတတ်သော ပြဿနာများနှင့် ဖြေရှင်းနည်း (Troubleshooting)
+
+### HTMLPurifier SerializerPath Warning Error
+- **ဖြစ်ပေါ်ရသည့် အကြောင်းရင်း**:
+  `cache:clear` သို့မဟုတ် Branch အပြောင်းအလဲ ပြုလုပ်သည့်အခါ Symfony မှ `var/cache/dev` ကို ရှင်းလင်းလိုက်ပြီး `htmlpurifier` cache folder ပါ ဖျက်ဆီးခံရခြင်းကြောင့် Template များတွင် `|purify` filter ခေါ်ယူသည့်အခါ အောက်ပါ Error ပေါ်ပေါက်တတ်ပါသည်-
+  ```
+  User Warning: Base directory /var/www/html/var/cache/dev/htmlpurifier does not exist,
+  please create or change using %Cache.SerializerPath
+  ```
+- **ဖြေရှင်းပြီးစီးပုံ**:
+  1. `app/config/eccube/packages/exercise_html_purifier.yaml` တွင် persistent cache လမ်းကြောင်းဖြစ်သော `%kernel.project_dir%/var/htmlpurifier` အဖြစ် သတ်မှတ်ပေးခဲ့ပါသည်။
+  2. `src/Eccube/EventListener/TwigInitializeListener.php` တွင် request တိုင်း၌ htmlpurifier cache directory မရှိပါက `mkdir(..., 0777, true)` ဖြင့် အလိုအလျောက် ဖန်တီးပေးစေရန် စီမံထားသဖြင့် နောင်တွင် ဤ Error ထပ်မံ မဖြစ်ပေါ်တော့ပါ။
+
