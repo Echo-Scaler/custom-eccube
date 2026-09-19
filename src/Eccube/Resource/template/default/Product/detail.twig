@@ -13,84 +13,144 @@ file that was distributed with this source code.
 {% set body_class = 'product_page' %}
 
 {% block stylesheet %}
-    <style>
-
-        .slick-slider {
-            margin-bottom: 30px;
-        }
-
-        .slick-dots {
-            position: absolute;
-            bottom: -45px;
-            display: block;
-            width: 100%;
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-
-        .slick-dots li {
-            position: relative;
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin: 0 5px;
-            padding: 0;
-
-            cursor: pointer;
-        }
-
-        .slick-dots li button {
-            font-size: 0;
-            line-height: 0;
-            display: block;
-            width: 20px;
-            height: 20px;
-            padding: 5px;
-            cursor: pointer;
-            color: transparent;
-            border: 0;
-            outline: none;
-            background: transparent;
-        }
-
-        .slick-dots li button:hover,
-        .slick-dots li button:focus {
-            outline: none;
-        }
-
-        .slick-dots li button:hover:before,
-        .slick-dots li button:focus:before {
-            opacity: 1;
-        }
-
-        .slick-dots li button:before {
-            content: " ";
-            line-height: 20px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 12px;
-            height: 12px;
-            text-align: center;
-            opacity: .25;
-            background-color: black;
-            border-radius: 50%;
-
-        }
-
-        .slick-dots li.slick-active button:before {
-            opacity: .75;
-            background-color: black;
-        }
-
-        .slick-dots li button.thumbnail img {
-            width: 0;
-            height: 0;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/nav_shopcart.css') }}?v={{ 'now'|date('U') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}?v={{ 'now'|date('U') }}">
 {% endblock %}
+
+{# Curated Product Catalog for Dynamic Rich Experience #}
+{% set catalog = {
+    '1': {
+        'id': 1,
+        'name': 'Wireless Earbuds, IPX8',
+        'category': 'Earbuds',
+        'subtitle': 'Active noise cancelling & deep bass sound with IPX8 waterproof rating.',
+        'price': '89.00',
+        'monthly': '15.00',
+        'rating': '4.9',
+        'reviews': '145',
+        'stock': '24',
+        'main_img': asset('assets/img/top/prod_headphone_1.jpg'),
+        'thumbs': [
+            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Matte Black'},
+            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Ocean Blue'},
+            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Forest Green'},
+            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Silver White'}
+        ],
+        'swatches': [
+            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Matte Black'},
+            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Ocean Blue'},
+            {'class': 'green', 'color': 'green', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'title': 'Forest Green'},
+            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Silver White'}
+        ],
+        'desc_p1': 'High-performance wireless earbuds with premium audio drivers and crystal-clear voice calling with dual beamforming microphones.',
+        'desc_p2': 'IPX8 waterproof rated for intensive workouts and heavy rain. Includes compact fast-charging wireless case with up to 32 hours total battery life.'
+    },
+    '2': {
+        'id': 2,
+        'name': 'Airpods- Max',
+        'category': 'Shop Headphones by type',
+        'subtitle': 'a perfect balance of exhilarating high-fidelity audio and the effortless magic of AirPods.',
+        'price': '549.00',
+        'monthly': '99.99',
+        'rating': '5.0',
+        'reviews': '121',
+        'stock': '12',
+        'main_img': asset('assets/img/product/airpods_max_pink.jpg'),
+        'thumbs': [
+            {'color': 'pink', 'img': asset('assets/img/product/airpods_max_pink.jpg'), 'name': 'Pink / Coral'},
+            {'color': 'green', 'img': asset('assets/img/product/airpods_max_green.jpg'), 'name': 'Mint Green'},
+            {'color': 'black', 'img': asset('assets/img/product/airpods_max_black.jpg'), 'name': 'Space Gray'},
+            {'color': 'blue', 'img': asset('assets/img/product/airpods_max_blue.jpg'), 'name': 'Sky Blue'},
+            {'color': 'silver', 'img': asset('assets/img/product/airpods_max_silver.jpg'), 'name': 'Silver White'}
+        ],
+        'swatches': [
+            {'class': 'pink', 'color': 'pink', 'img': asset('assets/img/product/airpods_max_pink.jpg'), 'title': 'Pink / Coral'},
+            {'class': 'black', 'color': 'black', 'img': asset('assets/img/product/airpods_max_black.jpg'), 'title': 'Space Gray'},
+            {'class': 'green', 'color': 'green', 'img': asset('assets/img/product/airpods_max_green.jpg'), 'title': 'Mint Green'},
+            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/product/airpods_max_silver.jpg'), 'title': 'Silver'},
+            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/product/airpods_max_blue.jpg'), 'title': 'Sky Blue'}
+        ],
+        'desc_p1': 'The Apple-designed dynamic driver provides immersive high-fidelity audio. Computational audio combines custom acoustic design with the Apple H1 chip and software for breakthrough listening experiences.',
+        'desc_p2': 'Designed with a knit-mesh canopy and acoustically engineered memory foam ear cushions for an exceptional fit.'
+    },
+    '3': {
+        'id': 3,
+        'name': 'Bose BT Earphones',
+        'category': 'Over-Ear Headphones',
+        'subtitle': 'Comfortable cushioned over-ear headphones with superior sound clarity and active EQ.',
+        'price': '289.00',
+        'monthly': '49.00',
+        'rating': '4.8',
+        'reviews': '98',
+        'stock': '18',
+        'main_img': asset('assets/img/top/prod_headphone_3.jpg'),
+        'thumbs': [
+            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Triple Black'},
+            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Luxe Silver'},
+            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Midnight Blue'},
+            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Cypress Green'}
+        ],
+        'swatches': [
+            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'title': 'Triple Black'},
+            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Luxe Silver'},
+            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Midnight Blue'}
+        ],
+        'desc_p1': 'World-class noise cancelling technology measures outside noise and counters it with equal opposite signal for pure audio immersion.',
+        'desc_p2': 'Plush synthetic leather earcups and impact-resistant glass-filled nylon headband ensure luxury listening all day long.'
+    },
+    '4': {
+        'id': 4,
+        'name': 'VIVEFOX Headphones',
+        'category': 'On-Ear Headphones',
+        'subtitle': 'Wired stereo headsets with high definition built-in microphone and durable braided cable.',
+        'price': '39.00',
+        'monthly': '9.00',
+        'rating': '4.7',
+        'reviews': '84',
+        'stock': '35',
+        'main_img': asset('assets/img/top/prod_headphone_4.jpg'),
+        'thumbs': [
+            {'color': 'pink', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Rose Gold'},
+            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Onyx Black'},
+            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Navy Blue'},
+            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Silver'}
+        ],
+        'swatches': [
+            {'class': 'pink', 'color': 'pink', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Rose Gold'},
+            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Onyx Black'},
+            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Navy Blue'}
+        ],
+        'desc_p1': 'Lightweight foldable design with ultra-soft memory foam earmuffs for all-day comfortable study and commuting wear.',
+        'desc_p2': 'Universal 3.5mm gold-plated audio connector compatible with laptops, tablets, gaming consoles and mobile devices.'
+    },
+    '5': {
+        'id': 5,
+        'name': 'Gaming Pro Headset',
+        'category': 'Gaming Audio',
+        'subtitle': 'Immersive 7.1 surround sound with noise-cancelling microphone and RGB lighting.',
+        'price': '199.00',
+        'monthly': '35.00',
+        'rating': '4.9',
+        'reviews': '167',
+        'stock': '9',
+        'main_img': asset('assets/img/top/prod_gaming_headphone.jpg'),
+        'thumbs': [
+            {'color': 'black', 'img': asset('assets/img/top/prod_gaming_headphone.jpg'), 'name': 'Stealth Black'},
+            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Razer Green'},
+            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Cyber Blue'},
+            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Titanium'}
+        ],
+        'swatches': [
+            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_gaming_headphone.jpg'), 'title': 'Stealth Black'},
+            {'class': 'green', 'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Neon Green'},
+            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Cyber Blue'}
+        ],
+        'desc_p1': 'Custom tuned 50mm neodymium audio drivers deliver an expansive positional soundscape for competitive esports dominance.',
+        'desc_p2': 'Detachable broadcast-quality microphone with voice isolation filtering for pristine, distortion-free team comms.'
+    }
+} %}
+
+{% set cur = catalog[Product.id ~ '']|default(catalog['2']) %}
 
 {% block javascript %}
     <script>
@@ -122,62 +182,69 @@ file that was distributed with this source code.
                 }
             });
 
-            // Core Web Vital の Cumulative Layout Shift(CLS)対策のため
-            // img タグに width, height が付与されている.
-            // 630px 未満の画面サイズでは縦横比が壊れるための対策
-            // see https://github.com/EC-CUBE/ec-cube/pull/5023
-            $('.ec-grid2__cell').hide();
-            var removeSize = function () {
-                $('.slide-item').height('');
-                $('.slide-item img')
-                    .removeAttr('width')
-                    .removeAttr('height')
-                    .removeAttr('style');
-            };
-            var slickInitial = function(slick) {
-                $('.ec-grid2__cell').fadeIn(1500);
-                var baseHeight = $(slick.target).height();
-                var baseWidth = $(slick.target).width();
-                var rate = baseWidth / baseHeight;
+            // Color Swatch & Thumbnail Interactive Switcher
+            function switchProductImage(src, colorName) {
+                var $mainImg = $('#mainShowcaseImg');
+                $mainImg.css('opacity', '0.4');
+                setTimeout(function() {
+                    $mainImg.attr('src', src).css('opacity', '1');
+                }, 150);
+            }
 
-                $('.slide-item').height(baseHeight * rate); // 余白を削除する
-                // transform を使用することでCLSの影響を受けないようにする
-                $('.slide-item img')
-                    .css(
-                        {
-                            'transform-origin': 'top left',
-                            'transform': 'scaleY(' + rate + ')',
-                            'transition': 'transform .1s'
-                        }
-                    );
-                // 正しいサイズに近くなったら属性を解除する
-                setTimeout(removeSize, 500);
-            };
-            $('.item_visual').on('init', slickInitial);
-            // リサイズ時は CLS の影響を受けないため属性を解除する
-            $(window).resize(removeSize);
-            $('.item_visual').slick({
-                dots: false,
-                arrows: false,
-                responsive: [{
-                    breakpoint: 768,
-                    settings: {
-                        dots: true
-                    }
-                }]
+            $('.shopcart-color-swatch').on('click', function() {
+                $('.shopcart-color-swatch').removeClass('is-active');
+                $(this).addClass('is-active');
+                var imgSrc = $(this).attr('data-img');
+                var colorVal = $(this).attr('data-color');
+                switchProductImage(imgSrc, colorVal);
+
+                // Update thumbnail active state
+                $('.shopcart-detail-thumb').removeClass('is-active');
+                $('.shopcart-detail-thumb[data-color="' + colorVal + '"]').addClass('is-active');
             });
 
-            $('.slideThumb').on('click', function() {
-                var index = $(this).attr('data-index');
-                $('.item_visual').slick('slickGoTo', index, false);
-            })
-        });
-    </script>
-    <script>
-        $(function() {
+            $('.shopcart-detail-thumb').on('click', function() {
+                $('.shopcart-detail-thumb').removeClass('is-active');
+                $(this).addClass('is-active');
+                var imgSrc = $(this).attr('data-img');
+                var colorVal = $(this).attr('data-color');
+                switchProductImage(imgSrc, colorVal);
+
+                // Update swatch active state
+                $('.shopcart-color-swatch').removeClass('is-active');
+                $('.shopcart-color-swatch[data-color="' + colorVal + '"]').addClass('is-active');
+            });
+
+            // Quantity Stepper Controls
+            $('#btnQtyMinus').on('click', function() {
+                var $qty = $('#quantity');
+                var $disp = $('#shopcartQtyDisplay');
+                var currentVal = parseInt($qty.val(), 10) || 1;
+                if (currentVal > 1) {
+                    currentVal -= 1;
+                    $qty.val(currentVal);
+                    $disp.text(currentVal);
+                }
+            });
+
+            $('#btnQtyPlus').on('click', function() {
+                var $qty = $('#quantity');
+                var $disp = $('#shopcartQtyDisplay');
+                var currentVal = parseInt($qty.val(), 10) || 1;
+                currentVal += 1;
+                $qty.val(currentVal);
+                $disp.text(currentVal);
+            });
+
+            // Buy Now (Submit to cart and proceed)
+            $('#btnBuyNow').on('click', function(e) {
+                e.preventDefault();
+                $('#form1').submit();
+            });
+
+            // Add to Cart AJAX
             $('.add-cart').on('click', function(event) {
                 {% if form.classcategory_id1 is defined %}
-                // 規格1フォームの必須チェック
                 if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
                     $('#classcategory_id1')[0].setCustomValidity('{{ 'front.product.product_class_unselected'|trans }}');
                     return true;
@@ -187,7 +254,6 @@ file that was distributed with this source code.
                 {% endif %}
 
                 {% if form.classcategory_id2 is defined %}
-                // 規格2フォームの必須チェック
                 if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
                     $('#classcategory_id2')[0].setCustomValidity('{{ 'front.product.product_class_unselected'|trans }}');
                     return true;
@@ -196,7 +262,6 @@ file that was distributed with this source code.
                 }
                 {% endif %}
 
-                // 個数フォームのチェック
                 if ($('#quantity').val() < 1) {
                     $('#quantity')[0].setCustomValidity('{{ 'front.product.invalid_quantity'|trans }}');
                     return true;
@@ -205,25 +270,22 @@ file that was distributed with this source code.
                 }
 
                 event.preventDefault();
-                $form = $('#form1');
+                var $form = $('#form1');
                 $.ajax({
                     url: $form.attr('action'),
                     type: $form.attr('method'),
                     data: $form.serialize(),
                     dataType: 'json',
                     beforeSend: function(xhr, settings) {
-                        // Buttonを無効にする
                         $('.add-cart').prop('disabled', true);
                     }
                 }).done(function(data) {
-                    // レスポンス内のメッセージをalertで表示
                     $.each(data.messages, function() {
                         $('#ec-modal-header').text(this);
                     });
+                    $('.ec-modal').show();
 
-                    $('.ec-modal').show()
-
-                    // カートブロックを更新する
+                    // Update header cart count
                     $.ajax({
                         url: "{{ url('block_cart') }}",
                         type: 'GET',
@@ -234,18 +296,16 @@ file that was distributed with this source code.
                 }).fail(function(data) {
                     alert('{{ 'front.product.add_cart_error'|trans }}');
                 }).always(function(data) {
-                    // Buttonを有効にする
                     $('.add-cart').prop('disabled', false);
                 });
             });
-        });
 
-        $('.ec-modal-wrap').on('click', function(e) {
-            // モーダル内の処理は外側にバブリングさせない
-            e.stopPropagation();
-        });
-        $('.ec-modal-overlay, .ec-modal, .ec-modal-close, .ec-inlineBtn--cancel').on('click', function() {
-            $('.ec-modal').hide()
+            $('.ec-modal-wrap').on('click', function(e) {
+                e.stopPropagation();
+            });
+            $('.ec-modal-overlay, .ec-modal, .ec-modal-close, .ec-inlineBtn--cancel').on('click', function() {
+                $('.ec-modal').hide();
+            });
         });
     </script>
     <script type="application/ld+json">
@@ -254,155 +314,172 @@ file that was distributed with this source code.
         "@type": "Product",
         "name": "{{ Product.name }}",
         "image": [
-            {% for img in Product.ProductImage %}
-                "{{ app.request.schemeAndHttpHost }}{{ asset(img, 'save_image') }}"{% if not loop.last %},{% endif %}
-
-            {% else %}
-                "{{ app.request.schemeAndHttpHost }}{{ asset(''|no_image_product, 'save_image') }}"
-            {% endfor %}
+            "{{ app.request.schemeAndHttpHost }}{{ cur.main_img }}"
         ],
-        "description": "{{ Product.description_list | default(Product.description_detail) | replace({'\n': '', '\r': ''}) | slice(0,300) }}",
-        {% if Product.code_min %}
-        "sku": "{{ Product.code_min }}",
-        {% endif %}
+        "description": "{{ cur.subtitle }}",
         "offers": {
             "@type": "Offer",
             "url": "{{ url('product_detail', {'id': Product.id}) }}",
-            "priceCurrency": "{{ eccube_config.currency }}",
-            "price": {{ Product.getPrice02IncTaxMin ? Product.getPrice02IncTaxMin : 0}},
-            "availability": "{{ Product.stock_find ? "InStock" : "OutOfStock" }}"
+            "priceCurrency": "USD",
+            "price": {{ cur.price }},
+            "availability": "InStock"
         }
     }
     </script>
 {% endblock %}
 
 {% block main %}
-    <div class="ec-productRole">
-        <div class="ec-grid2">
-            <div class="ec-grid2__cell">
-                <div class="ec-sliderItemRole">
+    <section class="shopcart-detail-section">
+        <div class="shopcart-container">
+            <!-- Breadcrumb Navigation -->
+            <nav class="shopcart-breadcrumb" aria-label="breadcrumb">
+                <a href="{{ url('homepage') }}">Electronics</a>
+                <span class="shopcart-breadcrumb__sep">/</span>
+                <a href="{{ url('product_list') }}?name=Audio">Audio</a>
+                <span class="shopcart-breadcrumb__sep">/</span>
+                <a href="{{ url('product_list') }}?name=Headphones">Headphones</a>
+                <span class="shopcart-breadcrumb__sep">/</span>
+                <a href="{{ url('product_list') }}?name=Headphones">{{ cur.category }}</a>
+                <span class="shopcart-breadcrumb__sep">/</span>
+                <span class="shopcart-breadcrumb__current">{{ Product.name }}</span>
+            </nav>
 
-                    <div class="item_visual">
-                        {% for ProductImage in Product.ProductImage %}
-                            <div class="slide-item"><img src="{{ asset(ProductImage, 'save_image') }}" alt="{{ loop.first ? Product.name : '' }}" width="550" height="550"{% if loop.index > 1 %} loading="lazy"{% endif %}></div>
-                        {% else %}
-                            <div class="slide-item"><img src="{{ asset(''|no_image_product, 'save_image') }}" alt="{{ loop.first ? Product.name : '' }}" width="550" height="550"></div>
-                        {% endfor %}
+            <!-- Product Detail Main Grid -->
+            <div class="shopcart-detail-grid">
+                <!-- Left Column: Gallery Showcase -->
+                <div class="shopcart-detail-gallery">
+                    <!-- Main Showcase Display -->
+                    <div class="shopcart-detail-main-showcase">
+                        <img id="mainShowcaseImg" src="{{ cur.main_img }}" alt="{{ Product.name }}">
                     </div>
-                    <div class="item_nav">
-                        {% for ProductImage in Product.ProductImage %}
-                            <div class="slideThumb" data-index="{{ loop.index0 }}"><img src="{{ asset(ProductImage, 'save_image') }}" alt="" width="133" height="133" loading="lazy"></div>
+
+                    <!-- Thumbnails -->
+                    <div class="shopcart-detail-thumbs">
+                        {% for thumb in cur.thumbs %}
+                            <div class="shopcart-detail-thumb{% if loop.first %} is-active{% endif %}" data-color="{{ thumb.color }}" data-img="{{ thumb.img }}" title="{{ thumb.name }}">
+                                <img src="{{ thumb.img }}" alt="{{ thumb.name }}">
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>
-            <div class="ec-grid2__cell">
-                <div class="ec-productRole__profile">
-                    {# 商品名 #}
-                    <div class="ec-productRole__title">
-                        <h2 class="ec-headingTitle">{{ Product.name }}</h2>
-                    </div>
-                    {# タグ #}
-                    <ul class="ec-productRole__tags">
-                        {% for Tag in Product.Tags %}
-                            <li class="ec-productRole__tag tag_{{ Tag.id }}">{{ Tag }}</li>
-                        {% endfor %}
-                    </ul>
-                    {# 通常価格 #}
-                    {% if Product.hasProductClass -%}
-                        <div class="ec-productRole__priceRegular">
-                            {% if Product.getPrice01Min is not null and Product.getPrice01IncTaxMin == Product.getPrice01IncTaxMax %}
-                                <span class="ec-productRole__priceRegularPrice">{{ 'front.product.normal_price'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}</span></span>
-                                <span class="ec-productRole__priceRegularTax">{{ 'common.tax_include'|trans }}</span>
-                            {% elseif Product.getPrice01Min is not null and Product.getPrice01Max is not null %}
-                                <span class="ec-productRole__priceRegularPrice">{{ 'front.product.normal_price'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}～ {{ Product.getPrice01IncTaxMax|price }}</span></span>
-                                <span class="ec-productRole__priceRegularTax">{{ 'common.tax_include'|trans }}</span>
-                            {% endif %}
+
+                <!-- Right Column: Info & Purchase Box -->
+                <div class="shopcart-detail-info">
+                    <!-- Title -->
+                    <h1 class="shopcart-detail-title">{{ Product.name }}</h1>
+
+                    <!-- Subtitle / Short Description -->
+                    <p class="shopcart-detail-subtitle">{{ cur.subtitle }}</p>
+
+                    <!-- Rating Stars -->
+                    <div class="shopcart-detail-rating">
+                        <div class="shopcart-detail-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                         </div>
-                    {% else %}
-                        {% if Product.getPrice01Max is not null %}
-                            <span class="ec-productRole__priceRegularPrice">{{ 'front.product.normal_price'|trans }}：{{ Product.getPrice01IncTaxMin|price }}</span>
-                            <span class="ec-productRole__priceRegularTax">{{ 'common.tax_include'|trans }}</span>
-                        {% endif %}
-                    {% endif %}
-                    {# 販売価格 #}
-                    <div class="ec-productRole__price">
-                        {% if Product.hasProductClass -%}
-                            {% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
-                                <div class="ec-price">
-                                    <span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }}</span>
-                                    <span class="ec-price__tax">{{ 'common.tax_include'|trans }}</span>
-                                </div>
-                            {% else %}
-                                <div class="ec-price">
-                                    <span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }} ～ {{ Product.getPrice02IncTaxMax|price }}</span>
-                                    <span class="ec-price__tax">{{ 'common.tax_include'|trans }}</span>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="ec-price">
-                                <span class="ec-price__price">{{ Product.getPrice02IncTaxMin|price }}</span>
-                                <span class="ec-price__tax">{{ 'common.tax_include'|trans }}</span>
-                            </div>
-                        {% endif %}
+                        <span class="shopcart-detail-review-count">({{ cur.reviews }})</span>
                     </div>
-                    {# 商品コード #}
-                    {% if Product.code_min is not empty %}
-                        <div class="ec-productRole__code">
-                            {{ 'front.product.code'|trans }}： <span class="product-code-default">{{ Product.code_min }}{% if Product.code_min != Product.code_max %} ～ {{ Product.code_max }}{% endif %}</span>
+
+                    <hr class="shopcart-detail-divider">
+
+                    <!-- Price & Financing -->
+                    <div class="shopcart-detail-price-box">
+                        <div class="shopcart-detail-price">
+                            ${{ cur.price }} <span class="shopcart-detail-monthly">or {{ cur.monthly }}/month</span>
                         </div>
-                    {% endif %}
-                    {# 関連カテゴリ #}
-                    {% if Product.ProductCategories is not empty %}
-                        <div class="ec-productRole__category">
-                            <div>{{ 'front.product.related_category'|trans }}</div>
-                            {% for ProductCategory in Product.ProductCategories %}
-                                <ul>
-                                    <li>
-                                        {% for Category in ProductCategory.Category.path %}
-                                            <a href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a> {%- if loop.last == false %}
-                                            <span>＞</span>{% endif -%}
-                                        {% endfor %}
-                                    </li>
-                                </ul>
+                        <div class="shopcart-detail-financing">
+                            Suggested payments with 6 months special financing
+                        </div>
+                    </div>
+
+                    <hr class="shopcart-detail-divider">
+
+                    <!-- Choose a Color -->
+                    <div class="shopcart-color-section">
+                        <div class="shopcart-color-title">Choose a Color</div>
+                        <div class="shopcart-color-swatches">
+                            {% for swatch in cur.swatches %}
+                                <button type="button" class="shopcart-color-swatch shopcart-color-swatch--{{ swatch.class }}{% if loop.first %} is-active{% endif %}" data-color="{{ swatch.color }}" data-img="{{ swatch.img }}" title="{{ swatch.title }}">
+                                    <span class="shopcart-color-swatch__circle"></span>
+                                </button>
                             {% endfor %}
                         </div>
-                    {% endif %}
+                    </div>
+
+                    <!-- Quantity Stepper & Stock Warning -->
+                    <div class="shopcart-qty-stock-row">
+                        <div class="shopcart-qty-stepper">
+                            <button type="button" class="shopcart-qty-btn" id="btnQtyMinus"><i class="fas fa-minus"></i></button>
+                            <span class="shopcart-qty-input" id="shopcartQtyDisplay">1</span>
+                            <button type="button" class="shopcart-qty-btn" id="btnQtyPlus"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="shopcart-stock-notice">
+                            Only <strong>{{ cur.stock }} Items</strong> Left!<br>Don't miss it
+                        </div>
+                    </div>
+
+                    <!-- Purchase Form -->
                     <form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
-                        {% if Product.stock_find %}
-                            <div class="ec-productRole__actions">
-                                {% if form.classcategory_id1 is defined %}
-                                    <div class="ec-select">
-                                        {{ form_row(form.classcategory_id1) }}
-                                        {{ form_errors(form.classcategory_id1) }}
-                                    </div>
-                                    {% if form.classcategory_id2 is defined %}
-                                        <div class="ec-select">
-                                            {{ form_row(form.classcategory_id2) }}
-                                            {{ form_errors(form.classcategory_id2) }}
-                                        </div>
-                                    {% endif %}
+                        {% if form.classcategory_id1 is defined %}
+                            <div style="display: none;">
+                                {{ form_widget(form.classcategory_id1) }}
+                                {% if form.classcategory_id2 is defined %}
+                                    {{ form_widget(form.classcategory_id2) }}
                                 {% endif %}
-                                <div class="ec-numberInput"><span>{{ 'common.quantity'|trans }}</span>
-                                    {{ form_widget(form.quantity) }}
-                                    {{ form_errors(form.quantity) }}
-                                </div>
-                            </div>
-                            <div class="ec-productRole__btn">
-                                <button type="submit" class="ec-blockBtn--action add-cart">
-                                    {{ 'front.product.add_cart'|trans }}
-                                </button>
-                            </div>
-                        {% else %}
-                            <div class="ec-productRole__btn">
-                                <button type="button" class="ec-blockBtn--action" disabled="disabled">
-                                    {{ 'front.product.out_of_stock'|trans }}
-                                </button>
                             </div>
                         {% endif %}
 
+                        {# Actual Quantity input synced with stepper #}
+                        {{ form_widget(form.quantity, {'id': 'quantity', 'attr': {'style': 'display:none;', 'value': '1'}}) }}
+
+                        <!-- Action Buttons -->
+                        <div class="shopcart-detail-actions">
+                            <button type="button" class="shopcart-btn-buynow" id="btnBuyNow">
+                                Buy Now
+                            </button>
+                            <button type="submit" class="shopcart-btn-addcart add-cart">
+                                Add to Cart
+                            </button>
+                        </div>
+
                         {{ form_rest(form) }}
                     </form>
+
+                    <!-- Delivery & Service Info Card -->
+                    <div class="shopcart-delivery-card">
+                        <!-- Free Delivery -->
+                        <div class="shopcart-delivery-item">
+                            <div class="shopcart-delivery-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="shopcart-delivery-text">
+                                <h4 class="shopcart-delivery-title">Free Delivery</h4>
+                                <p class="shopcart-delivery-sub">
+                                    <a href="#deliveryModal" onclick="event.preventDefault(); alert('Free expedited shipping available for your area on orders over $50.');">Enter your Postal code for Delivery Availability</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="shopcart-delivery-divider">
+
+                        <!-- Return Delivery -->
+                        <div class="shopcart-delivery-item">
+                            <div class="shopcart-delivery-icon">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div class="shopcart-delivery-text">
+                                <h4 class="shopcart-delivery-title">Return Delivery</h4>
+                                <p class="shopcart-delivery-sub">
+                                    Free 30days Delivery Returns. <a href="#returnModal" onclick="event.preventDefault(); alert('Enjoy 30-day hassle-free returns with full money back guarantee.');">Details</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Confirmation for Add to Cart -->
                     <div class="ec-modal">
                         <div class="ec-modal-overlay">
                             <div class="ec-modal-wrap">
@@ -417,30 +494,59 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </div>
-                    {% if BaseInfo.option_favorite_product %}
-                        <form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
-                            <div class="ec-productRole__btn">
-                                {% if is_favorite == false %}
-                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel">
-                                        {{ 'front.product.add_favorite'|trans }}
-                                    </button>
-                                {% else %}
-                                    <button type="submit" id="favorite" class="ec-blockBtn--cancel"
-                                            disabled="disabled">{{ 'front.product.add_favorite_alrady'|trans }}
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </form>
-                    {% endif %}
-                    <div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }}
+                </div>
+            </div>
+
+            <!-- Product Extra Details / Specifications -->
+            <div class="shopcart-detail-extra">
+                <h3 class="shopcart-detail-extra-title">Product Description & Technical Specifications</h3>
+                <div class="shopcart-detail-extra-content">
+                    <p>{{ cur.desc_p1 }}</p>
+                    <p>{{ cur.desc_p2 }}</p>
+                </div>
+            </div>
+
+            <!-- Related / Similar Products Section -->
+            <div class="shopcart-related-section" style="margin-top: 56px; padding-top: 40px; border-top: 1px solid #e2e8f0;">
+                <div class="shopcart-section-header" style="margin-bottom: 28px;">
+                    <h2 class="shopcart-section-title">Similar Products You May Like</h2>
+                    <div class="shopcart-section-track">
+                        <div class="shopcart-section-track__bar"></div>
                     </div>
+                </div>
+
+                <div class="shopcart-product-grid shopcart-related-grid">
+                    {% set count = 0 %}
+                    {% for rel_id, rel in catalog %}
+                        {% if rel_id != (Product.id ~ '') and count < 4 %}
+                            {% set count = count + 1 %}
+                            {% set price_parts = rel.price|split('.') %}
+                            <div class="shopcart-product-card">
+                                <div class="shopcart-product-thumb">
+                                    <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <a href="{{ url('product_detail', {id: rel.id}) }}">
+                                        <img src="{{ rel.main_img }}" alt="{{ rel.name }}">
+                                    </a>
+                                </div>
+                                <div class="shopcart-product-info">
+                                    <div class="shopcart-product-head">
+                                        <a href="{{ url('product_detail', {id: rel.id}) }}" class="shopcart-product-name">{{ rel.name }}</a>
+                                        <span class="shopcart-product-price"><sup>$</sup>{{ price_parts[0] }}<sup>.{{ price_parts[1]|default('00') }}</sup></span>
+                                    </div>
+                                    <div class="shopcart-product-desc">{{ rel.subtitle }}</div>
+                                    <div class="shopcart-product-rating">
+                                        <span class="shopcart-stars">★★★★★</span>
+                                        <span class="shopcart-rating-count">({{ rel.reviews }})</span>
+                                    </div>
+                                    <a href="{{ url('product_detail', {id: rel.id}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        {% if Product.freearea %}
-             <div class="ec-productRole__description">
-                 {{ include(template_from_string(Product.freearea), sandboxed = true) }}
-            </div>
-        {% endif %}
-    </div>
+    </section>
 {% endblock %}

@@ -35,8 +35,10 @@ file that was distributed with this source code.
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v={{ 'now'|date('U') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/nav_shopcart.css') }}?v={{ 'now'|date('U') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}?v={{ 'now'|date('U') }}">
     <script src="{{ asset('front.bundle.js', 'bundle') }}"></script>
     {% block stylesheet %}{% endblock %}
     <script>
@@ -54,8 +56,6 @@ file that was distributed with this source code.
     {% endif %}
     {# プラグイン用styleseetやmetatagなど #}
     {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
-    <link rel="stylesheet" href="{{ asset('assets/css/nav_shopcart.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}">
 </head>
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
 {# Layout: BODY_AFTER #}
@@ -65,7 +65,7 @@ file that was distributed with this source code.
 
 
 {%  if isMaintenance is defined and isMaintenance and isDebugMode %}
-    <dev class="ec-twoModeAlert">
+    <div class="ec-twoModeAlert">
         <div class="ec-maintenanceAlert">
             <div>
                 <div class="ec-maintenanceAlert__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"/></div>
@@ -78,7 +78,7 @@ file that was distributed with this source code.
                 {{ 'front.under_debug_mode'|trans }}
             </div>
         </div>
-    </dev>
+    </div>
 {%  else %}
     {% if isMaintenance %}
         <div class="ec-maintenanceAlert">

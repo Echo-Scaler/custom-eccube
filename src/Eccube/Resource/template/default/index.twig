@@ -12,6 +12,11 @@ file that was distributed with this source code.
 
 {% set body_class = 'front_page' %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/nav_shopcart.css') }}?v={{ 'now'|date('U') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}?v={{ 'now'|date('U') }}">
+{% endblock %}
+
 {% block javascript %}
     <script>
         $(function() {
@@ -214,12 +219,12 @@ file that was distributed with this source code.
         </div>
     </section>
 
-    <!-- 2. How Shopcart Works (Business Process Flow - 4 Steps) -->
+    <!-- 2. How Offmarket Works (Business Process Flow - 4 Steps) -->
     <section class="shopcart-flow-section">
         <div class="shopcart-container">
             <div class="shopcart-section-header shopcart-section-header--center">
                 <span class="shopcart-badge-pill">SEAMLESS EXPERIENCE</span>
-                <h2 class="shopcart-section-title shopcart-section-title--center">How Shopcart Works</h2>
+                <h2 class="shopcart-section-title shopcart-section-title--center">How Offmarket Works</h2>
                 <p class="shopcart-section-subtitle">Experience a frictionless 4-step shopping journey designed for speed, security, and satisfaction.</p>
             </div>
 
@@ -406,21 +411,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 1}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="Wireless Earbuds, IPX8">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Wireless Earbuds, IPX8</a>
+                            <a href="{{ url('product_detail', {id: 1}) }}" class="shopcart-product-name">Wireless Earbuds, IPX8</a>
                             <span class="shopcart-product-price"><sup>$</sup>89<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-desc">Active noise cancelling & deep bass sound</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 1}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -430,13 +435,13 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 2}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_2.jpg') }}" alt="AirPods Max">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">AirPods Max</a>
+                            <a href="{{ url('product_detail', {id: 2}) }}" class="shopcart-product-name">AirPods Max</a>
                             <span class="shopcart-product-price"><sup>$</sup>559<sup>.00</sup></span>
                         </div>
                         <div class="shopcart-product-desc">A perfect balance of high-fidelity audio</div>
@@ -444,7 +449,7 @@ file that was distributed with this source code.
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn shopcart-add-cart-btn--solid">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 2}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -454,21 +459,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 3}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Bose BT Earphones">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Bose BT Earphones</a>
+                            <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-product-name">Bose BT Earphones</a>
                             <span class="shopcart-product-price"><sup>$</sup>289<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-desc">Comfortable cushioned over-ear headphones</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -478,21 +483,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 4}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="VIVEFOX Headphones">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">VIVEFOX Headphones</a>
+                            <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-product-name">VIVEFOX Headphones</a>
                             <span class="shopcart-product-price"><sup>$</sup>39<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Wired Stereo Headsets With Mic</div>
+                        <div class="shopcart-product-desc">Wired stereo headsets with HD mic</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -502,21 +507,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 5}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="JBL TUNE 600BTNC">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">JBL TUNE 600BTNC</a>
+                            <a href="{{ url('product_detail', {id: 5}) }}" class="shopcart-product-name">JBL TUNE 600BTNC</a>
                             <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Premium Bone Conduction Open Ear Bluetooth</div>
+                        <div class="shopcart-product-desc">Pure bass sound with active noise cancelling</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 5}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -526,21 +531,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 1}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="TAGRY Bluetooth">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">TAGRY Bluetooth</a>
+                            <a href="{{ url('product_detail', {id: 1}) }}" class="shopcart-product-name">TAGRY Bluetooth</a>
                             <span class="shopcart-product-price"><sup>$</sup>109<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">256, 8 core GPU, 8 GB</div>
+                        <div class="shopcart-product-desc">Wireless earbuds with LED power display</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 1}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -550,21 +555,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 3}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Monster MNFLEX">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Monster MNFLEX</a>
+                            <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-product-name">Monster MNFLEX</a>
                             <span class="shopcart-product-price"><sup>$</sup>89<sup>.75</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Flex Active Noise Canceling Bluetooth</div>
+                        <div class="shopcart-product-desc">Flex active noise canceling bluetooth</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -574,21 +579,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 4}) }}">
                             <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="Mpow CH6">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Mpow CH6</a>
+                            <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-product-name">Mpow CH6</a>
                             <span class="shopcart-product-price"><sup>$</sup>569<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Kids Headphones</div>
+                        <div class="shopcart-product-desc">Foldable kids headphones with safe volume limit</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
             </div>
@@ -607,21 +612,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
+                        <a href="{{ url('product_detail', {id: 5}) }}">
                             <img src="{{ asset('assets/img/top/prod_gaming_headphone.jpg') }}" alt="Gaming Headphone">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Gaming Headphone</a>
-                            <span class="shopcart-product-price"><sup>$</sup>239<sup>.00</sup></span>
+                            <a href="{{ url('product_detail', {id: 5}) }}" class="shopcart-product-name">Gaming Headphone</a>
+                            <span class="shopcart-product-price"><sup>$</sup>199<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-desc">Immersive 7.1 surround sound & RGB mic</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 5}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -631,21 +636,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/cat_laptop.jpg') }}" alt="Macbook pro 13&quot;">
+                        <a href="{{ url('product_detail', {id: 2}) }}">
+                            <img src="{{ asset('assets/img/product/airpods_max_pink.jpg') }}" alt="Airpods- Max">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Macbook pro 13"</a>
-                            <span class="shopcart-product-price"><sup>$</sup>1099<sup>.00</sup></span>
+                            <a href="{{ url('product_detail', {id: 2}) }}" class="shopcart-product-name">Airpods- Max</a>
+                            <span class="shopcart-product-price"><sup>$</sup>549<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">256, 8 core GPU, 8 GB</div>
+                        <div class="shopcart-product-desc">Exhilarating high-fidelity audio</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 2}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -655,21 +660,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/hero_smartwatch.jpg') }}" alt="HomePod mini">
+                        <a href="{{ url('product_detail', {id: 3}) }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Bose BT Earphones">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">HomePod mini</a>
-                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                            <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-product-name">Bose BT Earphones</a>
+                            <span class="shopcart-product-price"><sup>$</sup>289<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">5 Colors Available</div>
+                        <div class="shopcart-product-desc">Comfortable cushioned over-ear headphones</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 3}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -679,21 +684,21 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
                             <i class="far fa-heart"></i>
                         </button>
-                        <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/cat_bag.jpg') }}" alt="Laptop sleeve MacBook">
+                        <a href="{{ url('product_detail', {id: 4}) }}">
+                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="VIVEFOX Headphones">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Laptop sleeve MacBook</a>
-                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                            <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-product-name">VIVEFOX Headphones</a>
+                            <span class="shopcart-product-price"><sup>$</sup>39<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-desc">Wired stereo headsets with HD mic</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
+                        <a href="{{ url('product_detail', {id: 4}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
             </div>
@@ -735,7 +740,7 @@ file that was distributed with this source code.
             <div class="shopcart-section-header shopcart-section-header--center" style="margin-top: 50px;">
                 <span class="shopcart-badge-pill">REAL FEEDBACK</span>
                 <h2 class="shopcart-section-title shopcart-section-title--center">Loved by Audio Enthusiasts & Daily Shoppers</h2>
-                <p class="shopcart-section-subtitle">Read what our verified customers have to say about their shopping experience with Shopcart.</p>
+                <p class="shopcart-section-subtitle">Read what our verified customers have to say about their shopping experience with Offmarket.</p>
             </div>
 
             <div class="shopcart-reviews-grid">
@@ -794,15 +799,15 @@ file that was distributed with this source code.
                             <i class="far fa-heart"></i>
                         </button>
                         <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="Laptop sleeve MacBook">
+                            <img src="{{ asset('assets/img/top/prod_headphone_1.jpg') }}" alt="Wireless Earbuds Pro, IPX8">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Laptop sleeve MacBook</a>
-                            <span class="shopcart-product-price"><sup>$</sup>59<sup>.00</sup></span>
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Wireless Earbuds Pro, IPX8</a>
+                            <span class="shopcart-product-price"><sup>$</sup>89<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Organic Cotton, fairtrade certified</div>
+                        <div class="shopcart-product-desc">Active noise cancelling & wireless charging</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
@@ -831,7 +836,7 @@ file that was distributed with this source code.
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
                         </div>
-                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn shopcart-add-cart-btn--solid">Add to Cart</a>
+                        <a href="{{ url('cart') }}" class="shopcart-add-cart-btn">Add to Cart</a>
                     </div>
                 </div>
 
@@ -842,15 +847,15 @@ file that was distributed with this source code.
                             <i class="far fa-heart"></i>
                         </button>
                         <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Ipad Mini">
+                            <img src="{{ asset('assets/img/top/prod_headphone_3.jpg') }}" alt="Bose QuietComfort 45">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Ipad Mini</a>
-                            <span class="shopcart-product-price"><sup>$</sup>569<sup>.00</sup></span>
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Bose QuietComfort 45</a>
+                            <span class="shopcart-product-price"><sup>$</sup>289<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">Table with air purifier, stained venner/black</div>
+                        <div class="shopcart-product-desc">World-class noise cancellation & 24h battery</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>
@@ -866,15 +871,15 @@ file that was distributed with this source code.
                             <i class="far fa-heart"></i>
                         </button>
                         <a href="{{ url('product_list') }}">
-                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="Flower Laptop Sleeve">
+                            <img src="{{ asset('assets/img/top/prod_headphone_4.jpg') }}" alt="VIVEFOX Pro Headphones">
                         </a>
                     </div>
                     <div class="shopcart-product-info">
                         <div class="shopcart-product-head">
-                            <a href="{{ url('product_list') }}" class="shopcart-product-name">Flower Laptop Sleeve</a>
+                            <a href="{{ url('product_list') }}" class="shopcart-product-name">VIVEFOX Pro Headphones</a>
                             <span class="shopcart-product-price"><sup>$</sup>39<sup>.00</sup></span>
                         </div>
-                        <div class="shopcart-product-desc">15 in. x 10 in. -Flap top closure</div>
+                        <div class="shopcart-product-desc">Wired stereo headset with HD microphone</div>
                         <div class="shopcart-product-rating">
                             <span class="shopcart-stars">★★★★★</span>
                             <span class="shopcart-rating-count">(121)</span>

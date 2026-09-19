@@ -41,13 +41,16 @@ file that was distributed with this source code.
                         <i class="fas fa-chevron-down shopcart-chevron"></i>
                     </button>
                     <div class="shopcart-dropdown__menu">
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'en'})) }}" class="shopcart-dropdown__item {% if app.request.locale == 'en' or app.request.locale is empty %}is-active{% endif %}">
+                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'en'})) }}"
+                            class="shopcart-dropdown__item {% if app.request.locale == 'en' or app.request.locale is empty %}is-active{% endif %}">
                             <span class="shopcart-flag">🇺🇸</span> English (Eng)
                         </a>
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'ja'})) }}" class="shopcart-dropdown__item {% if app.request.locale == 'ja' %}is-active{% endif %}">
+                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'ja'})) }}"
+                            class="shopcart-dropdown__item {% if app.request.locale == 'ja' %}is-active{% endif %}">
                             <span class="shopcart-flag">🇯🇵</span> 日本語 (ja)
                         </a>
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'my'})) }}" class="shopcart-dropdown__item {% if app.request.locale == 'my' %}is-active{% endif %}">
+                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'my'})) }}"
+                            class="shopcart-dropdown__item {% if app.request.locale == 'my' %}is-active{% endif %}">
                             <span class="shopcart-flag">🇲🇲</span> မြန်မာ (my)
                         </a>
                     </div>
@@ -60,16 +63,20 @@ file that was distributed with this source code.
                         <i class="fas fa-chevron-down shopcart-chevron"></i>
                     </button>
                     <div class="shopcart-dropdown__menu">
-                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item" data-location="United States">
+                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item"
+                            data-location="United States">
                             <span class="shopcart-flag">🇺🇸</span> United States
                         </a>
-                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item" data-location="Japan">
+                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item"
+                            data-location="Japan">
                             <span class="shopcart-flag">🇯🇵</span> Japan
                         </a>
-                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item" data-location="Myanmar">
+                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item"
+                            data-location="Myanmar">
                             <span class="shopcart-flag">🇲🇲</span> Myanmar
                         </a>
-                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item" data-location="Global">
+                        <a href="javascript:void(0)" class="shopcart-dropdown__item shopcart-loc-item"
+                            data-location="Global">
                             <span class="shopcart-flag">🌐</span> Global / Other
                         </a>
                     </div>
@@ -82,7 +89,8 @@ file that was distributed with this source code.
     <header class="shopcart-main-nav">
         <div class="shopcart-container shopcart-main-nav__inner">
             <!-- Mobile Toggle -->
-            <button type="button" class="shopcart-mobile-toggle" id="shopcartMobileNavToggle" aria-label="Open Navigation">
+            <button type="button" class="shopcart-mobile-toggle" id="shopcartMobileNavToggle"
+                aria-label="Open Navigation">
                 <i class="fas fa-bars"></i>
             </button>
 
@@ -91,18 +99,22 @@ file that was distributed with this source code.
                 <div class="shopcart-brand__icon">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Fresh Leaves -->
-                        <path d="M19 3.5C19 3.5 17 7.5 19 10.5C21 10.5 25 8.5 25 8.5C25 8.5 21 5.5 19 3.5Z" fill="#22c55e"/>
-                        <path d="M18.5 10.5C18.5 7.5 15.5 4.5 12.5 5.5C12.5 5.5 13.5 9.5 16.5 11" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="#22c55e"/>
+                        <path d="M19 3.5C19 3.5 17 7.5 19 10.5C21 10.5 25 8.5 25 8.5C25 8.5 21 5.5 19 3.5Z"
+                            fill="#22c55e" />
+                        <path d="M18.5 10.5C18.5 7.5 15.5 4.5 12.5 5.5C12.5 5.5 13.5 9.5 16.5 11" stroke="#22c55e"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="#22c55e" />
                         <!-- Carrot / Produce -->
-                        <path d="M14 12C14 10.5 24 10.5 24 12C24 15.5 19 19.5 19 19.5C19 19.5 14 15.5 14 12Z" fill="#ff7a18"/>
+                        <path d="M14 12C14 10.5 24 10.5 24 12C24 15.5 19 19.5 19 19.5C19 19.5 14 15.5 14 12Z"
+                            fill="#ff7a18" />
                         <!-- Cart Frame -->
-                        <path d="M5 9.5H8.5L12 22.5H27L30.5 12.5H12" stroke="#003d29" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5 9.5H8.5L12 22.5H27L30.5 12.5H12" stroke="#003d29" stroke-width="2.6"
+                            stroke-linecap="round" stroke-linejoin="round" />
                         <!-- Cart Wheels -->
-                        <circle cx="13.5" cy="27" r="2.2" stroke="#003d29" stroke-width="2.4" fill="#ffffff"/>
-                        <circle cx="25.5" cy="27" r="2.2" stroke="#003d29" stroke-width="2.4" fill="#ffffff"/>
+                        <circle cx="13.5" cy="27" r="2.2" stroke="#003d29" stroke-width="2.4" fill="#ffffff" />
+                        <circle cx="25.5" cy="27" r="2.2" stroke="#003d29" stroke-width="2.4" fill="#ffffff" />
                     </svg>
                 </div>
-                <span class="shopcart-brand__name">Shopcart</span>
+                <span class="shopcart-brand__name">Offmarket</span>
             </a>
 
             <!-- Navigation Links -->
@@ -110,43 +122,43 @@ file that was distributed with this source code.
                 <!-- Categories Dropdown -->
                 {% set current_loc = app.request.get('_locale')|default(app.request.locale) %}
                 {% set category_en_map = {
-                    'Gelato': 'Gelato',
-                    'New Arrivals': 'New Arrivals',
-                    'Color Desserts': 'Color Desserts',
-                    'CUBE': 'CUBE',
-                    'Ice Cream Sandwiches': 'Ice Cream Sandwiches',
-                    'Fruits': 'Fruits',
-                    'ジェラート': 'Gelato',
-                    '新入荷': 'New Arrivals',
-                    '彩のデザート': 'Color Desserts',
-                    'アイスサンド': 'Ice Cream Sandwiches',
-                    'フルーツ': 'Fruits'
+                'Gelato': 'Gelato',
+                'New Arrivals': 'New Arrivals',
+                'Color Desserts': 'Color Desserts',
+                'CUBE': 'CUBE',
+                'Ice Cream Sandwiches': 'Ice Cream Sandwiches',
+                'Fruits': 'Fruits',
+                'ジェラート': 'Gelato',
+                '新入荷': 'New Arrivals',
+                '彩のデザート': 'Color Desserts',
+                'アイスサンド': 'Ice Cream Sandwiches',
+                'フルーツ': 'Fruits'
                 } %}
                 {% set category_ja_map = {
-                    'Gelato': 'ジェラート',
-                    'New Arrivals': '新入荷',
-                    'Color Desserts': '彩のデザート',
-                    'CUBE': 'CUBE',
-                    'Ice Cream Sandwiches': 'アイスサンド',
-                    'Fruits': 'フルーツ',
-                    'ジェラート': 'ジェラート',
-                    '新入荷': '新入荷',
-                    '彩のデザート': '彩のデザート',
-                    'アイスサンド': 'アイスサンド',
-                    'フルーツ': 'フルーツ'
+                'Gelato': 'ジェラート',
+                'New Arrivals': '新入荷',
+                'Color Desserts': '彩のデザート',
+                'CUBE': 'CUBE',
+                'Ice Cream Sandwiches': 'アイスサンド',
+                'Fruits': 'フルーツ',
+                'ジェラート': 'ジェラート',
+                '新入荷': '新入荷',
+                '彩のデザート': '彩のデザート',
+                'アイスサンド': 'アイスサンド',
+                'フルーツ': 'フルーツ'
                 } %}
                 {% set category_my_map = {
-                    'Gelato': 'ဂျယ်လာတို',
-                    'New Arrivals': 'ပစ္စည်းအသစ်များ',
-                    'Color Desserts': 'အချိုပွဲစုံ',
-                    'CUBE': 'CUBE',
-                    'Ice Cream Sandwiches': 'အအေးမုန့်ညှပ်',
-                    'Fruits': 'သစ်သီးများ',
-                    'ジェラート': 'ဂျယ်လာတို',
-                    '新入荷': 'ပစ္စည်းအသစ်များ',
-                    '彩のデザート': 'အချိုပွဲစုံ',
-                    'アイスサンド': 'အအေးမုန့်ညှပ်',
-                    'フルーツ': 'သစ်သီးများ'
+                'Gelato': 'ဂျယ်လာတို',
+                'New Arrivals': 'ပစ္စည်းအသစ်များ',
+                'Color Desserts': 'အချိုပွဲစုံ',
+                'CUBE': 'CUBE',
+                'Ice Cream Sandwiches': 'အအေးမုန့်ညှပ်',
+                'Fruits': 'သစ်သီးများ',
+                'ジェラート': 'ဂျယ်လာတို',
+                '新入荷': 'ပစ္စည်းအသစ်များ',
+                '彩のデザート': 'အချိုပွဲစုံ',
+                'アイスサンド': 'အအေးမုန့်ညှပ်',
+                'フルーツ': 'သစ်သီးများ'
                 } %}
                 <div class="shopcart-nav-item shopcart-dropdown shopcart-cat-dropdown">
                     <a href="{{ url('product_list') }}" class="shopcart-nav-link shopcart-dropdown__toggle">
@@ -155,43 +167,45 @@ file that was distributed with this source code.
                     </a>
                     <div class="shopcart-dropdown__menu shopcart-cat-menu">
                         {% if Categories|length > 0 %}
-                            {% for Category in Categories %}
-                                {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
-                                    {% set cat_display_name = category_ja_map[Category.name] %}
-                                {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
-                                    {% set cat_display_name = category_my_map[Category.name] %}
-                                {% elseif category_en_map[Category.name] is defined %}
-                                    {% set cat_display_name = category_en_map[Category.name] %}
-                                {% else %}
-                                    {% set cat_display_name = Category.name %}
-                                {% endif %}
-                                <div class="shopcart-cat-group">
-                                    <a href="{{ url('product_list') }}?category_id={{ Category.id }}" class="shopcart-cat-parent">
-                                        <i class="fas fa-folder-open shopcart-cat-icon"></i>
-                                        <span>{{ cat_display_name }}</span>
-                                    </a>
-                                    {% if Category.children|length > 0 %}
-                                        <div class="shopcart-cat-children">
-                                            {% for ChildCategory in Category.children %}
-                                                {% if current_loc == 'ja' and category_ja_map[ChildCategory.name] is defined %}
-                                                    {% set child_display_name = category_ja_map[ChildCategory.name] %}
-                                                {% elseif current_loc == 'my' and category_my_map[ChildCategory.name] is defined %}
-                                                    {% set child_display_name = category_my_map[ChildCategory.name] %}
-                                                {% elseif category_en_map[ChildCategory.name] is defined %}
-                                                    {% set child_display_name = category_en_map[ChildCategory.name] %}
-                                                {% else %}
-                                                    {% set child_display_name = ChildCategory.name %}
-                                                {% endif %}
-                                                <a href="{{ url('product_list') }}?category_id={{ ChildCategory.id }}" class="shopcart-cat-child">
-                                                    {{ child_display_name }}
-                                                </a>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
+                        {% for Category in Categories %}
+                        {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
+                        {% set cat_display_name = category_ja_map[Category.name] %}
+                        {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
+                        {% set cat_display_name = category_my_map[Category.name] %}
+                        {% elseif category_en_map[Category.name] is defined %}
+                        {% set cat_display_name = category_en_map[Category.name] %}
                         {% else %}
-                            <a href="{{ url('product_list') }}" class="shopcart-dropdown__item">All Categories</a>
+                        {% set cat_display_name = Category.name %}
+                        {% endif %}
+                        <div class="shopcart-cat-group">
+                            <a href="{{ url('product_list') }}?category_id={{ Category.id }}"
+                                class="shopcart-cat-parent">
+                                <i class="fas fa-folder-open shopcart-cat-icon"></i>
+                                <span>{{ cat_display_name }}</span>
+                            </a>
+                            {% if Category.children|length > 0 %}
+                            <div class="shopcart-cat-children">
+                                {% for ChildCategory in Category.children %}
+                                {% if current_loc == 'ja' and category_ja_map[ChildCategory.name] is defined %}
+                                {% set child_display_name = category_ja_map[ChildCategory.name] %}
+                                {% elseif current_loc == 'my' and category_my_map[ChildCategory.name] is defined %}
+                                {% set child_display_name = category_my_map[ChildCategory.name] %}
+                                {% elseif category_en_map[ChildCategory.name] is defined %}
+                                {% set child_display_name = category_en_map[ChildCategory.name] %}
+                                {% else %}
+                                {% set child_display_name = ChildCategory.name %}
+                                {% endif %}
+                                <a href="{{ url('product_list') }}?category_id={{ ChildCategory.id }}"
+                                    class="shopcart-cat-child">
+                                    {{ child_display_name }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <a href="{{ url('product_list') }}" class="shopcart-dropdown__item">All Categories</a>
                         {% endif %}
                     </div>
                 </div>
@@ -215,7 +229,8 @@ file that was distributed with this source code.
             <!-- Search Bar -->
             <div class="shopcart-search-wrap">
                 <form method="get" class="shopcart-search-form" action="{{ path('product_list') }}">
-                    <input type="search" name="name" class="shopcart-search-input" placeholder="Search Product" value="{{ app.request.get('name') }}" autocomplete="off">
+                    <input type="search" name="name" class="shopcart-search-input" placeholder="Search Product"
+                        value="{{ app.request.get('name') }}" autocomplete="off">
                     <button type="submit" class="shopcart-search-btn" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
@@ -226,66 +241,69 @@ file that was distributed with this source code.
             <div class="shopcart-user-actions">
                 <!-- Account Dropdown -->
                 <div class="shopcart-action-item shopcart-dropdown shopcart-account-dropdown">
-                    <a href="{% if is_granted('ROLE_USER') %}{{ url('mypage') }}{% else %}{{ url('mypage_login') }}{% endif %}" class="shopcart-action-link shopcart-dropdown__toggle">
+                    <a href="{% if is_granted('ROLE_USER') %}{{ url('mypage') }}{% else %}{{ url('mypage_login') }}{% endif %}"
+                        class="shopcart-action-link shopcart-dropdown__toggle">
                         <i class="far fa-user shopcart-action-icon"></i>
                         <span>Account</span>
                     </a>
                     <div class="shopcart-dropdown__menu shopcart-account-menu">
                         {% if is_granted('ROLE_USER') %}
-                            <div class="shopcart-account-header">
-                                <div class="shopcart-account-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="shopcart-account-details">
-                                    <div class="shopcart-account-greeting">Welcome back,</div>
-                                    <div class="shopcart-account-name">{{ app.user.name01|default('') }} {{ app.user.name02|default('Member') }}</div>
-                                </div>
+                        <div class="shopcart-account-header">
+                            <div class="shopcart-account-avatar">
+                                <i class="fas fa-user-circle"></i>
                             </div>
-                            <a href="{{ url('mypage') }}" class="shopcart-dropdown__item">
-                                <i class="fas fa-history"></i>
-                                <span>Order History</span>
-                            </a>
-                            <a href="{{ url('mypage_change') }}" class="shopcart-dropdown__item">
-                                <i class="fas fa-user-pen"></i>
-                                <span>Edit Profile</span>
-                            </a>
-                            {% if BaseInfo.option_favorite_product %}
-                                <a href="{{ url('mypage_favorite') }}" class="shopcart-dropdown__item">
-                                    <i class="fas fa-heart"></i>
-                                    <span>{{ 'front.block.login.favorite'|trans }}</span>
-                                </a>
-                            {% endif %}
-                            <div class="shopcart-dropdown-divider"></div>
-                            <a href="{{ url('logout') }}" class="shopcart-dropdown__item shopcart-dropdown__item--danger">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>{{ 'front.block.login.logout'|trans }}</span>
-                            </a>
+                            <div class="shopcart-account-details">
+                                <div class="shopcart-account-greeting">Welcome back,</div>
+                                <div class="shopcart-account-name">{{ app.user.name01|default('') }} {{
+                                    app.user.name02|default('Member') }}</div>
+                            </div>
+                        </div>
+                        <a href="{{ url('mypage') }}" class="shopcart-dropdown__item">
+                            <i class="fas fa-history"></i>
+                            <span>Order History</span>
+                        </a>
+                        <a href="{{ url('mypage_change') }}" class="shopcart-dropdown__item">
+                            <i class="fas fa-user-pen"></i>
+                            <span>Edit Profile</span>
+                        </a>
+                        {% if BaseInfo.option_favorite_product %}
+                        <a href="{{ url('mypage_favorite') }}" class="shopcart-dropdown__item">
+                            <i class="fas fa-heart"></i>
+                            <span>{{ 'front.block.login.favorite'|trans }}</span>
+                        </a>
+                        {% endif %}
+                        <div class="shopcart-dropdown-divider"></div>
+                        <a href="{{ url('logout') }}" class="shopcart-dropdown__item shopcart-dropdown__item--danger">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>{{ 'front.block.login.logout'|trans }}</span>
+                        </a>
                         {% else %}
-                            <div class="shopcart-account-header shopcart-account-header--guest">
-                                <div class="shopcart-account-greeting">Access your account</div>
-                                <a href="{{ url('mypage_login') }}" class="shopcart-btn shopcart-btn--primary">Sign In</a>
-                                <div class="shopcart-account-sub">
-                                    New customer? <a href="{{ url('entry') }}">Create account</a>
-                                </div>
+                        <div class="shopcart-account-header shopcart-account-header--guest">
+                            <div class="shopcart-account-greeting">Access your account</div>
+                            <a href="{{ url('mypage_login') }}" class="shopcart-btn shopcart-btn--primary">Sign In</a>
+                            <div class="shopcart-account-sub">
+                                New customer? <a href="{{ url('entry') }}">Create account</a>
                             </div>
-                            <div class="shopcart-dropdown-divider"></div>
-                            <a href="{{ url('mypage') }}" class="shopcart-dropdown__item">
-                                <i class="fas fa-id-card-clip"></i>
-                                <span>{{ 'front.block.login.mypage'|trans }}</span>
-                            </a>
-                            {% if BaseInfo.option_favorite_product %}
-                                <a href="{{ url('mypage_favorite') }}" class="shopcart-dropdown__item">
-                                    <i class="fas fa-heart"></i>
-                                    <span>{{ 'front.block.login.favorite'|trans }}</span>
-                                </a>
-                            {% endif %}
+                        </div>
+                        <div class="shopcart-dropdown-divider"></div>
+                        <a href="{{ url('mypage') }}" class="shopcart-dropdown__item">
+                            <i class="fas fa-id-card-clip"></i>
+                            <span>{{ 'front.block.login.mypage'|trans }}</span>
+                        </a>
+                        {% if BaseInfo.option_favorite_product %}
+                        <a href="{{ url('mypage_favorite') }}" class="shopcart-dropdown__item">
+                            <i class="fas fa-heart"></i>
+                            <span>{{ 'front.block.login.favorite'|trans }}</span>
+                        </a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
 
                 <!-- Cart Dropdown -->
                 <div class="shopcart-action-item shopcart-dropdown shopcart-cart-dropdown-wrap">
-                    <a href="{{ url('cart') }}" class="shopcart-action-link shopcart-cart-link shopcart-dropdown__toggle">
+                    <a href="{{ url('cart') }}"
+                        class="shopcart-action-link shopcart-cart-link shopcart-dropdown__toggle">
                         <div class="shopcart-cart-icon-container">
                             <i class="fas fa-shopping-cart shopcart-action-icon"></i>
                             <span class="shopcart-cart-count-badge">{{ totalQuantity|number_format }}</span>
@@ -294,42 +312,45 @@ file that was distributed with this source code.
                     </a>
                     <div class="shopcart-dropdown__menu shopcart-cart-preview-menu">
                         {% if totalQuantity > 0 %}
-                            <div class="shopcart-cart-preview-header">
-                                <span>Shopping Cart ({{ totalQuantity }})</span>
-                            </div>
-                            <div class="shopcart-cart-preview-items">
-                                {% for Cart in Carts %}
-                                    {% for CartItem in Cart.CartItems %}
-                                        {% set ProductClass = CartItem.ProductClass %}
-                                        {% set Product = ProductClass.Product %}
-                                        <div class="shopcart-cart-preview-item">
-                                            <div class="shopcart-cart-preview-img">
-                                                <img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}" alt="{{ Product.name }}">
-                                            </div>
-                                            <div class="shopcart-cart-preview-info">
-                                                <div class="shopcart-cart-preview-title">{{ Product.name }}</div>
-                                                <div class="shopcart-cart-preview-meta">
-                                                    <span>{{ CartItem.quantity }} &times;</span>
-                                                    <strong class="shopcart-cart-preview-price">{{ CartItem.price|price }}</strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% endfor %}
-                            </div>
-                            <div class="shopcart-cart-preview-footer">
-                                <div class="shopcart-cart-preview-total">
-                                    <span>Total:</span>
-                                    <strong>{{ totalPrice|price }}</strong>
+                        <div class="shopcart-cart-preview-header">
+                            <span>Shopping Cart ({{ totalQuantity }})</span>
+                        </div>
+                        <div class="shopcart-cart-preview-items">
+                            {% for Cart in Carts %}
+                            {% for CartItem in Cart.CartItems %}
+                            {% set ProductClass = CartItem.ProductClass %}
+                            {% set Product = ProductClass.Product %}
+                            <div class="shopcart-cart-preview-item">
+                                <div class="shopcart-cart-preview-img">
+                                    <img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}"
+                                        alt="{{ Product.name }}">
                                 </div>
-                                <a href="{{ url('cart') }}" class="shopcart-btn shopcart-btn--primary shopcart-btn--full">Proceed to Cart</a>
+                                <div class="shopcart-cart-preview-info">
+                                    <div class="shopcart-cart-preview-title">{{ Product.name }}</div>
+                                    <div class="shopcart-cart-preview-meta">
+                                        <span>{{ CartItem.quantity }} &times;</span>
+                                        <strong class="shopcart-cart-preview-price">{{ CartItem.price|price }}</strong>
+                                    </div>
+                                </div>
                             </div>
+                            {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <div class="shopcart-cart-preview-footer">
+                            <div class="shopcart-cart-preview-total">
+                                <span>Total:</span>
+                                <strong>{{ totalPrice|price }}</strong>
+                            </div>
+                            <a href="{{ url('cart') }}"
+                                class="shopcart-btn shopcart-btn--primary shopcart-btn--full">Proceed to Cart</a>
+                        </div>
                         {% else %}
-                            <div class="shopcart-cart-preview-empty">
-                                <i class="fas fa-shopping-basket"></i>
-                                <p>{{ 'front.block.cart.no_item'|trans|default('Your cart is empty.') }}</p>
-                                <a href="{{ url('product_list') }}" class="shopcart-btn shopcart-btn--outline">Start Shopping</a>
-                            </div>
+                        <div class="shopcart-cart-preview-empty">
+                            <i class="fas fa-shopping-basket"></i>
+                            <p>{{ 'front.block.cart.no_item'|trans|default('Your cart is empty.') }}</p>
+                            <a href="{{ url('product_list') }}" class="shopcart-btn shopcart-btn--outline">Start
+                                Shopping</a>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -343,7 +364,7 @@ file that was distributed with this source code.
         <div class="shopcart-mobile-drawer__content">
             <div class="shopcart-mobile-drawer__header">
                 <div class="shopcart-brand">
-                    <span class="shopcart-brand__name">Shopcart</span>
+                    <span class="shopcart-brand__name">Offmarket</span>
                 </div>
                 <button type="button" class="shopcart-mobile-drawer__close" id="shopcartDrawerClose">
                     <i class="fas fa-times"></i>
@@ -353,7 +374,8 @@ file that was distributed with this source code.
             <!-- Mobile Search -->
             <div class="shopcart-mobile-drawer__search">
                 <form method="get" class="shopcart-search-form" action="{{ path('product_list') }}">
-                    <input type="search" name="name" class="shopcart-search-input" placeholder="Search Product" value="{{ app.request.get('name') }}">
+                    <input type="search" name="name" class="shopcart-search-input" placeholder="Search Product"
+                        value="{{ app.request.get('name') }}">
                     <button type="submit" class="shopcart-search-btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -368,18 +390,19 @@ file that was distributed with this source code.
                     </button>
                     <div class="shopcart-mobile-accordion__content">
                         {% for Category in Categories %}
-                            {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
-                                {% set cat_mob_name = category_ja_map[Category.name] %}
-                            {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
-                                {% set cat_mob_name = category_my_map[Category.name] %}
-                            {% elseif category_en_map[Category.name] is defined %}
-                                {% set cat_mob_name = category_en_map[Category.name] %}
-                            {% else %}
-                                {% set cat_mob_name = Category.name %}
-                            {% endif %}
-                            <a href="{{ url('product_list') }}?category_id={{ Category.id }}" class="shopcart-mobile-cat-link">
-                                {{ cat_mob_name }}
-                            </a>
+                        {% if current_loc == 'ja' and category_ja_map[Category.name] is defined %}
+                        {% set cat_mob_name = category_ja_map[Category.name] %}
+                        {% elseif current_loc == 'my' and category_my_map[Category.name] is defined %}
+                        {% set cat_mob_name = category_my_map[Category.name] %}
+                        {% elseif category_en_map[Category.name] is defined %}
+                        {% set cat_mob_name = category_en_map[Category.name] %}
+                        {% else %}
+                        {% set cat_mob_name = Category.name %}
+                        {% endif %}
+                        <a href="{{ url('product_list') }}?category_id={{ Category.id }}"
+                            class="shopcart-mobile-cat-link">
+                            {{ cat_mob_name }}
+                        </a>
                         {% endfor %}
                     </div>
                 </div>
@@ -391,15 +414,21 @@ file that was distributed with this source code.
             <div class="shopcart-mobile-drawer__section">
                 <div class="shopcart-mobile-drawer__title">Account & Orders</div>
                 {% if is_granted('ROLE_USER') %}
-                    <a href="{{ url('mypage') }}" class="shopcart-mobile-nav-link"><i class="fas fa-history"></i> Order History</a>
-                    <a href="{{ url('mypage_change') }}" class="shopcart-mobile-nav-link"><i class="fas fa-user-edit"></i> Edit Profile</a>
-                    {% if BaseInfo.option_favorite_product %}
-                        <a href="{{ url('mypage_favorite') }}" class="shopcart-mobile-nav-link"><i class="fas fa-heart"></i> Favorites</a>
-                    {% endif %}
-                    <a href="{{ url('logout') }}" class="shopcart-mobile-nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="{{ url('mypage') }}" class="shopcart-mobile-nav-link"><i class="fas fa-history"></i> Order
+                    History</a>
+                <a href="{{ url('mypage_change') }}" class="shopcart-mobile-nav-link"><i class="fas fa-user-edit"></i>
+                    Edit Profile</a>
+                {% if BaseInfo.option_favorite_product %}
+                <a href="{{ url('mypage_favorite') }}" class="shopcart-mobile-nav-link"><i class="fas fa-heart"></i>
+                    Favorites</a>
+                {% endif %}
+                <a href="{{ url('logout') }}" class="shopcart-mobile-nav-link text-danger"><i
+                        class="fas fa-sign-out-alt"></i> Logout</a>
                 {% else %}
-                    <a href="{{ url('mypage_login') }}" class="shopcart-mobile-nav-link"><i class="fas fa-sign-in-alt"></i> Sign In</a>
-                    <a href="{{ url('entry') }}" class="shopcart-mobile-nav-link"><i class="fas fa-user-plus"></i> Register Account</a>
+                <a href="{{ url('mypage_login') }}" class="shopcart-mobile-nav-link"><i class="fas fa-sign-in-alt"></i>
+                    Sign In</a>
+                <a href="{{ url('entry') }}" class="shopcart-mobile-nav-link"><i class="fas fa-user-plus"></i> Register
+                    Account</a>
                 {% endif %}
             </div>
 
