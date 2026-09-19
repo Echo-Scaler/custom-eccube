@@ -579,11 +579,15 @@ admin.header.logout: Sign out
 admin.header.last_login: Last sign-in
 admin.header.change_password: Change Password
 admin.header.two_factor_auth: Two-Factor Auth
+admin.header.to_front: Store Front
 
 admin.login.enable_javascript: Please enable JavaScript
 admin.login.login: Sign in
+admin.login.sub_title: Welcome back! Please enter your administrator credentials.
 admin.login.login_id: ID
 admin.login.password: Password
+admin.login.remember_me: Remember Login ID
+admin.login.signing_in: Signing in...
 
 admin.change_password: Change Password
 admin.change_password.current_password: Current Password

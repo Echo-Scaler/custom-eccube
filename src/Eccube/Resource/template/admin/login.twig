@@ -13,39 +13,268 @@ file that was distributed with this source code.
 {% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block main %}
-
-    <div class="container" style="margin-top: 150px;">
-        <div class="row">
-            <div class="col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-                <div class="text-center p-5 bg-white">
-                    {{ include('@admin/alert.twig') }}
-                    <form name="form1" id="form1" method="post" action="{{ path('admin_login') }}">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                        <p><img src="{{ asset('assets/img/logo2.png', 'admin') }}" width="106"></p>
-                        <div class="mb-3">
-                            {{ form_widget(form.login_id, {'id': 'login_id', 'attr': {'placeholder': 'admin.login.login_id', 'autofocus': true}}) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_widget(form.password, {'attr': {'placeholder': 'admin.login.password'}}) }}
-                        </div>
-                        {% if error %}
-                            <div class="mb-3">
-                                <span class="text-danger">{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</span>
-                            </div>
-                        {% endif %}
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">{{ 'admin.login.login'|trans }}</button>
-                        </div>
-                        {{ form_rest(form) }}
-                    </form>
-                </div>
+<div class="login-split-wrapper">
+    <!-- Left Hero & 3D Isometric Visual Panel -->
+    <div class="login-hero-side">
+        <div class="login-hero-content">
+            <div class="login-hero-badge">
+                <span class="pulse-dot"></span>
+                <span>EC-CUBE E-Commerce Platform</span>
             </div>
-            <div class="col-12">
-                <p class="text-center mt-3">
-                    <small>Copyright &copy; 2000-{{ "now"|date("Y") }} EC-CUBE CO.,LTD. All Rights Reserved.</small>
-                </p>
+            <h1 class="login-hero-heading">Next-Gen E-Commerce Management</h1>
+            <p class="login-hero-subtitle">
+                Streamline your online store operations, manage product catalogs, fulfill customer orders, and track
+                real-time sales growth effortlessly.
+            </p>
+        </div>
+
+        <div class="login-artwork-container">
+            <img src="{{ asset('assets/img/login_bg_3d.jpg', 'admin') }}" alt="Smart E-Commerce Operations"
+                class="login-artwork-img" />
+        </div>
+
+        <div class="login-hero-features">
+            <div class="login-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span>Order Processing</span>
+            </div>
+            <div class="login-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <span>Product & Inventory</span>
+            </div>
+            <div class="login-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Real-time Analytics</span>
             </div>
         </div>
     </div>
 
+    <!-- Right Authentication Form Panel -->
+    <div class="login-form-side">
+        <!-- Top Nav Info -->
+        <div class="login-form-header">
+            <a href="{{ path('admin_login') }}" class="login-brand-logo">
+                <img src="{{ asset('assets/img/logo2.png', 'admin') }}" alt="{{ BaseInfo.shop_name }}">
+            </a>
+            <a href="{{ path('homepage') }}" class="login-store-link"
+                title="{{ 'admin.header.to_front'|trans }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>{{ 'admin.header.to_front'|trans }}</span>
+            </a>
+        </div>
+
+        <!-- Center Form Box -->
+        <div class="login-form-center">
+            <div class="login-title-section">
+                <h2 class="login-main-title">{{ 'admin.login.login'|trans }}</h2>
+                <p class="login-main-desc">
+                    {{ 'admin.login.sub_title'|trans }}
+                </p>
+            </div>
+
+            {% if error %}
+            <div class="login-alert-box mb-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</span>
+            </div>
+            {% endif %}
+
+            <form name="form1" id="form1" method="post" action="{{ path('admin_login') }}" class="login-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <!-- Login ID Field -->
+                <div class="login-field-group">
+                    <label for="login_id" class="login-label">
+                        <span>{{ 'admin.login.login_id'|trans }}</span>
+                    </label>
+                    <div class="login-input-wrapper">
+                        <span class="login-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </span>
+                        {{ form_widget(form.login_id, {
+                        'id': 'login_id',
+                        'attr': {
+                        'class': 'login-input',
+                        'placeholder': 'admin.login.login_id'|trans,
+                        'autofocus': true,
+                        'autocomplete': 'username'
+                        }
+                        }) }}
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="login-field-group">
+                    <label for="password" class="login-label">
+                        <span>{{ 'admin.login.password'|trans }}</span>
+                    </label>
+                    <div class="login-input-wrapper">
+                        <span class="login-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        {{ form_widget(form.password, {
+                        'id': 'password',
+                        'attr': {
+                        'class': 'login-input',
+                        'placeholder': '••••••••••••',
+                        'autocomplete': 'current-password'
+                        }
+                        }) }}
+                        <button type="button" class="login-pw-toggle" id="togglePasswordBtn"
+                            title="Toggle password visibility" tabindex="-1">
+                            <svg id="eyeIconOpen" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg id="eyeIconClosed" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="display: none;">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                </path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me / Options Row -->
+                <div class="login-options-row">
+                    <label class="login-checkbox-label" for="remember_login_id">
+                        <input type="checkbox" id="remember_login_id" class="login-checkbox-input">
+                        <span>{{ 'admin.login.remember_me'|trans }}</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="login-submit-btn">
+                    <span id="submitBtnText">{{ 'admin.login.login'|trans }}</span>
+                    <svg id="submitBtnArrow" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+
+                {{ form_rest(form) }}
+            </form>
+        </div>
+
+        <!-- Footer & Security Notice -->
+        <div class="login-form-footer">
+            <div class="login-security-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>EC-CUBE Authenticated Admin Access</span>
+            </div>
+            <div>
+                <small>Copyright &copy; 2000-{{ "now"|date("Y") }} {{ BaseInfo.shop_name|default('EC-CUBE CO.,LTD.') }}.
+                    All Rights Reserved.</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Password Visibility Toggle
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('password');
+        const eyeOpen = document.getElementById('eyeIconOpen');
+        const eyeClosed = document.getElementById('eyeIconClosed');
+
+        if (toggleBtn && passwordInput) {
+            toggleBtn.addEventListener('click', function () {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                if (isPassword) {
+                    eyeOpen.style.display = 'none';
+                    eyeClosed.style.display = 'block';
+                } else {
+                    eyeOpen.style.display = 'block';
+                    eyeClosed.style.display = 'none';
+                }
+            });
+        }
+
+        // 2. Remember Login ID via localStorage
+        const rememberCheckbox = document.getElementById('remember_login_id');
+        const loginIdInput = document.getElementById('login_id');
+        const STORAGE_KEY = 'eccube_admin_saved_login_id';
+
+        if (loginIdInput && rememberCheckbox) {
+            const savedId = localStorage.getItem(STORAGE_KEY);
+            if (savedId) {
+                loginIdInput.value = savedId;
+                rememberCheckbox.checked = true;
+                if (passwordInput) {
+                    passwordInput.focus();
+                }
+            }
+
+            const form = document.getElementById('form1');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    if (rememberCheckbox.checked && loginIdInput.value.trim() !== '') {
+                        localStorage.setItem(STORAGE_KEY, loginIdInput.value.trim());
+                    } else {
+                        localStorage.removeItem(STORAGE_KEY);
+                    }
+
+                    // Loading State on Submit
+                    const submitBtn = document.getElementById('submitBtn');
+                    const submitBtnText = document.getElementById('submitBtnText');
+                    const submitBtnArrow = document.getElementById('submitBtnArrow');
+                    if (submitBtn && submitBtnText) {
+                        submitBtn.style.opacity = '0.85';
+                        submitBtn.style.pointerEvents = 'none';
+                        submitBtnText.innerText = "{{ 'admin.login.signing_in'|trans|escape('js') }}";
+                        if (submitBtnArrow) {
+                            submitBtnArrow.style.display = 'none';
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
 {% endblock %}
