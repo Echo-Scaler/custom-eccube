@@ -109,7 +109,14 @@ file that was distributed with this source code.
 <script src="{{ asset('assets/js/function.js', 'admin') }}"></script>
 <script>
     $(function() {
-        $('.pulse-nav-close-btn').on('click', function(e) {
+        $('.c-headerBar__toggleBtn').on('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth >= 992) {
+                $('body').toggleClass('sidebar-collapsed');
+            }
+        });
+
+        $('.pulse-nav-close-btn, .c-curtain').on('click', function(e) {
             e.preventDefault();
             $('.c-mainNavArea').removeClass('is-active');
             $('.c-curtain').removeClass('is-active');
