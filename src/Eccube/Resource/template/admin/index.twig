@@ -17,16 +17,27 @@ file that was distributed with this source code.
     <script>
         $(function() {
             var options = {
+                responsive: true,
+                maintainAspectRatio: false,
                 layout: {
                     padding: {
                         left: 0,
                         right: 0,
-                        top: 25,
+                        top: 20,
                         bottom: 0
                     }
                 },
                 plugins: {
+                    legend: {
+                        display: false
+                    },
                     tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleFont: { size: 12, family: 'Inter, sans-serif' },
+                        bodyFont: { size: 13, family: 'Inter, sans-serif' },
+                        padding: 10,
+                        cornerRadius: 8,
+                        displayColors: false,
                         callbacks: {
                             label: function(tooltipItem) {
                                 return '{{ currency_symbol() }}' + tooltipItem.formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -36,286 +47,382 @@ file that was distributed with this source code.
                 },
                 scales: {
                     y: {
-                        beginatzero: true,
+                        beginAtZero: true,
                         display: true,
+                        grid: {
+                            color: '#f1f5f9',
+                            drawBorder: false
+                        },
                         ticks: {
+                            font: { size: 11, family: 'Inter, sans-serif' },
+                            color: '#64748b',
                             callback: function(value, index, ticks) {
                                 if (Math.floor(value) === value) {
                                     return '{{ currency_symbol() }}' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                                 }
                             }
                         }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: { size: 11, family: 'Inter, sans-serif' },
+                            color: '#64748b'
+                        }
                     }
                 }
             };
 
-            var priceBackgroundColor = 'rgba(58, 115, 188, 1)';
-            var priceBorderColor = 'rgba(255, 255, 255, 0)';
-
             $.ajax({
-                url: '{{ url('admin_homepage_sale') }}',
+                url: "{{ url('admin_homepage_sale') }}",
                 type: 'GET',
                 dataType: 'json'
             }).done(function(datas) {
-
                 for (var i = 0; i < datas.length; i++) {
                     var data = datas[i];
-
                     var labels = [];
                     var prices = [];
                     var priceBackgroundColors = [];
-                    var priceBorderColors = [];
+                    var maxPrice = 0;
+
                     Object.keys(data).forEach(function(key) {
-                        labels.push(key);
-                        prices.push(data[key].price);
-                        priceBackgroundColors.push(priceBackgroundColor);
-                        priceBorderColors.push(priceBorderColor);
+                        var val = data[key].price;
+                        if (val > maxPrice) maxPrice = val;
                     });
 
-                    var ctx = $('#chart-' + i)[0].getContext('2d');
-                    ctx.canvas.height = 100;
-                    var chart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [
-                                {
-                                    type: 'bar',
-                                    label: '{{ 'admin.home.sales_summary_amount'|trans }}',
-                                    data: prices,
-                                    backgroundColor: priceBackgroundColors,
-                                    borderColor: priceBorderColors,
-                                    borderWidth: 1,
-                                    yAxisID: 'y'
-                                }
-                            ]
-                        },
-                        options: options
+                    Object.keys(data).forEach(function(key) {
+                        labels.push(key);
+                        var val = data[key].price;
+                        prices.push(val);
+                        // Peak bar gets dark highlight; normal bars get soft gray
+                        if (maxPrice > 0 && val === maxPrice) {
+                            priceBackgroundColors.push('#1e293b');
+                        } else {
+                            priceBackgroundColors.push('#cbd5e1');
+                        }
                     });
+
+                    var canvas = $('#chart-' + i);
+                    if (canvas.length > 0) {
+                        var ctx = canvas[0].getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        type: 'bar',
+                                        label: "{{ 'admin.home.sales_summary_amount'|trans }}",
+                                        data: prices,
+                                        backgroundColor: priceBackgroundColors,
+                                        borderRadius: 6,
+                                        borderSkipped: false,
+                                        yAxisID: 'y'
+                                    }
+                                ]
+                            },
+                            options: options
+                        });
+                    }
                 }
             }).fail(function(data) {
+                console.error("Sales chart load error:", data);
             }).always(function() {
                 $('#loading').hide();
             });
-
         });
-
     </script>
 {% endblock javascript %}
 
 {% block main %}
+    <!-- Admin URL Security Alert -->
     {% if is_danger_admin_url %}
-    <div class="alert alert-warning alert-dismissible fade show m-3" role="alert">
+    <div class="alert alert-warning alert-dismissible fade show mb-4 pulse-alert" role="alert">
         <i class="fa fa-warning fa-lg me-2"></i>
         <span class="fw-bold">{{ 'admin.common.admin_url_warning'|trans({ '%url%': url('admin_setting_system_security') })|raw }}</span>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close">
-
-        </button>
+        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
-    <div class="c-contentsArea__cols">
-        <div class="c-contentsArea__primaryCol">
-            <div class="c-primaryCol">
-                <div class="row">
-                    <div class="col-4 mb-4">
-                        <div id="order-status" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <a href="{{ url('admin_order') }}">
-                                    <span class="card-title">{{ 'admin.home.order_status_title'|trans }}</span>
-                                </a>
-                            </div>
-                            <div class="card-body p-0">
-                                {% for OrderStatus in OrderStatuses %}
-                                    <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                        <a href="{{ url('admin_order', { 'order_status_id': OrderStatus.id }) }}" class="p-3 d-block">
-                                            <div class="row align-items-center">
-                                                <div class="col align-middle">
-                                                    <span class="align-middle">{{ OrderStatus.name }}</span>
-                                                </div>
-                                                <div class="col-auto text-end align-middle">
-                                                    <span class="h4 align-middle fw-normal text-dark">{{ Orders is not empty and Orders[OrderStatus.id] is defined ? Orders[OrderStatus.id] : 0 }}</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div><!-- /#order-status -->
+
+    <!-- Front Desk / Dashboard Hero Header -->
+    <div class="pulse-hero-header">
+        <div class="pulse-hero-title-group">
+            <h1 class="pulse-hero-title">{{ 'admin.home'|trans }}</h1>
+            <div class="pulse-hero-time-badge">
+                <span class="pulse-live-indicator"></span>
+                <span>Welcome back, {{ app.user.name }} • {{ BaseInfo.shop_name }} • {{ "now"|date("l, F j, Y") }}</span>
+            </div>
+        </div>
+        <div class="pulse-hero-actions">
+            <a href="{{ url('admin_order') }}" class="btn btn-pulse-outline">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <line x1="6" y1="12" x2="18" y2="12"></line>
+                    <line x1="6" y1="8" x2="10" y2="8"></line>
+                </svg>
+                <span>Manage Orders</span>
+            </a>
+            <a href="{{ url('admin_product_product_new') }}" class="btn btn-pulse-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Add Product</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 Top KPI Cards (Real System Metrics) -->
+    <div class="pulse-kpi-grid">
+        <!-- KPI 1: Products -->
+        <a href="{{ url('admin_product') }}" class="pulse-kpi-card text-decoration-none">
+            <div class="kpi-card-header">
+                <div class="kpi-label-group">
+                    <div class="kpi-icon-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
                     </div>
-                    <div class="col-8 mb-4">
-                        <div id="chart-statistics" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.sales_summary_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0">
-                                <div class="row text-center border-bottom mb-3">
-                                    <div class="col-4 py-2 border-end">
-                                        <div class="h3">
-                                            {% set amount = salesThisMonth is empty ? 0 : salesThisMonth.order_amount %}
-                                            {% set count = salesThisMonth is empty ? 0 : salesThisMonth.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_this_month'|trans }}</small>
-                                    </div>
-                                    <div class="col-4 py-2 border-end">
-                                        <div class="h3">
-                                            {% set amount = salesToday is empty ? 0 : salesToday.order_amount %}
-                                            {% set count = salesToday is empty ? 0 : salesToday.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_today'|trans }}</small>
-                                    </div>
-                                    <div class="col-4 py-2">
-                                        <div class="h3">
-                                            {% set amount = salesYesterday is empty ? 0 : salesYesterday.order_amount %}
-                                            {% set count = salesYesterday is empty ? 0 : salesYesterday.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_yesterday'|trans }}</small>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col text-center">
-                                        <div class="btn-group nav d-inline-flex" id="pills-tab" role="tablist">
-                                            <a class="nav-link active btn btn-ec-tab py-2 ps-4 pe-4" id="pills-weekly-tab" data-bs-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
-                                                {{ 'admin.home.sales_summary_weekly'|trans }}
-                                            </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 ps-4 pe-4" id="pills-monthly-tab" data-bs-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
-                                                {{ 'admin.home.sales_summary_monthly'|trans }}
-                                            </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 ps-4 pe-4" id="pills-year-tab" data-bs-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
-                                                {{ 'admin.home.sales_summary_yearly'|trans }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div id="loading" class="text-center pt-5">
-                                            <img src="{{ asset('assets/img/loading.gif', 'admin') }}">
-                                        </div>
-                                        <div class="tab-content" id="pills-tabContent">
-                                            <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab">
-                                                <canvas id="chart-0"></canvas>
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
-                                                <canvas id="chart-1"></canvas>
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-year" role="tabpanel" aria-labelledby="pills-year-tab">
-                                                <canvas id="chart-2"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- /#chart-statistics -->
+                    <span class="kpi-label">TOTAL PRODUCTS</span>
+                </div>
+                <div class="kpi-more-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+                </div>
+            </div>
+            <div class="kpi-value">{{ countProducts|number_format }}</div>
+            <div class="kpi-subtext">Active catalog items</div>
+        </a>
+
+        <!-- KPI 2: Out of Stock -->
+        <a href="{{ url('admin_homepage_nonstock') }}" class="pulse-kpi-card text-decoration-none">
+            <div class="kpi-card-header">
+                <div class="kpi-label-group">
+                    <div class="kpi-icon-badge text-danger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <span class="kpi-label">OUT OF STOCK</span>
+                </div>
+                <div class="kpi-more-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+                </div>
+            </div>
+            <div class="kpi-value text-danger">{{ countNonStockProducts|number_format }}</div>
+            <div class="kpi-subtext">Requires replenishment</div>
+        </a>
+
+        <!-- KPI 3: Registered Customers -->
+        <a href="{{ url('admin_homepage_customer') }}" class="pulse-kpi-card text-decoration-none">
+            <div class="kpi-card-header">
+                <div class="kpi-label-group">
+                    <div class="kpi-icon-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <span class="kpi-label">REGISTERED CUSTOMERS</span>
+                </div>
+                <div class="kpi-more-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+                </div>
+            </div>
+            <div class="kpi-value">{{ countCustomers|number_format }}</div>
+            <div class="kpi-subtext">Member accounts</div>
+        </a>
+
+        <!-- KPI 4: Today's Orders / Sales -->
+        <a href="{{ url('admin_order') }}" class="pulse-kpi-card text-decoration-none">
+            <div class="kpi-card-header">
+                <div class="kpi-label-group">
+                    <div class="kpi-icon-badge text-success">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <span class="kpi-label">TODAY'S ORDERS</span>
+                </div>
+                <div class="kpi-more-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></svg>
+                </div>
+            </div>
+            <div class="kpi-value text-success">{{ salesToday is empty ? 0 : salesToday.order_count|number_format }}</div>
+            <div class="kpi-subtext">Sales: {{ (salesToday is empty ? 0 : salesToday.order_amount)|price }}</div>
+        </a>
+    </div>
+
+    <!-- SALES PERFORMANCE SECTION (3 Metric Cards) -->
+    <div class="pulse-section-header">
+        <span class="pulse-section-title">SALES PERFORMANCE</span>
+    </div>
+    <div class="pulse-metrics-row">
+        <!-- This Month -->
+        <div class="pulse-metric-card">
+            <div class="metric-card-header">
+                <span class="metric-label">{{ 'admin.home.sales_summary_this_month'|trans }}</span>
+                <span class="metric-badge">{{ (salesThisMonth is empty ? 0 : salesThisMonth.order_count)|number_format }} orders</span>
+            </div>
+            <div class="metric-value">{{ (salesThisMonth is empty ? 0 : salesThisMonth.order_amount)|price }}</div>
+            <div class="metric-footer">Total accumulated this month</div>
+        </div>
+
+        <!-- Today -->
+        <div class="pulse-metric-card">
+            <div class="metric-card-header">
+                <span class="metric-label">{{ 'admin.home.sales_summary_today'|trans }}</span>
+                <span class="metric-badge">{{ (salesToday is empty ? 0 : salesToday.order_count)|number_format }} orders</span>
+            </div>
+            <div class="metric-value">{{ (salesToday is empty ? 0 : salesToday.order_amount)|price }}</div>
+            <div class="metric-footer">Real-time daily turnover</div>
+        </div>
+
+        <!-- Yesterday -->
+        <div class="pulse-metric-card">
+            <div class="metric-card-header">
+                <span class="metric-label">{{ 'admin.home.sales_summary_yesterday'|trans }}</span>
+                <span class="metric-badge">{{ (salesYesterday is empty ? 0 : salesYesterday.order_count)|number_format }} orders</span>
+            </div>
+            <div class="metric-value">{{ (salesYesterday is empty ? 0 : salesYesterday.order_amount)|price }}</div>
+            <div class="metric-footer">Previous closing turnover</div>
+        </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN SPLIT: Sales Chart (Left) + Order Status Breakdown (Right) -->
+    <div class="row g-4 mb-4">
+        <!-- Sales Analytics Chart -->
+        <div class="col-lg-7">
+            <div id="chart-statistics" class="pulse-panel-card h-100">
+                <div class="pulse-panel-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="pulse-panel-title">{{ 'admin.home.sales_summary_title'|trans }}</span>
+                    </div>
+                    <!-- Pill Tabs -->
+                    <div class="pulse-pill-tabs nav" id="pills-tab" role="tablist">
+                        <a class="pulse-pill-tab active" id="pills-weekly-tab" data-bs-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
+                            {{ 'admin.home.sales_summary_weekly'|trans }}
+                        </a>
+                        <a class="pulse-pill-tab" id="pills-monthly-tab" data-bs-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
+                            {{ 'admin.home.sales_summary_monthly'|trans }}
+                        </a>
+                        <a class="pulse-pill-tab" id="pills-year-tab" data-bs-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
+                            {{ 'admin.home.sales_summary_yearly'|trans }}
+                        </a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col mb-4">
-                        <div id="shop-statistical" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.shop_status_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_homepage_nonstock') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-inbox fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_out_of_stock'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-end align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countNonStockProducts|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_product') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-cubes fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_products'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-check align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countProducts|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_homepage_customer') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-users fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_customers'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-check align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countCustomers|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div><!-- /#shop-statistical -->
+                <div class="pulse-panel-body">
+                    <div id="loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                    <div class="col mb-4">
-                        <div id="ec-cube-plugin" class="card rounded border-0 h-100">
-                            <div class="card-header border-bottom-0">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.recommend_plugins_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body py-0" style="max-height: 395px; overflow-y: scroll">
-                                {% for plugin in recommendedPlugins %}
-                                    <div class="row py-3 border border-bottom-0 border-start-0 border-end-0">
-                                        <div class="col-5 col-md-4">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
-                                                <img src="{{ plugin.image }}" class="w-100" alt="{{ plugin.name }}">
-                                            </a>
-                                        </div>
-                                        <div class="col-7 col-md-8 ps-0">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
-                                            <p class="m-0 pt-2">
-                                                {{ plugin.short_description }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    {{ include('@admin/Store/plugin_detail_modal.twig', {'item': plugin} ) }}
-                                {% endfor %}
-                            </div>
-                            <div class="card-footer">
-                                > <a href="{{ url('admin_store_plugin_owners_search_page') }}">{{ 'admin.home.recommend_plugins.owner_store'|trans }}</a>
-                            </div>
-                        </div><!-- /#ec-cube-plugin -->
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab" style="height: 260px;">
+                            <canvas id="chart-0"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab" style="height: 260px;">
+                            <canvas id="chart-1"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="pills-year" role="tabpanel" aria-labelledby="pills-year-tab" style="height: 260px;">
+                            <canvas id="chart-2"></canvas>
+                        </div>
                     </div>
-                    <div class="col mb-4">
-                        <div id="ec-cube-news" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.news_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <iframe name="information" class="link_list_wrap" src="{{ eccube_config.eccube_info_url }}" style="width:100%; border:0; min-height:390px;"></iframe>
-                            </div>
-                            <div class="card-footer" style="height:43px;box-sizing: border-box;"></div>
-                        </div><!-- /#ec-cube-news -->
-                    </div>
-                </div><!-- /.row -->
-            </div><!-- /.c-primaryCol -->
-        </div><!-- /.c-contentsArea__primaryCol -->
-    </div><!-- /.c-contentsArea__cols -->
+                </div>
+            </div>
+        </div>
 
+        <!-- Real Order Status Queue List -->
+        <div class="col-lg-5">
+            <div id="order-status" class="pulse-panel-card h-100">
+                <div class="pulse-panel-header">
+                    <span class="pulse-panel-title">{{ 'admin.home.order_status_title'|trans }}</span>
+                    <a href="{{ url('admin_order') }}" class="pulse-panel-link">View All &rarr;</a>
+                </div>
+                <div class="pulse-panel-body p-0">
+                    <div class="pulse-order-status-list">
+                        {% for OrderStatus in OrderStatuses %}
+                            {% set orderCount = Orders is not empty and Orders[OrderStatus.id] is defined ? Orders[OrderStatus.id] : 0 %}
+                            <a href="{{ url('admin_order', { 'order_status_id': OrderStatus.id }) }}" class="pulse-order-status-row">
+                                <div class="status-name-group">
+                                    <span class="pulse-status-dot {% if orderCount > 0 %}active-dot{% endif %}"></span>
+                                    <span class="status-title">{{ OrderStatus.name }}</span>
+                                </div>
+                                <div class="status-count-group">
+                                    <span class="pulse-count-pill {% if orderCount > 0 %}has-orders{% endif %}">
+                                        {{ orderCount }}
+                                    </span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="pulse-panel-footer">
+                    <a href="{{ url('admin_order') }}" class="btn btn-sm btn-pulse-outline w-100">
+                        <span>Check Order Processing Queue</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM ROW: Recommended Plugins (Left) & Shop News (Right) -->
+    <div class="row g-4">
+        <!-- Recommended Plugins -->
+        <div class="col-lg-6">
+            <div id="ec-cube-plugin" class="pulse-panel-card h-100">
+                <div class="pulse-panel-header">
+                    <span class="pulse-panel-title">{{ 'admin.home.recommend_plugins_title'|trans }}</span>
+                    <a href="{{ url('admin_store_plugin_owners_search_page') }}" class="pulse-panel-link">
+                        {{ 'admin.home.recommend_plugins.owner_store'|trans }} &rarr;
+                    </a>
+                </div>
+                <div class="pulse-panel-body" style="max-height: 380px; overflow-y: auto;">
+                    {% if recommendedPlugins is not empty %}
+                        {% for plugin in recommendedPlugins %}
+                            <div class="pulse-plugin-item">
+                                <div class="pulse-plugin-thumb">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
+                                        <img src="{{ plugin.image }}" alt="{{ plugin.name }}">
+                                    </a>
+                                </div>
+                                <div class="pulse-plugin-info">
+                                    <a href="#" class="pulse-plugin-name" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
+                                        {{ plugin.name }}
+                                    </a>
+                                    <p class="pulse-plugin-desc">{{ plugin.short_description }}</p>
+                                </div>
+                            </div>
+                            {{ include('@admin/Store/plugin_detail_modal.twig', {'item': plugin} ) }}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="fa fa-plug fa-2x mb-2 d-block"></i>
+                            <span>No recommended plugins available at this time.</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Store News & Information -->
+        <div class="col-lg-6">
+            <div id="ec-cube-news" class="pulse-panel-card h-100">
+                <div class="pulse-panel-header">
+                    <span class="pulse-panel-title">{{ 'admin.home.news_title'|trans }}</span>
+                </div>
+                <div class="pulse-panel-body p-0">
+                    <iframe name="information" class="pulse-news-iframe" src="{{ eccube_config.eccube_info_url }}"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -16,12 +16,12 @@ file that was distributed with this source code.
 <script>
 $(function () {
     $("#qrcode").qrcode({
-        size: 200,
-        fill: '#000',
+        size: 180,
+        fill: '#0f172a',
         text: 'otpauth://totp/{{ 'EC-CUBE:'|url_encode }}{{ BaseInfo.shop_name|url_encode }}{{ ' - '|url_encode }}{{ Member.name|url_encode }}?secret={{ auth_key }}&issuer={{ 'EC-CUBE'|url_encode }}',
         radius: 0,
         quiet: 0,
-        mode: 0, // 0: normal , 1: label strip , 2: label box , 3: image strip , 4: image box
+        mode: 0,
         mSize: 0.1,
         mPosX: 0.5,
         mPosY: 0.5,
@@ -35,44 +35,129 @@ $(function () {
 {% endblock %}
 
 {% block main %}
-        <style>
-        #qrcode canvas { width: 150px; }
-        </style>
-    <div class="container" style="margin-top: 150px;">
-        <div class="row">
-            <div class="col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-                <div class="text-center p-5 bg-white">
-                    {{ include('@admin/alert.twig') }}
-                    <form name="form1" id="form1" method="post" action="{{ path('admin_two_factor_auth_set') }}">
-                        {{ form_widget(form._token) }}
-                        {{ form_widget(form.auth_key) }}
-                        <h5 class="mb-3">{{ 'admin.setting.system.two_factor_auth_title'|trans }}</h5>
-                        <p class="mb-3 text-start">{{ 'tooltip.setting.system.two_factor_auth.qr_code'|trans }}</p>
-                        <div id="qrcode" class="mb-3"></div>
-                        {% if error is not empty %}
-                            <div class="text-danger mb-3 text-start small">{{ error }}</div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="mb-3 d-flex justify-content-center">
-                                    {{ form_widget(form.device_token, {'attr': {'class':'w-100','placeholder': 'admin.setting.system.two_factor_auth.device_token', 'autofocus': true}}) }}
-                                </div>
-                                <p class="mb-3 text-start">{{ form_errors(form.device_token) }}</p>
-                            </div>
-                            <div class="col-12">
-                            	<button type="submit" class="btn btn-primary w-100">{{ 'admin.common.registration'|trans }}</button>
-                            </div>
-                        </div>
-                        
-                    </form>
-                </div>
+<div class="login-split-wrapper">
+    <!-- Left Hero & 3D Isometric Visual Panel -->
+    <div class="login-hero-side">
+        <div class="login-hero-content">
+            <div class="login-hero-badge">
+                <span class="pulse-dot"></span>
+                <span>Two-Factor Setup</span>
             </div>
-            <div class="col-12">
-                <p class="text-center mt-3">
-                    <small>Copyright &copy; 2000-{{ "now"|date("Y") }} EC-CUBE CO.,LTD. All Rights Reserved.</small>
-                </p>
+            <h1 class="login-hero-heading">Setup Security Key</h1>
+            <p class="login-hero-subtitle">
+                Scan the QR code with your Google Authenticator or Microsoft Authenticator app to enable 2FA protection.
+            </p>
+        </div>
+
+        <div class="login-artwork-container">
+            <img src="{{ asset('assets/img/login_bg_3d.jpg', 'admin') }}" alt="Security Verification" class="login-artwork-img" />
+        </div>
+
+        <div class="login-hero-features">
+            <div class="login-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Encrypted Secret</span>
             </div>
         </div>
     </div>
 
+    <!-- Right Form Panel -->
+    <div class="login-form-side">
+        <!-- Top Nav Info -->
+        <div class="login-form-header">
+            <a href="{{ path('admin_login') }}" class="login-brand-logo">
+                <img src="{{ asset('assets/img/logo2.png', 'admin') }}" alt="{{ BaseInfo.shop_name }}">
+            </a>
+            <a href="{{ path('admin_login') }}" class="login-store-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>{{ 'admin.login.login'|trans }}</span>
+            </a>
+        </div>
+
+        <!-- Center Form Box -->
+        <div class="login-form-center">
+            <div class="login-title-section">
+                <h2 class="login-main-title">{{ 'admin.setting.system.two_factor_auth_title'|trans }}</h2>
+                <p class="login-main-desc">
+                    {{ 'tooltip.setting.system.two_factor_auth.qr_code'|trans }}
+                </p>
+            </div>
+
+            <div class="text-center mb-3">
+                <div class="login-2fa-qrcode-box">
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+
+            {% if error is not empty %}
+                <div class="login-alert-box mb-4">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+            <form name="form1" id="form1" method="post" action="{{ path('admin_two_factor_auth_set') }}" class="login-form">
+                {{ form_widget(form._token) }}
+                {{ form_widget(form.auth_key) }}
+
+                <div class="login-field-group">
+                    <label for="{{ form.device_token.vars.id }}" class="login-label">
+                        <span>{{ 'admin.setting.system.two_factor_auth.device_token'|trans }}</span>
+                    </label>
+                    <div class="login-input-wrapper">
+                        <span class="login-input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </span>
+                        {{ form_widget(form.device_token, {
+                            'attr': {
+                                'class': 'login-input',
+                                'placeholder': '000000',
+                                'autofocus': true,
+                                'inputmode': 'numeric',
+                                'pattern': '[0-9]*',
+                                'maxlength': 6,
+                                'style': 'letter-spacing: 4px; font-size: 1.25rem; font-weight: 700;'
+                            }
+                        }) }}
+                    </div>
+                    <div class="text-danger small mt-1">{{ form_errors(form.device_token) }}</div>
+                </div>
+
+                <button type="submit" class="login-submit-btn">
+                    <span>{{ 'admin.common.registration'|trans }}</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-form-footer">
+            <div class="login-security-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Two-Factor Setup Portal</span>
+            </div>
+            <div>
+                <small>Copyright &copy; 2000-{{ "now"|date("Y") }} {{ BaseInfo.shop_name|default('EC-CUBE CO.,LTD.') }}. All Rights Reserved.</small>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

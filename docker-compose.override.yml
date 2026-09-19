@@ -23,7 +23,7 @@ services:
       ECCUBE_ADMIN_USER: "admin"
       ECCUBE_ADMIN_PASS: "password"
       ECCUBE_2FA_ENABLED: "false"
-      ECCUBE_LOCALE: "${ECCUBE_LOCALE:-en}"
+      ECCUBE_LOCALE: "en"
 
   mysql:
     image: mysql:8.0

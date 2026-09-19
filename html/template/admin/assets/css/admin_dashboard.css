@@ -1,0 +1,1057 @@
+/* ============================================================
+   EC-CUBE Admin Dashboard & Admin Pages
+   Pulse Clinic Pixel-Exact Design System
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. Design Tokens
+   ---------------------------------------------------------- */
+:root {
+  --bg-page:             #f3f4f6;
+  --bg-canvas:           #ffffff;
+  --bg-white:            #ffffff;
+  --bg-hover:            #f8fafc;
+  --bg-active:           #f1f5f9;
+
+  --border-color:        #e5e7eb;
+  --border-light:        #f1f5f9;
+  --border-subtle:       #f8fafc;
+
+  --text-primary:        #0f172a;
+  --text-secondary:      #475569;
+  --text-muted:          #64748b;
+  --text-dim:            #94a3b8;
+
+  --radius-xs:           4px;
+  --radius-sm:           8px;
+  --radius-md:           12px;
+  --radius-lg:           16px;
+  --radius-xl:           20px;
+  --radius-pill:         9999px;
+
+  --font-sans:           'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition:          all 0.15s ease;
+}
+
+/* ----------------------------------------------------------
+   1. Base & Global Reset
+   ---------------------------------------------------------- */
+html, body {
+  background: var(--bg-page) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+/* ----------------------------------------------------------
+   2. Top Bar Header (.c-headerBar)
+   ---------------------------------------------------------- */
+.c-headerBar {
+  background: var(--bg-white) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  height: 56px !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: none !important;
+}
+
+.c-headerBar__container {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  height: 56px !important;
+  padding: 0 24px !important;
+  max-width: 100% !important;
+  margin-left: 230px;
+  transition: margin-left 0.2s ease;
+}
+
+.c-headerBar__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.c-headerBar__toggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.c-headerBar__toggleBtn:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.c-headerBar__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumb-root {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.breadcrumb-sep {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.breadcrumb-leaf {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.c-headerBar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.c-headerBar__searchPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px 0 10px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+}
+.c-headerBar__searchPill:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.c-headerBar__searchPill kbd {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.2;
+}
+
+.c-headerBar__notificationBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.c-headerBar__notificationBtn:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+/* ----------------------------------------------------------
+   3. Sidebar Navigation (.c-mainNavArea)
+   ---------------------------------------------------------- */
+.c-mainNavArea {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 230px !important;
+  height: 100vh !important;
+  background: var(--bg-white) !important;
+  border-right: 1px solid var(--border-color) !important;
+  z-index: 1050;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.c-mainNavArea__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.c-mainNavArea__brand {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.pulse-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.pulse-brand-icon {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.pulse-brand-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.c-mainNavArea__menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+  scrollbar-width: thin;
+}
+
+.c-mainNavArea__nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-category-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 18px 18px 6px 18px;
+}
+
+.c-mainNavArea__navItem {
+  list-style: none;
+  margin: 0;
+}
+
+.c-mainNavArea__navItemTitle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 14px !important;
+  margin: 2px 10px !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.c-mainNavArea__navItemTitle:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.c-mainNavArea__navItemTitle.is-active {
+  background: var(--bg-active) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.c-mainNavArea__navItemTitle svg {
+  flex-shrink: 0;
+}
+
+.c-mainNavArea__subLink {
+  display: block;
+  padding: 6px 14px 6px 40px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.c-mainNavArea__subLink:hover {
+  color: var(--text-primary);
+}
+
+/* Bottom Profile */
+.c-mainNavArea__userProfile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 12px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.c-mainNavArea__userProfile:hover {
+  background: var(--bg-active);
+  border-color: #cbd5e1;
+}
+
+.user-avatar-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.user-chevron {
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------
+   4. Main Content Area Canvas
+   ---------------------------------------------------------- */
+.c-container {
+  margin-top: 56px !important;
+  min-width: 0 !important;
+}
+
+.c-contentsArea {
+  margin-left: 230px !important;
+  padding: 20px 24px !important;
+  background: var(--bg-page) !important;
+  min-height: calc(100vh - 56px);
+  box-sizing: border-box;
+}
+
+/* Dashboard White Outer Rounded Canvas */
+.pulse-dashboard-container {
+  background: var(--bg-canvas);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* Page Title on sub-pages (Products, Orders, Settings) */
+.c-pageTitle {
+  background: transparent !important;
+  padding: 0 0 20px 0 !important;
+  margin-bottom: 0 !important;
+  border: none !important;
+}
+
+.c-pageTitle__title {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.4px;
+}
+
+/* ----------------------------------------------------------
+   5. Dashboard Hero Header (Real System Context)
+   ---------------------------------------------------------- */
+.pulse-hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pulse-hero-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pulse-hero-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.pulse-hero-time-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.pulse-live-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  display: inline-block;
+}
+
+.pulse-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-pulse-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.btn-pulse-outline:hover {
+  background: var(--bg-hover);
+  border-color: #cbd5e1;
+  color: var(--text-primary);
+}
+
+.btn-pulse-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  background: #0f172a;
+  border: 1px solid #0f172a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.btn-pulse-primary:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* ----------------------------------------------------------
+   6. 4 Top KPI Cards (Real System Metrics)
+   ---------------------------------------------------------- */
+.pulse-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pulse-kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: block;
+  cursor: pointer;
+}
+.pulse-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  border-color: #cbd5e1;
+}
+
+.kpi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.kpi-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-icon-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kpi-more-btn {
+  color: var(--text-dim);
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.kpi-subtext {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------
+   7. Sales Performance Metrics (3 Cards)
+   ---------------------------------------------------------- */
+.pulse-section-header {
+  margin-bottom: 12px;
+}
+
+.pulse-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pulse-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pulse-metric-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.metric-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.metric-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-active);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.metric-footer {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ----------------------------------------------------------
+   8. Main Split Panels: Chart & Real Order Status List
+   ---------------------------------------------------------- */
+.pulse-panel-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pulse-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pulse-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pulse-panel-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+.pulse-panel-link:hover {
+  text-decoration: underline;
+}
+
+.pulse-pill-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  padding: 3px;
+  border-radius: var(--radius-pill);
+}
+
+.pulse-pill-tab {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.pulse-pill-tab:hover {
+  color: var(--text-primary);
+}
+.pulse-pill-tab.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pulse-panel-body {
+  padding: 20px;
+  flex: 1;
+}
+
+/* Real Order Status Queue List */
+.pulse-order-status-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.pulse-order-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+.pulse-order-status-row:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.pulse-order-status-row:last-child {
+  border-bottom: none;
+}
+
+.status-name-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulse-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+.pulse-status-dot.active-dot {
+  background: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.status-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.pulse-count-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+.pulse-count-pill.has-orders {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.pulse-panel-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-light);
+  background: #fafbfc;
+}
+
+/* Recommended Plugins */
+.pulse-plugin-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.pulse-plugin-item:last-child {
+  border-bottom: none;
+}
+
+.pulse-plugin-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.pulse-plugin-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pulse-plugin-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pulse-plugin-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.pulse-plugin-name:hover {
+  text-decoration: underline;
+}
+
+.pulse-plugin-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.pulse-news-iframe {
+  width: 100%;
+  min-height: 380px;
+  border: 0;
+}
+
+/* Storefront Link in Header */
+.c-headerBar__storefrontLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.c-headerBar__storefrontLink:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.user-avatar-badge-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-online-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  margin-left: auto;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+/* ----------------------------------------------------------
+   8. Global Components for All Other Admin Pages
+   ---------------------------------------------------------- */
+.card {
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  background: #ffffff !important;
+  overflow: hidden;
+}
+
+.card-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 16px 20px !important;
+}
+
+.card-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+}
+
+.card-body {
+  padding: 20px !important;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  color: var(--text-primary) !important;
+  background: #ffffff !important;
+  transition: var(--transition) !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #94a3b8 !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06) !important;
+  outline: none !important;
+}
+
+/* Search Panels */
+.c-subContents {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 20px !important;
+  margin-top: 14px !important;
+  margin-bottom: 20px !important;
+}
+.c-subContents::before {
+  display: none !important;
+}
+
+/* Order Status Filter Pills */
+#admin_search_order_status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+#admin_search_order_status .form-check {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#admin_search_order_status .form-check-input {
+  display: none;
+}
+#admin_search_order_status .form-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+#admin_search_order_status .form-check-input:checked + .form-check-label {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+/* Buttons */
+.btn-ec-conversion {
+  background: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 8px 20px !important;
+}
+.btn-ec-conversion:hover {
+  background: #1e293b !important;
+}
+
+.btn-ec-regular {
+  background: #ffffff !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-pill) !important;
+  padding: 8px 18px !important;
+}
+.btn-ec-regular:hover {
+  background: var(--bg-hover) !important;
+  border-color: #cbd5e1 !important;
+}
+
+.btn-ec-sub {
+  background: transparent !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+  border-radius: var(--radius-pill) !important;
+}
+
+/* Fixed Conversion Area */
+.c-conversionArea {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(10px) !important;
+  border-top: 1px solid var(--border-color) !important;
+  height: 64px !important;
+}
+.c-conversionArea__container {
+  height: 64px;
+  max-width: 100%;
+}
+
+/* ----------------------------------------------------------
+   9. Responsive Media Queries
+   ---------------------------------------------------------- */
+@media only screen and (max-width: 1280px) {
+  .frontdesk-main-grid {
+    grid-template-columns: 1fr;
+  }
+  .frontdesk-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .c-headerBar__container {
+    margin-left: 0 !important;
+    padding: 0 14px !important;
+  }
+  .c-contentsArea {
+    margin-left: 0 !important;
+    padding: 14px !important;
+  }
+  .pulse-dashboard-container {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+  .frontdesk-hero {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .frontdesk-kpi-row {
+    grid-template-columns: 1fr;
+  }
+  .c-mainNavArea {
+    left: -230px !important;
+    transition: left 0.25s ease;
+  }
+  .c-mainNavArea.is-active {
+    left: 0 !important;
+  }
+  .table-responsive {
+    overflow-x: auto !important;
+  }
+}
