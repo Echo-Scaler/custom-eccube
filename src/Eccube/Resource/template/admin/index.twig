@@ -49,8 +49,8 @@ file that was distributed with this source code.
                 }
             };
 
-            var priceBackgroundColor = 'rgba(58, 115, 188, 1)';
-            var priceBorderColor = 'rgba(255, 255, 255, 0)';
+            var priceBackgroundColor = 'rgba(200, 200, 205, 0.6)';
+            var priceBorderColor = 'rgba(200, 200, 205, 0)';
 
             $.ajax({
                 url: '{{ url('admin_homepage_sale') }}',
@@ -68,7 +68,13 @@ file that was distributed with this source code.
                     Object.keys(data).forEach(function(key) {
                         labels.push(key);
                         prices.push(data[key].price);
-                        priceBackgroundColors.push(priceBackgroundColor);
+                        // Highlight the highest bar with dark color
+                        var maxPrice = Math.max.apply(null, Object.values(data).map(function(v) { return v.price; }));
+                        if (data[key].price === maxPrice && data[key].price > 0) {
+                            priceBackgroundColors.push('rgba(50, 50, 55, 0.85)');
+                        } else {
+                            priceBackgroundColors.push(priceBackgroundColor);
+                        }
                         priceBorderColors.push(priceBorderColor);
                     });
 
@@ -85,7 +91,8 @@ file that was distributed with this source code.
                                     data: prices,
                                     backgroundColor: priceBackgroundColors,
                                     borderColor: priceBorderColors,
-                                    borderWidth: 1,
+                                    borderWidth: 0,
+                                    borderRadius: 3,
                                     yAxisID: 'y'
                                 }
                             ]
@@ -104,20 +111,215 @@ file that was distributed with this source code.
 {% endblock javascript %}
 
 {% block main %}
+    {# ── Security Warning ── #}
     {% if is_danger_admin_url %}
     <div class="alert alert-warning alert-dismissible fade show m-3" role="alert">
         <i class="fa fa-warning fa-lg me-2"></i>
         <span class="fw-bold">{{ 'admin.common.admin_url_warning'|trans({ '%url%': url('admin_setting_system_security') })|raw }}</span>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close">
-
-        </button>
+        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
+
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
+
+                {# ════════════════════════════════════════════
+                   WELCOME BANNER (Pulse Clinic style — light)
+                   ════════════════════════════════════════════ #}
+                <div class="dashboard-welcome">
+                    <div class="dashboard-welcome__content">
+                        <div class="dashboard-welcome__label">Welcome</div>
+                        <div class="dashboard-welcome__title">{{ 'admin.header.user_name'|trans({'%name%':app.user.name}) }}, here is your store</div>
+                        <div class="dashboard-welcome__subtitle">Today at a glance, and how your store has been performing.</div>
+                    </div>
+                    <div class="dashboard-welcome__actions">
+                        <a href="{{ url('admin_order') }}" class="btn-outline">Orders</a>
+                        <a href="{{ url('admin_product') }}" class="btn-solid">Products</a>
+                    </div>
+                </div>
+
+                {# ════════════════════════════════════════════
+                   KPI CARDS ROW — 4 columns (Pulse Clinic style)
+                   Order status counts + key metrics
+                   ════════════════════════════════════════════ #}
+                <div class="kpi-grid">
+                    {# Card 1: Out of Stock #}
+                    <div class="kpi-card">
+                        <a href="{{ url('admin_homepage_nonstock') }}">
+                            <div class="kpi-card__header">
+                                <div class="kpi-card__title-row">
+                                    <div class="kpi-card__icon"><i class="fa fa-inbox"></i></div>
+                                    <div class="kpi-card__label">Out of Stock</div>
+                                </div>
+                                <div class="kpi-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                            </div>
+                            <div class="kpi-card__value">{{ '%02d'|format(countNonStockProducts) }}</div>
+                            <div class="kpi-card__desc">Items need restocking</div>
+                        </a>
+                    </div>
+
+                    {# Card 2: Total Products #}
+                    <div class="kpi-card">
+                        <a href="{{ url('admin_product') }}">
+                            <div class="kpi-card__header">
+                                <div class="kpi-card__title-row">
+                                    <div class="kpi-card__icon"><i class="fa fa-cubes"></i></div>
+                                    <div class="kpi-card__label">Products</div>
+                                </div>
+                                <div class="kpi-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                            </div>
+                            <div class="kpi-card__value">{{ '%02d'|format(countProducts) }}</div>
+                            <div class="kpi-card__desc">In the catalog</div>
+                        </a>
+                    </div>
+
+                    {# Card 3: Customers #}
+                    <div class="kpi-card">
+                        <a href="{{ url('admin_homepage_customer') }}">
+                            <div class="kpi-card__header">
+                                <div class="kpi-card__title-row">
+                                    <div class="kpi-card__icon"><i class="fa fa-users"></i></div>
+                                    <div class="kpi-card__label">Customers</div>
+                                </div>
+                                <div class="kpi-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                            </div>
+                            <div class="kpi-card__value">{{ '%02d'|format(countCustomers) }}</div>
+                            <div class="kpi-card__desc">Registered members</div>
+                        </a>
+                    </div>
+
+                    {# Card 4: Order count from all displayed statuses #}
+                    <div class="kpi-card">
+                        <a href="{{ url('admin_order') }}">
+                            <div class="kpi-card__header">
+                                <div class="kpi-card__title-row">
+                                    <div class="kpi-card__icon"><i class="fa fa-shopping-cart"></i></div>
+                                    <div class="kpi-card__label">Active Orders</div>
+                                </div>
+                                <div class="kpi-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                            </div>
+                            <div class="kpi-card__value">
+                                {% set totalOrders = 0 %}
+                                {% for OrderStatus in OrderStatuses %}
+                                    {% set totalOrders = totalOrders + (Orders is not empty and Orders[OrderStatus.id] is defined ? Orders[OrderStatus.id] : 0) %}
+                                {% endfor %}
+                                {{ '%02d'|format(totalOrders) }}
+                            </div>
+                            <div class="kpi-card__desc">Across all statuses</div>
+                        </a>
+                    </div>
+                </div>
+
+                {# ════════════════════════════════════════════
+                   SALES SUMMARY — "LAST 30 DAYS" style
+                   3 metric cards like the reference
+                   ════════════════════════════════════════════ #}
+                <div class="section-title">Sales Summary</div>
+                <div class="metric-grid">
+                    {# This Month #}
+                    <div class="metric-card">
+                        <div class="metric-card__header">
+                            <div class="metric-card__title-row">
+                                <div class="metric-card__icon"><i class="fa fa-money"></i></div>
+                                <div class="metric-card__label">This Month</div>
+                            </div>
+                            <div class="metric-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                        </div>
+                        <div class="metric-card__value">
+                            {% set amount = salesThisMonth is empty ? 0 : salesThisMonth.order_amount %}
+                            {{ amount|price }}
+                        </div>
+                        <div class="metric-card__desc">
+                            {% set count = salesThisMonth is empty ? 0 : salesThisMonth.order_count %}
+                            {{ count|number_format }} orders this month
+                        </div>
+                    </div>
+
+                    {# Today #}
+                    <div class="metric-card">
+                        <div class="metric-card__header">
+                            <div class="metric-card__title-row">
+                                <div class="metric-card__icon"><i class="fa fa-calendar-check-o"></i></div>
+                                <div class="metric-card__label">Today</div>
+                            </div>
+                            <div class="metric-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                        </div>
+                        <div class="metric-card__value">
+                            {% set amount = salesToday is empty ? 0 : salesToday.order_amount %}
+                            {{ amount|price }}
+                        </div>
+                        <div class="metric-card__desc">
+                            {% set count = salesToday is empty ? 0 : salesToday.order_count %}
+                            {{ count|number_format }} orders today
+                        </div>
+                    </div>
+
+                    {# Yesterday #}
+                    <div class="metric-card">
+                        <div class="metric-card__header">
+                            <div class="metric-card__title-row">
+                                <div class="metric-card__icon"><i class="fa fa-history"></i></div>
+                                <div class="metric-card__label">Yesterday</div>
+                            </div>
+                            <div class="metric-card__menu"><i class="fa fa-ellipsis-h"></i></div>
+                        </div>
+                        <div class="metric-card__value">
+                            {% set amount = salesYesterday is empty ? 0 : salesYesterday.order_amount %}
+                            {{ amount|price }}
+                        </div>
+                        <div class="metric-card__desc">
+                            {% set count = salesYesterday is empty ? 0 : salesYesterday.order_count %}
+                            {{ count|number_format }} orders yesterday
+                        </div>
+                    </div>
+                </div>
+
+                {# ════════════════════════════════════════════
+                   SALES CHART — "COLLECTED PER DAY" style
+                   ════════════════════════════════════════════ #}
+                <div class="chart-card">
+                    <div class="chart-card__header">
+                        <div class="chart-card__title">{{ 'admin.home.sales_summary_title'|trans }}</div>
+                        <div class="chart-card__summary">
+                            {% set amount = salesThisMonth is empty ? 0 : salesThisMonth.order_amount %}
+                            <strong>{{ amount|price }}</strong> in the period
+                        </div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <div class="btn-group nav d-inline-flex" id="pills-tab" role="tablist">
+                            <a class="nav-link active btn btn-ec-tab" id="pills-weekly-tab" data-bs-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
+                                {{ 'admin.home.sales_summary_weekly'|trans }}
+                            </a>
+                            <a class="nav-link btn btn-ec-tab" id="pills-monthly-tab" data-bs-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
+                                {{ 'admin.home.sales_summary_monthly'|trans }}
+                            </a>
+                            <a class="nav-link btn btn-ec-tab" id="pills-year-tab" data-bs-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
+                                {{ 'admin.home.sales_summary_yearly'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                    <div id="loading" class="text-center pt-5">
+                        <img src="{{ asset('assets/img/loading.gif', 'admin') }}">
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab">
+                            <canvas id="chart-0"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
+                            <canvas id="chart-1"></canvas>
+                        </div>
+                        <div class="tab-pane fade" id="pills-year" role="tabpanel" aria-labelledby="pills-year-tab">
+                            <canvas id="chart-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                {# ════════════════════════════════════════════
+                   ORDER STATUS + RESOURCES
+                   ════════════════════════════════════════════ #}
                 <div class="row">
-                    <div class="col-4 mb-4">
+                    <div class="col-lg-4 mb-4">
                         <div id="order-status" class="card rounded border-0 h-100">
                             <div class="card-header">
                                 <a href="{{ url('admin_order') }}">
@@ -130,147 +332,19 @@ file that was distributed with this source code.
                                         <a href="{{ url('admin_order', { 'order_status_id': OrderStatus.id }) }}" class="p-3 d-block">
                                             <div class="row align-items-center">
                                                 <div class="col align-middle">
-                                                    <span class="align-middle">{{ OrderStatus.name }}</span>
+                                                    <span class="align-middle" style="font-size:13px;">{{ OrderStatus.name }}</span>
                                                 </div>
                                                 <div class="col-auto text-end align-middle">
-                                                    <span class="h4 align-middle fw-normal text-dark">{{ Orders is not empty and Orders[OrderStatus.id] is defined ? Orders[OrderStatus.id] : 0 }}</span>
+                                                    <span class="h4 align-middle fw-bold text-dark">{{ Orders is not empty and Orders[OrderStatus.id] is defined ? Orders[OrderStatus.id] : 0 }}</span>
                                                 </div>
                                             </div>
                                         </a>
                                     </div>
                                 {% endfor %}
                             </div>
-                        </div><!-- /#order-status -->
+                        </div>
                     </div>
-                    <div class="col-8 mb-4">
-                        <div id="chart-statistics" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.sales_summary_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0">
-                                <div class="row text-center border-bottom mb-3">
-                                    <div class="col-4 py-2 border-end">
-                                        <div class="h3">
-                                            {% set amount = salesThisMonth is empty ? 0 : salesThisMonth.order_amount %}
-                                            {% set count = salesThisMonth is empty ? 0 : salesThisMonth.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_this_month'|trans }}</small>
-                                    </div>
-                                    <div class="col-4 py-2 border-end">
-                                        <div class="h3">
-                                            {% set amount = salesToday is empty ? 0 : salesToday.order_amount %}
-                                            {% set count = salesToday is empty ? 0 : salesToday.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_today'|trans }}</small>
-                                    </div>
-                                    <div class="col-4 py-2">
-                                        <div class="h3">
-                                            {% set amount = salesYesterday is empty ? 0 : salesYesterday.order_amount %}
-                                            {% set count = salesYesterday is empty ? 0 : salesYesterday.order_count %}
-                                            {{ 'admin.home.sales_summary_value'|trans({ '%amount%': amount|price, '%count%': count|number_format }) }}
-                                        </div>
-                                        <small>{{ 'admin.home.sales_summary_yesterday'|trans }}</small>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col text-center">
-                                        <div class="btn-group nav d-inline-flex" id="pills-tab" role="tablist">
-                                            <a class="nav-link active btn btn-ec-tab py-2 ps-4 pe-4" id="pills-weekly-tab" data-bs-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
-                                                {{ 'admin.home.sales_summary_weekly'|trans }}
-                                            </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 ps-4 pe-4" id="pills-monthly-tab" data-bs-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
-                                                {{ 'admin.home.sales_summary_monthly'|trans }}
-                                            </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 ps-4 pe-4" id="pills-year-tab" data-bs-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
-                                                {{ 'admin.home.sales_summary_yearly'|trans }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div id="loading" class="text-center pt-5">
-                                            <img src="{{ asset('assets/img/loading.gif', 'admin') }}">
-                                        </div>
-                                        <div class="tab-content" id="pills-tabContent">
-                                            <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab">
-                                                <canvas id="chart-0"></canvas>
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
-                                                <canvas id="chart-1"></canvas>
-                                            </div>
-                                            <div class="tab-pane fade" id="pills-year" role="tabpanel" aria-labelledby="pills-year-tab">
-                                                <canvas id="chart-2"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- /#chart-statistics -->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col mb-4">
-                        <div id="shop-statistical" class="card rounded border-0 h-100">
-                            <div class="card-header">
-                                <div class="d-inline-block">
-                                    <span class="card-title">{{ 'admin.home.shop_status_title'|trans }}</span>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_homepage_nonstock') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-inbox fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_out_of_stock'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-end align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countNonStockProducts|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_product') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-cubes fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_products'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-check align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countProducts|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="d-block border border-top-0 border-start-0 border-end-0">
-                                    <a href="{{ url('admin_homepage_customer') }}" class="p-3 d-block">
-                                        <div class="row align-items-center">
-                                            <div class="col-2 align-middle text-center">
-                                                <i class="fa fa-users fa-2x text-secondary" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="col p-0">
-                                                <span class="align-middle">{{ 'admin.home.shop_status_customers'|trans }}</span>
-                                            </div>
-                                            <div class="col-auto text-check align-middle">
-                                                <span class="h4 align-middle fw-normal text-dark">{{ countCustomers|number_format }}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div><!-- /#shop-statistical -->
-                    </div>
-                    <div class="col mb-4">
+                    <div class="col-lg-4 mb-4">
                         <div id="ec-cube-plugin" class="card rounded border-0 h-100">
                             <div class="card-header border-bottom-0">
                                 <div class="d-inline-block">
@@ -287,7 +361,7 @@ file that was distributed with this source code.
                                         </div>
                                         <div class="col-7 col-md-8 ps-0">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
-                                            <p class="m-0 pt-2">
+                                            <p class="m-0 pt-2" style="font-size:12px; color:#999;">
                                                 {{ plugin.short_description }}
                                             </p>
                                         </div>
@@ -298,9 +372,9 @@ file that was distributed with this source code.
                             <div class="card-footer">
                                 > <a href="{{ url('admin_store_plugin_owners_search_page') }}">{{ 'admin.home.recommend_plugins.owner_store'|trans }}</a>
                             </div>
-                        </div><!-- /#ec-cube-plugin -->
+                        </div>
                     </div>
-                    <div class="col mb-4">
+                    <div class="col-lg-4 mb-4">
                         <div id="ec-cube-news" class="card rounded border-0 h-100">
                             <div class="card-header">
                                 <div class="d-inline-block">
@@ -311,9 +385,10 @@ file that was distributed with this source code.
                                 <iframe name="information" class="link_list_wrap" src="{{ eccube_config.eccube_info_url }}" style="width:100%; border:0; min-height:390px;"></iframe>
                             </div>
                             <div class="card-footer" style="height:43px;box-sizing: border-box;"></div>
-                        </div><!-- /#ec-cube-news -->
+                        </div>
                     </div>
-                </div><!-- /.row -->
+                </div>
+
             </div><!-- /.c-primaryCol -->
         </div><!-- /.c-contentsArea__primaryCol -->
     </div><!-- /.c-contentsArea__cols -->

@@ -1,0 +1,1329 @@
+/* ============================================================
+   EC-CUBE Admin Dashboard – Pulse Clinic Style Redesign
+   ============================================================
+   Matches the reference design exactly:
+   - White header with breadcrumb navigation
+   - Clean white sidebar with category labels
+   - Dark active nav state
+   - Light welcome banner
+   - KPI stat cards with icons and 3-dot menus
+   - Section titles between card groups
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. CSS Custom Properties (Design Tokens)
+   ---------------------------------------------------------- */
+:root {
+  --bg-page:             #f7f7f8;
+  --bg-white:            #ffffff;
+  --bg-card:             #ffffff;
+  --bg-hover:            #f5f5f7;
+
+  --border-color:        #e8e8ec;
+  --border-light:        #f0f0f3;
+
+  --shadow-card:         0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-card-hover:   0 4px 12px rgba(0,0,0,0.08);
+
+  --text-primary:        #1a1a1a;
+  --text-secondary:      #6b6b6b;
+  --text-muted:          #999999;
+  --text-label:          #888888;
+
+  --accent:              #1a1a1a;
+  --accent-active-bg:    #1a1a1a;
+  --accent-active-text:  #ffffff;
+  --accent-blue:         #3b82f6;
+  --accent-green:        #10b981;
+  --accent-red:          #ef4444;
+  --accent-orange:       #f59e0b;
+  --accent-purple:       #8b5cf6;
+
+  --radius-sm:           8px;
+  --radius-md:           12px;
+  --radius-lg:           16px;
+
+  --font-family:         'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition:          0.15s ease;
+}
+
+/* ----------------------------------------------------------
+   1. Global
+   ---------------------------------------------------------- */
+html, body {
+  background: var(--bg-page) !important;
+  font-family: var(--font-family) !important;
+  font-size: 14px;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--text-primary); }
+a:hover { text-decoration: none; color: var(--text-primary); }
+
+/* ----------------------------------------------------------
+   2. Header Bar
+   ---------------------------------------------------------- */
+.c-headerBar {
+  background: var(--bg-white) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  height: 56px !important;
+}
+
+.c-headerBar a,
+.c-headerBar a:hover {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+}
+
+.c-headerBar__container {
+  max-width: none !important;
+}
+
+.c-headerBar__logo {
+  height: 56px !important;
+  width: 220px !important;
+  padding: 0 20px !important;
+  border-right: 1px solid var(--border-color);
+}
+
+.c-headerBar__logo h1 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.c-headerBar__logo img {
+  filter: brightness(0) saturate(100%);
+  height: 20px;
+  width: auto;
+}
+
+.c-headerBar__shopTitle {
+  height: 56px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+  padding: 0 16px !important;
+}
+
+.c-headerBar__shopTitle:hover {
+  background: var(--bg-hover) !important;
+}
+
+.c-headerBar__shopTitle .fa-angle-right {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  padding-left: 8px !important;
+}
+
+.c-headerBar__toggleBtn {
+  height: 56px !important;
+  color: var(--text-primary) !important;
+  font-size: 20px !important;
+}
+
+.c-headerBar__toggleBtn:hover {
+  background: var(--bg-hover) !important;
+}
+
+.c-headerBar__userMenu {
+  height: 56px !important;
+  color: var(--text-primary) !important;
+  padding: 0 16px !important;
+}
+
+.c-headerBar__userMenu:hover {
+  background: var(--bg-hover) !important;
+}
+
+.c-headerBar__userMenu .fa-user-circle {
+  font-size: 28px !important;
+  color: var(--text-muted) !important;
+}
+
+.c-headerBar__userMenu span {
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.c-headerBar__userMenu .fa-angle-down {
+  font-size: 16px !important;
+}
+
+/* ----------------------------------------------------------
+   3. Sidebar Navigation (Pulse Clinic Style)
+   ---------------------------------------------------------- */
+.c-mainNavArea {
+  padding-top: 56px !important;
+  width: 220px !important;
+  background: var(--bg-white) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+/* Category labels */
+.c-mainNavArea .nav-category-label {
+  display: block;
+  padding: 24px 20px 8px 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.c-mainNavArea .nav-category-label:first-child {
+  padding-top: 16px;
+}
+
+/* Nav item title */
+.c-mainNavArea__navItemTitle {
+  border-bottom: none !important;
+  padding: 8px 20px !important;
+  font-size: 13.5px !important;
+  color: var(--text-primary) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  transition: background var(--transition) !important;
+  position: relative !important;
+}
+
+.c-mainNavArea__navItemTitle:hover {
+  background: var(--bg-hover) !important;
+}
+
+.c-mainNavArea__navItemTitle i {
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+  width: 20px !important;
+  text-align: center !important;
+  margin-right: 10px !important;
+}
+
+.c-mainNavArea__navItemTitle span {
+  color: inherit !important;
+  font-weight: 400 !important;
+  font-size: 13.5px !important;
+}
+
+.c-mainNavArea__navItemTitle::after {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  top: 8px !important;
+  right: 16px !important;
+}
+
+/* Active (Home) nav item — dark background like Pulse Clinic */
+.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
+  background: var(--accent-active-bg) !important;
+  color: var(--accent-active-text) !important;
+  border-radius: 8px !important;
+  margin: 2px 10px !important;
+  padding: 8px 12px !important;
+}
+
+.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle i {
+  color: var(--accent-active-text) !important;
+}
+
+.c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle span {
+  font-weight: 500 !important;
+  color: var(--accent-active-text) !important;
+}
+
+/* Expanded nav section */
+.c-mainNavArea__navItemTitle[aria-expanded="true"] {
+  font-weight: 500 !important;
+}
+
+/* Sub-nav items */
+.c-mainNavArea__navItem ul {
+  background: transparent !important;
+  font-size: 13px !important;
+}
+
+.c-mainNavArea__navItem li a {
+  padding: 6px 20px 6px 50px !important;
+  color: var(--text-secondary) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  transition: background var(--transition), color var(--transition) !important;
+}
+
+.c-mainNavArea__navItem li a:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.c-mainNavArea__navItem li a.is-active {
+  background: var(--accent-active-bg) !important;
+  color: var(--accent-active-text) !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  margin: 2px 10px !important;
+  padding: 6px 12px 6px 40px !important;
+}
+
+/* Sub-title (e.g., Basic settings, System settings) */
+.c-mainNavArea__navItemSubTitle {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 6px 20px 6px 50px !important;
+  font-size: 13px !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+}
+
+.c-mainNavArea__navItemSubTitle:hover {
+  background: var(--bg-hover) !important;
+}
+
+.c-mainNavArea__navItemSubTitle span {
+  color: inherit !important;
+}
+
+.c-mainNavArea__navItemSubTitle:after {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  right: 16px !important;
+}
+
+/* ----------------------------------------------------------
+   4. Content Area
+   ---------------------------------------------------------- */
+.c-contentsArea {
+  padding: 24px 32px !important;
+}
+
+/* Hide the default page title on dashboard — we use welcome banner instead */
+#page_admin_homepage .c-pageTitle {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------
+   5. Welcome Banner (Light style matching reference)
+   ---------------------------------------------------------- */
+.dashboard-welcome {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.dashboard-welcome__content {
+  flex: 1;
+}
+
+.dashboard-welcome__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.dashboard-welcome__title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.dashboard-welcome__subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.dashboard-welcome__actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 24px;
+}
+
+.dashboard-welcome__actions .btn-outline {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.dashboard-welcome__actions .btn-outline:hover {
+  background: var(--bg-hover);
+  border-color: #ccc;
+}
+
+.dashboard-welcome__actions .btn-solid {
+  background: var(--accent-active-bg);
+  border: 1px solid var(--accent-active-bg);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.dashboard-welcome__actions .btn-solid:hover {
+  opacity: 0.9;
+}
+
+/* ----------------------------------------------------------
+   6. KPI Stat Cards (Exact Pulse Clinic Style)
+   ---------------------------------------------------------- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 992px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px 20px 16px 20px;
+  transition: box-shadow var(--transition), transform var(--transition);
+  position: relative;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.kpi-card a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.kpi-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.kpi-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-card__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.kpi-card__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kpi-card__menu {
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.kpi-card__value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.kpi-card__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ----------------------------------------------------------
+   7. Section Title (e.g., "LAST 30 DAYS")
+   ---------------------------------------------------------- */
+.section-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  margin-top: 4px;
+}
+
+/* ----------------------------------------------------------
+   8. Metric Cards (3-column row like reference)
+   ---------------------------------------------------------- */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 992px) {
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.metric-card a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.metric-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.metric-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metric-card__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.metric-card__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.metric-card__menu {
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.metric-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.metric-card__change {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.metric-card__change--down {
+  color: var(--accent-red);
+}
+
+.metric-card__change--up {
+  color: var(--accent-green);
+}
+
+.metric-card__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ----------------------------------------------------------
+   9. Chart Card
+   ---------------------------------------------------------- */
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.chart-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart-card__title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chart-card__summary {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.chart-card__summary strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Chart tabs */
+.chart-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.chart-tab {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none !important;
+}
+
+.chart-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.chart-tab.active,
+.nav-link.active.chart-tab {
+  background: var(--accent-active-bg);
+  border-color: var(--accent-active-bg);
+  color: #fff;
+}
+
+/* Override default btn-ec-tab */
+.btn-ec-tab {
+  background: transparent !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+  transition: all var(--transition) !important;
+  margin: 0 2px !important;
+}
+
+.btn-ec-tab:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-ec-tab.active,
+.nav-link.active.btn-ec-tab {
+  background: var(--accent-active-bg) !important;
+  border-color: var(--accent-active-bg) !important;
+  color: #fff !important;
+}
+
+/* ----------------------------------------------------------
+   10. Override default Bootstrap cards for dashboard
+   ---------------------------------------------------------- */
+#page_admin_homepage .card {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  transition: box-shadow var(--transition), transform var(--transition) !important;
+}
+
+#page_admin_homepage .card:hover {
+  box-shadow: var(--shadow-card-hover) !important;
+  transform: translateY(-1px);
+}
+
+#page_admin_homepage .card-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 16px 20px !important;
+}
+
+#page_admin_homepage .card-title {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  color: var(--text-muted) !important;
+}
+
+#page_admin_homepage .card-body {
+  padding: 16px 20px !important;
+}
+
+#page_admin_homepage .card-footer {
+  background: transparent !important;
+  border-top: 1px solid var(--border-light) !important;
+  padding: 12px 20px !important;
+}
+
+/* Order Status list items */
+#order-status .d-block a {
+  transition: background var(--transition) !important;
+}
+
+#order-status .d-block a:hover {
+  background: var(--bg-hover) !important;
+}
+
+#order-status .h4 {
+  font-weight: 700 !important;
+}
+
+/* Sales chart numbers */
+#chart-statistics .h3 {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+#chart-statistics small {
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+}
+
+/* ----------------------------------------------------------
+   11. Recommended Plugins
+   ---------------------------------------------------------- */
+#ec-cube-plugin .card-body {
+  scrollbar-width: thin;
+  scrollbar-color: #ddd transparent;
+}
+
+#ec-cube-plugin .card-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+#ec-cube-plugin .card-body::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 3px;
+}
+
+#ec-cube-plugin img {
+  border-radius: 6px;
+}
+
+/* ----------------------------------------------------------
+   12. Alerts
+   ---------------------------------------------------------- */
+.alert-warning {
+  background: #fffbeb !important;
+  border: 1px solid #fcd34d !important;
+  color: #92400e !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* ----------------------------------------------------------
+   13. Popover (User Menu)
+   ---------------------------------------------------------- */
+.popover {
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.popover-header {
+  background: var(--bg-page) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+}
+
+/* ----------------------------------------------------------
+   14. Responsive — Large Tablet (1280px and below)
+   Sidebar collapses to narrow, content adjusts
+   ---------------------------------------------------------- */
+@media only screen and (min-width: 768px) and (max-width: 1279px) {
+  .c-mainNavArea {
+    width: 180px !important;
+  }
+
+  .c-mainNavArea__navItemTitle {
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+  }
+
+  .c-mainNavArea__navItemTitle i {
+    font-size: 13px !important;
+    margin-right: 6px !important;
+  }
+
+  .c-mainNavArea__navItemTitle::after {
+    right: 8px !important;
+  }
+
+  .c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
+    margin: 2px 6px !important;
+    padding: 8px 10px !important;
+  }
+
+  .c-mainNavArea__navItem li a {
+    padding: 6px 12px 6px 36px !important;
+    font-size: 12px !important;
+  }
+
+  .c-mainNavArea__navItemSubTitle {
+    padding: 6px 12px 6px 36px !important;
+    font-size: 12px !important;
+  }
+
+  .c-mainNavArea .nav-category-label {
+    padding: 20px 12px 6px 12px;
+    font-size: 9px;
+  }
+
+  .c-contentsArea {
+    margin-left: 180px !important;
+    padding: 20px 20px !important;
+  }
+
+  .c-conversionArea {
+    width: calc(100% - 180px) !important;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .kpi-card__value {
+    font-size: 26px;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .metric-card__value {
+    font-size: 22px;
+  }
+
+  .dashboard-welcome {
+    padding: 22px 24px;
+  }
+
+  .dashboard-welcome__title {
+    font-size: 22px;
+  }
+
+  .chart-card {
+    padding: 20px;
+  }
+}
+
+/* ----------------------------------------------------------
+   15. Responsive — Tablet (992px and below)
+   KPI becomes 2 columns, metrics stack
+   ---------------------------------------------------------- */
+@media only screen and (max-width: 992px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .dashboard-welcome {
+    flex-direction: column;
+  }
+
+  .dashboard-welcome__actions {
+    margin-left: 0;
+    margin-top: 16px;
+  }
+
+  .chart-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Bottom cards stack on tablet */
+  #page_admin_homepage .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* ----------------------------------------------------------
+   16. Responsive — Small Tablet / Landscape Phone (768px)
+   Sidebar becomes overlay, curtain backdrop
+   ---------------------------------------------------------- */
+@media only screen and (max-width: 767px) {
+  /* Header */
+  .c-headerBar {
+    height: 52px !important;
+  }
+
+  .c-headerBar__logo {
+    display: none !important;
+  }
+
+  .c-headerBar__toggleBtn {
+    display: table-cell !important;
+    height: 52px !important;
+    width: 52px !important;
+    font-size: 22px !important;
+    padding: 0 14px !important;
+  }
+
+  .c-headerBar__shopTitle {
+    height: 52px !important;
+    font-size: 13px !important;
+    padding: 0 12px !important;
+  }
+
+  .c-headerBar__userMenu {
+    height: 52px !important;
+    padding: 0 12px !important;
+  }
+
+  .c-headerBar__userMenu span {
+    display: none !important;
+  }
+
+  .c-headerBar__userMenu .fa-angle-down {
+    display: none !important;
+  }
+
+  .c-headerBar__userMenu .fa-user-circle {
+    font-size: 24px !important;
+  }
+
+  /* Sidebar overlay */
+  .c-mainNavArea {
+    padding-top: 52px !important;
+    left: -260px !important;
+    width: 260px !important;
+    height: 100% !important;
+    opacity: 0;
+    transition: left 0.3s ease, opacity 0.3s ease !important;
+    z-index: 600 !important;
+  }
+
+  .c-mainNavArea.is-active {
+    left: 0 !important;
+    width: 260px !important;
+    opacity: 1 !important;
+  }
+
+  .c-mainNavArea__navItemTitle {
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+  }
+
+  .c-mainNavArea__navItem:first-of-type > .c-mainNavArea__navItemTitle {
+    margin: 2px 10px !important;
+    padding: 10px 14px !important;
+  }
+
+  /* Curtain overlay */
+  .c-curtain.is-active {
+    display: block !important;
+    width: 100% !important;
+    height: 100vh !important;
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 500 !important;
+    position: fixed !important;
+  }
+
+  /* Content */
+  .c-contentsArea {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+
+  .c-conversionArea {
+    width: 100% !important;
+  }
+
+  /* Welcome Banner */
+  .dashboard-welcome {
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .dashboard-welcome__title {
+    font-size: 20px;
+  }
+
+  .dashboard-welcome__subtitle {
+    font-size: 13px;
+  }
+
+  .dashboard-welcome__actions {
+    margin-left: 0;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* KPI Cards */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .kpi-card {
+    padding: 16px;
+  }
+
+  .kpi-card__value {
+    font-size: 24px;
+  }
+
+  .kpi-card__icon {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  /* Metric Cards */
+  .metric-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .metric-card {
+    padding: 16px;
+  }
+
+  .metric-card__value {
+    font-size: 22px;
+  }
+
+  /* Chart */
+  .chart-card {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .chart-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .btn-ec-tab {
+    padding: 5px 12px !important;
+    font-size: 11px !important;
+  }
+
+  /* Section titles */
+  .section-title {
+    margin-bottom: 10px;
+  }
+
+  /* Bottom cards stack */
+  #page_admin_homepage .col-lg-4 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   17. Responsive — Mobile (576px and below)
+   Single column everything, compact spacing
+   ---------------------------------------------------------- */
+@media only screen and (max-width: 576px) {
+  .c-contentsArea {
+    padding: 12px !important;
+  }
+
+  /* Welcome stacks fully */
+  .dashboard-welcome {
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .dashboard-welcome__label {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+
+  .dashboard-welcome__title {
+    font-size: 18px;
+  }
+
+  .dashboard-welcome__subtitle {
+    font-size: 12px;
+  }
+
+  .dashboard-welcome__actions {
+    width: 100%;
+  }
+
+  .dashboard-welcome__actions .btn-outline,
+  .dashboard-welcome__actions .btn-solid {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  /* KPI single column */
+  .kpi-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .kpi-card {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .kpi-card a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .kpi-card__header {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .kpi-card__title-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .kpi-card__icon {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .kpi-card__label {
+    font-size: 8px;
+    text-align: center;
+  }
+
+  .kpi-card__menu {
+    display: none;
+  }
+
+  .kpi-card__value {
+    font-size: 22px;
+    margin-bottom: 0;
+  }
+
+  .kpi-card__desc {
+    font-size: 11px;
+  }
+
+  /* Metric cards compact */
+  .metric-grid {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .metric-card {
+    padding: 14px 16px;
+  }
+
+  .metric-card__value {
+    font-size: 20px;
+  }
+
+  .metric-card__desc {
+    font-size: 11px;
+  }
+
+  .metric-card__menu {
+    display: none;
+  }
+
+  /* Chart compact */
+  .chart-card {
+    padding: 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  .chart-card__header {
+    margin-bottom: 10px;
+  }
+
+  .btn-group.nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-ec-tab {
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 9px;
+    margin-bottom: 8px;
+  }
+
+  /* Cards */
+  #page_admin_homepage .card {
+    border-radius: 10px !important;
+  }
+
+  #page_admin_homepage .card-header {
+    padding: 12px 14px !important;
+  }
+
+  #page_admin_homepage .card-body {
+    padding: 12px 14px !important;
+  }
+
+  /* Order status compact */
+  #order-status .d-block a {
+    padding: 10px 14px !important;
+  }
+
+  /* Plugins compact */
+  #ec-cube-plugin .card-body {
+    max-height: 280px !important;
+  }
+
+  /* News iframe smaller */
+  #ec-cube-news iframe {
+    min-height: 280px !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   18. Responsive — Small Mobile (400px and below)
+   Extra compact for very small screens
+   ---------------------------------------------------------- */
+@media only screen and (max-width: 400px) {
+  .c-headerBar__shopTitle span {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .c-contentsArea {
+    padding: 8px !important;
+  }
+
+  .dashboard-welcome {
+    padding: 14px;
+  }
+
+  .dashboard-welcome__title {
+    font-size: 16px;
+  }
+
+  .kpi-card {
+    padding: 12px 14px;
+  }
+
+  .kpi-card__value {
+    font-size: 20px;
+  }
+
+  .metric-card__value {
+    font-size: 18px;
+  }
+
+  .chart-card {
+    padding: 12px;
+  }
+}
+
