@@ -73,14 +73,14 @@ file that was distributed with this source code.
                                         <ul class="collapse{{ active_menus(menus)[1] == key2 ? ' show' }}" id="nav-{{ key2 }}">
                                             {% for key3, level3 in level2.children %}
                                                 <li>
-                                                    <a href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}"{{ active_menus(menus)[2] == key3 ? ' class="is-active"' }}>
+                                                    <a class="c-mainNavArea__subLink{{ active_menus(menus)[2] == key3 ? ' is-active' : '' }}" href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}">
                                                         <span>{{ level3.name|trans }}</span>
                                                     </a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
                                     {% else %}
-                                        <a href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}"{{ active_menus(menus)[1] == key2 ? ' class="is-active"' }}>
+                                        <a class="c-mainNavArea__subLink{{ active_menus(menus)[1] == key2 ? ' is-active' : '' }}" href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}">
                                             <span>{{ level2.name|trans }}</span>
                                         </a>
                                     {% endif %}
@@ -106,22 +106,22 @@ file that was distributed with this source code.
                 </a>
                 <ul class="collapse" id="others">
                     <li>
-                        <a href="{{ eccube_config.eccube_official_site_url }}" target="_blank">
+                        <a class="c-mainNavArea__subLink" href="{{ eccube_config.eccube_official_site_url }}" target="_blank">
                             <span>{{ 'admin.info.official_site'|trans }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ eccube_config.eccube_community_site_url }}" target="_blank">
+                        <a class="c-mainNavArea__subLink" href="{{ eccube_config.eccube_community_site_url }}" target="_blank">
                             <span>{{ 'admin.info.community'|trans }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ eccube_config.eccube_document_url }}" target="_blank">
+                        <a class="c-mainNavArea__subLink" href="{{ eccube_config.eccube_document_url }}" target="_blank">
                             <span>{{ 'admin.info.document'|trans }}</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ eccube_config.eccube_manual_url }}" target="_blank">
+                        <a class="c-mainNavArea__subLink" href="{{ eccube_config.eccube_manual_url }}" target="_blank">
                             <span>{{ 'admin.info.manual'|trans }}</span>
                         </a>
                     </li>
