@@ -63,10 +63,12 @@ a:hover {
   height: 56px !important;
   position: fixed !important;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 230px !important;
+  right: 0 !important;
+  width: auto !important;
   z-index: 1000;
   box-shadow: none !important;
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c-headerBar__container {
@@ -75,62 +77,92 @@ a:hover {
   align-items: center !important;
   height: 56px !important;
   padding: 0 24px !important;
+  width: 100% !important;
   max-width: 100% !important;
-  margin-left: 230px;
-  transition: margin-left 0.2s ease;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Force dark readable colors on all header links (overrides app.css color: #fff) */
+.c-headerBar a {
+  color: var(--text-primary) !important;
+}
+.c-headerBar a:hover {
+  color: var(--text-primary) !important;
 }
 
 .c-headerBar__left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
 }
 
 .c-headerBar__toggleBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  flex-shrink: 0 !important;
 }
 .c-headerBar__toggleBtn:hover {
-  background: var(--bg-active);
-  color: var(--text-primary);
+  background: var(--bg-active) !important;
+  color: var(--text-primary) !important;
+}
+.c-headerBar__toggleBtn svg {
+  stroke: var(--text-secondary) !important;
 }
 
 .c-headerBar__breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
 }
 
 .breadcrumb-root {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--text-dim);
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+.breadcrumb-root:hover {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
 }
 
 .breadcrumb-sep {
-  font-size: 12px;
-  color: var(--text-dim);
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+  margin: 0 4px !important;
+  display: inline-block !important;
 }
 
 .breadcrumb-leaf {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .c-headerBar__right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
 }
 
 .c-headerBar__searchPill {
@@ -380,6 +412,8 @@ a:hover {
 .c-container {
   margin-top: 56px !important;
   min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .c-contentsArea {
@@ -388,6 +422,22 @@ a:hover {
   background: var(--bg-page) !important;
   min-height: calc(100vh - 56px);
   box-sizing: border-box;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Desktop Sidebar Collapsed Mode */
+body.sidebar-collapsed .c-mainNavArea {
+  left: -230px !important;
+}
+body.sidebar-collapsed .c-headerBar {
+  left: 0 !important;
+}
+body.sidebar-collapsed .c-contentsArea {
+  margin-left: 0 !important;
+}
+body.sidebar-collapsed .c-conversionArea {
+  left: 0 !important;
+  width: 100% !important;
 }
 
 /* Dashboard White Outer Rounded Canvas */
@@ -1082,12 +1132,47 @@ a:hover {
 .c-conversionArea {
   background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
   border-top: 1px solid var(--border-color) !important;
   height: 64px !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 230px !important;
+  right: 0 !important;
+  width: auto !important;
+  z-index: 900 !important;
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 .c-conversionArea__container {
-  height: 64px;
-  max-width: 100%;
+  height: 64px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Multi-column layout on Product, Order, Customer, Setting pages */
+.c-contentsArea__cols {
+  display: flex !important;
+  width: 100% !important;
+  gap: 20px !important;
+  padding: 0 0 60px 0 !important;
+}
+.c-contentsArea__primaryCol {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+.c-contentsArea__secondaryCol {
+  width: 340px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+}
+.c-secondaryCol {
+  margin-left: 0 !important;
 }
 
 /* ----------------------------------------------------------
@@ -1124,14 +1209,19 @@ a:hover {
 
 /* Breakpoint 2: Tablets Landscape & Portrait (max-width: 991px) */
 @media only screen and (max-width: 991px) {
-  /* Header & Main Container margin reset */
+  /* Header positioning */
+  .c-headerBar {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
   .c-headerBar__container {
     margin-left: 0 !important;
-    padding: 0 18px !important;
+    padding: 0 16px !important;
   }
   .c-contentsArea {
     margin-left: 0 !important;
-    padding: 20px 18px !important;
+    padding: 20px 16px !important;
     width: 100% !important;
   }
 
@@ -1144,18 +1234,29 @@ a:hover {
   }
   .c-mainNavArea.is-active {
     left: 0 !important;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.18) !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2) !important;
   }
 
   /* Fixed bottom conversion bar */
   .c-conversionArea {
     width: 100% !important;
-    margin-left: 0 !important;
     left: 0 !important;
     right: 0 !important;
+    margin-left: 0 !important;
   }
   .c-conversionArea__container {
-    padding: 0 18px !important;
+    padding: 0 16px !important;
+  }
+
+  /* Multi-column form layout stacks on tablet/mobile */
+  .c-contentsArea__cols {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .c-contentsArea__secondaryCol {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 14px !important;
   }
 
   /* Dashboard Container Canvas */
@@ -1299,6 +1400,36 @@ a:hover {
   }
   .c-pageTitle__title {
     font-size: 19px !important;
+  }
+
+  /* Subpage forms and lists (e.g. Option Name, Class Category, Product lists) */
+  .list-group-item form.row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .list-group-item form.row > div[class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .list-group-item form.row .btn {
+    width: 100% !important;
+  }
+  .mode-view {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .c-outsideBlock__contents .btn-group {
+    display: flex !important;
+    width: 100% !important;
+  }
+  .c-outsideBlock__contents .btn-group .btn {
+    flex: 1 !important;
+    text-align: center !important;
   }
 
   /* Conversion Area Buttons on Mobile */
