@@ -61,14 +61,14 @@ file that was distributed with this source code.
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <line x1="10" y1="14" x2="21" y2="3"></line>
                 </svg>
-                <span>Storefront</span>
+                <span class="storefront-link-text">Storefront</span>
             </a>
-            <div class="c-headerBar__searchPill">
+            <div class="c-headerBar__searchPill" title="Quick find">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <span>Quick find...</span>
+                <span class="search-pill-text">Quick find...</span>
                 <kbd>⌘K</kbd>
             </div>
             <a class="c-headerBar__userMenu"
@@ -79,8 +79,8 @@ file that was distributed with this source code.
                data-bs-content="&lt;p&gt;{{ app.user.login_date|date_min }}&lt;/p&gt;&lt;a href='{{ url("admin_change_password") }}' class='btn btn-ec-regular w-100 mb-2'&gt;{{ 'admin.header.change_password'|trans }}&lt;/a&gt;{% if app.user.two_factor_auth_enabled %}&lt;a href='{{ url("admin_setting_system_two_factor_auth_edit") }}' class='btn btn-ec-regular w-100 mb-2'&gt;{{ 'admin.header.two_factor_auth'|trans }}&lt;/a&gt;{% endif %}&lt;a href='{{ url("admin_logout") }}' class='btn btn-ec-sub w-100'&gt;{{ 'admin.header.logout'|trans }}&lt;/a&gt;"
                data-bs-html="true">
                 <div class="user-avatar-badge-small">{{ app.user.name|slice(0, 2)|upper }}</div>
-                <span>{{ app.user.name }}</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span class="user-menu-name">{{ app.user.name }}</span>
+                <svg class="user-menu-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
         </div>
     </div>
@@ -107,6 +107,15 @@ file that was distributed with this source code.
 </div>
 {% include('@common/lang.twig') %}
 <script src="{{ asset('assets/js/function.js', 'admin') }}"></script>
+<script>
+    $(function() {
+        $('.pulse-nav-close-btn').on('click', function(e) {
+            e.preventDefault();
+            $('.c-mainNavArea').removeClass('is-active');
+            $('.c-curtain').removeClass('is-active');
+        });
+    });
+</script>
 {% block javascript %}{% endblock %}
 {# プラグイン用Snippet #}
 {% if plugin_snippets is defined %}

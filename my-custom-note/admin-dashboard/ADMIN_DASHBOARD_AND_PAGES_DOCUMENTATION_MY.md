@@ -51,12 +51,24 @@ Docker ကွန်တိန်နာအတွင်းရှိ Symfony Dev Cac
 docker compose exec ec-cube php bin/console cache:clear
 ```
 
+### အဆင့် (၄) - Database Master Tables ဒေတာများကို အင်္ဂလိပ်ဘာသာသို့ ပြောင်းလဲခြင်း (Master Data Localization)
+EC-CUBE ၏ UI ခလုတ်များနှင့် ခေါင်းစဉ်များအပြင် Database အတွင်း သိမ်းဆည်းထားသော အောက်ပါ Master Data များကိုပါ အင်္ဂလိပ်ဘာသာသို့ အပြည့်အစုံ ပြောင်းလဲခဲ့ပါသည် (Script: `app/config/eccube/sql/translate_to_english.sql`):
+1. **Admin Member (`dtb_member`)**: `管理者` မှ `Administrator` သို့ (Avatar badge: `AD` အဖြစ် ပြောင်းလဲခြင်း)
+2. **Order Statuses (`mtb_order_status`)**: `New Order`, `Cancelled`, `In Progress`, `Shipped`, `Payment Confirmed`, `Payment Processing`, `Purchase Processing`, `Returned`
+3. **Product Statuses (`mtb_product_status`)**: `Published`, `Unpublished`, `Discontinued`
+4. **Customer Statuses (`mtb_customer_status`)**: `Provisional`, `Active Member`, `Withdrawn`
+5. **Product Tags (`dtb_tag`)**: `New Arrival`, `Recommended`, `Limited Edition`
+6. **Payment Methods (`dtb_payment`)**: `Postal Transfer`, `Registered Mail`, `Bank Transfer`, `Cash on Delivery`
+7. **Prefectures (`mtb_pref`)**: ဂျပန် ၄၇ ခရိုင် အမည်များအား အင်္ဂလိပ်စာလုံးပေါင်း (`Tokyo`, `Osaka`, `Kyoto`, `Hokkaido`, etc.) သို့ ပြောင်းလဲခြင်း။
+
 **ရရှိလာသော ရလဒ်များ -**
 - စာမျက်နှာ Title များ: `Home - Offmarket`, `Products All Products - Offmarket`, `Orders All Orders - Offmarket`
 - ဘေးဘက် မီနူးများ: `Overview`, `Management`, `Settings`, `Information`
 - ခလုတ်များနှင့် စာသားများ: `Search`, `Sign out`, `Change Password`, `Registration`, `Bulk Actions` အစရှိသည်တို့ အားလုံး အလိုအလျောက် English ဖြစ်သွားပါသည်။
+- Database ဒေတာများပါ English အပြည့်အဝ ဖြစ်သွားသဖြင့် စနစ်တစ်ခုလုံးတွင် ဂျပန်စာလုံး လုံးဝ မကျန်တော့ဘဲ 100% Full English Default ဖြစ်သွားပါသည်။
 
 ---
+
 
 ## ၃။ စနစ်ဒေတာ မပြောင်းလဲဘဲ UI ဒီဇိုင်းသစ် ပြင်ဆင်ခြင်း (UI Redesign with 100% Real System Data)
 
@@ -157,13 +169,26 @@ Dashboard တစ်ခုတည်းသာမက EC-CUBE စနစ်တစ်�
 
 အသုံးပြုသူ စခရင်အရွယ်အစားအလိုက် Breakpoints ၅ ခုကို တိကျစွာ ခွဲခြားရေးဆွဲထားပါသည်-
 
-| Breakpoint | စက်ပစ္စည်းအမျိုးအစား | အဓိက ဒီဇိုင်းပြောင်းလဲပုံ |
+| Breakpoint | စက်ပစ္စည်းအမျိုးအစား | အဓိက ဒီဇိုင်းနှင့် အလုပ်လုပ်ပုံ ပြောင်းလဲမှုများ |
 |---|---|---|
-| **>1280px** | Desktop ပုံမှန် | Full Sidebar (220px), ၄ ကော်လံ KPI, ကော်လံစုံ ဖောင်ပုံစံ |
-| **768px – 1279px** | Large Tablet / Laptop အသေး | Narrow Sidebar (180px), ၂ ကော်လံ KPI, Content ချိန်ညှိမှု |
-| **≤992px** | Tablet ဒေါင်လိုက် | Multi-column Forms များသည် ဒေါင်လိုက် Stack အဖြစ် အလိုအလျောက်ပြောင်းခြင်း |
-| **≤767px** | Landscape Mobile & Smartphone | Sidebar အား ဘေးဘက်သို့ ဝှက်ထားပြီး Hamburger Menu နှိပ်မှ Slide-in Drawer အဖြစ် ထွက်လာခြင်း၊ Curtain Overlay အမည်းရောင်နောက်ခံ၊ ဇယားများ Horizontal Scroll အလိုအလျောက် ပြုလုပ်နိုင်ခြင်း |
-| **≤576px / ≤400px** | Smartphone အသေးစားများ | Card များနှင့် ခလုတ်များ Compact Padding သို့ ပြောင်းလဲခြင်း |
+| **≥ 1200px** | Large Desktop & Widescreen | Full Sidebar (230px), ၄ ကော်လံ KPI Grid, ၃ ကော်လံ Sales Performance, Split Panels (7:5) |
+| **992px – 1199px** | Laptop & Small Desktop | Full Sidebar (230px), ၂ ကော်လံ KPI Grid, ၃ ကော်လံ Sales Performance, Compact Search Pill |
+| **768px – 991px** | Tablet Landscape & Portrait | Sidebar အား Offcanvas Drawer သို့ ပြောင်းလဲခြင်း (`left: -270px`), Curtain Backdrop Blur ထည့်သွင်းခြင်း, Container Margin များ `0` သို့ ပြန်ညှိခြင်း, ၂ ကော်လံ KPI Grid, Stacked Panels |
+| **576px – 767px** | Mobile Landscape & Medium Mobile | Hero Header အား ဒေါင်လိုက်စီတန်းခြင်း, ခလုတ်များ Full-Width Flex ဖွဲ့စည်းခြင်း, Sales Performance ၁ ကော်လံ Stack, Search Pill အား ၃၄px Round Icon Button ပြောင်းလဲခြင်း, Chart Tabs Auto-Wrap, Touch Table Horizontal Scroll |
+| **≤ 575px (Down to 320px)** | Small Mobile (iPhone / Android) | Topbar Breadcrumbs မှ Shop name ဝှက်၍ Page title သာ ဖော်ပြခြင်း, Storefront & User Menu အား Compact Icon/Avatar သာ ပြသခြင်း, KPI Grid ၁ ကော်လံ (26px font), ဇယားများ Touch Scrollable ဖြစ်စေခြင်း |
+
+### အဓိက Mobile UX အထူးပြုချက်များ (Key Mobile UX Features)
+1. **Offcanvas Mobile Drawer Navigation**:
+   - မိုဘိုင်းနှင့် တက်ဘလက်များတွင် Sidebar မီနူးသည် ဘယ်ဘက်သို့ ဝှက်ထားပြီး Top Header Bar ရှိ Toggle Icon (သို့မဟုတ်) Menu ခလုတ်ကို နှိပ်ပါက ချောမွေ့စွာ ထွက်ပေါ်လာစေပါသည် (`transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1)`).
+   - Sidebar Drawer အတွင်း၌လည်း မိုဘိုင်းအတွက် သီးသန့် **Close Button (X)** ထည့်သွင်းပေးထားပြီး အပြင်ဘက်မှောင်မည်းနေသော Curtain အလွှာကို နှိပ်လျှင်လည်း အလိုအလျောက် ပိတ်သွားစေပါသည်။
+2. **Backdrop Curtain Overlay (`.c-curtain`)**:
+   - မိုဘိုင်းမီနူး ပွင့်လာပါက နောက်ခံကို မှောင်စေပြီး အာရုံစူးစိုက်မှုကောင်းစေရန် `backdrop-filter: blur(3px)` ဖြင့် Glassmorphic Dark Curtain ခံပေးထားပါသည်။ Desktop (≥992px) တွင် မလိုအပ်ဘဲ ပေါ်မနေစေရန် `display: none !important` ဖြင့် ကာကွယ်ထားပါသည်။
+3. **Touch-Friendly Tables (`.table-responsive`)**:
+   - အမှာစာစာရင်း၊ ကုန်ပစ္စည်းစာရင်းနှင့် သုံးစွဲသူစာရင်း ဇယားများ အားလုံးကို မိုဘိုင်းစခရင် မကျိုးသွားစေရန် `-webkit-overflow-scrolling: touch` ဖြင့် ချောမွေ့စွာ ဘေးသို့ ဆွဲကြည့်နိုင်အောင် စီမံထားပါသည်။
+4. **Mobile Bottom Action Bar (`.c-conversionArea`)**:
+   - စာရင်းသွင်း/သိမ်းဆည်းရာတွင် အသုံးပြုသည့် Bottom Conversion Bar ကို မိုဘိုင်းတွင် စခရင်အပြည့်ယူစေပြီး ခလုတ်များ ကပ်မသွားဘဲ လက်မဖြင့် လွယ်ကူစွာ နှိပ်နိုင်စေရန် Flex Wrap စနစ်ဖြင့် ဖန်တီးထားပါသည်။
+5. **Mobile Topbar Optimization**:
+   - မိုဘိုင်းစခရင်အသေးများတွင် ခလုတ်များ အချင်းချင်း ထပ်မသွားစေရန် Breadcrumb အရှည်များကို ဖြတ်ချပြီး Page Title သာ ပြသပေးခြင်း၊ User Menu တွင် နာမည်စာသားအစား Avatar စက်ဝိုင်းလေးသာ ပြသပေးခြင်းတို့ ပြုလုပ်ထားပါသည်။
 
 ---
 
