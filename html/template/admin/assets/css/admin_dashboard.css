@@ -212,6 +212,7 @@ a:hover {
   z-index: 1050;
   padding: 0 !important;
   overflow: hidden;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease;
 }
 
 .c-mainNavArea__inner {
@@ -855,16 +856,17 @@ a:hover {
 }
 
 .user-avatar-badge-small {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: #0f172a;
   color: #ffffff;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .pulse-online-badge {
@@ -872,8 +874,84 @@ a:hover {
   height: 8px;
   border-radius: 50%;
   background: #22c55e;
-  margin-left: auto;
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  flex-shrink: 0;
+}
+
+.c-headerBar__userMenu {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 3px 10px 3px 4px !important;
+  border-radius: var(--radius-pill) !important;
+  background: var(--bg-hover) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: var(--transition) !important;
+  height: 34px !important;
+  user-select: none;
+}
+.c-headerBar__userMenu:hover {
+  background: var(--bg-active) !important;
+  border-color: #cbd5e1 !important;
+  color: var(--text-primary) !important;
+}
+
+.user-menu-name {
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-chevron {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.pulse-nav-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
+}
+.pulse-nav-close-btn:hover {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+/* Backdrop Overlay */
+.c-curtain {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  z-index: 1080 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.25s ease !important;
+  display: none;
+}
+.c-curtain.is-active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: block !important;
 }
 
 /* ----------------------------------------------------------
@@ -1013,45 +1091,351 @@ a:hover {
 }
 
 /* ----------------------------------------------------------
-   9. Responsive Media Queries
+   9. Comprehensive Responsive Design System (5 Breakpoints)
    ---------------------------------------------------------- */
-@media only screen and (max-width: 1280px) {
-  .frontdesk-main-grid {
-    grid-template-columns: 1fr;
-  }
-  .frontdesk-kpi-row {
-    grid-template-columns: repeat(2, 1fr);
+
+/* Desktop & Laptop (Min 992px) */
+@media only screen and (min-width: 992px) {
+  .c-curtain {
+    display: none !important;
   }
 }
 
-@media only screen and (max-width: 767px) {
+/* Breakpoint 1: Large Laptops / Compact Desktops (max-width: 1199px) */
+@media only screen and (max-width: 1199px) {
+  .pulse-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .pulse-metrics-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .c-headerBar__searchPill {
+    padding: 0 10px;
+  }
+  .search-pill-text {
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Breakpoint 2: Tablets Landscape & Portrait (max-width: 991px) */
+@media only screen and (max-width: 991px) {
+  /* Header & Main Container margin reset */
   .c-headerBar__container {
     margin-left: 0 !important;
-    padding: 0 14px !important;
+    padding: 0 18px !important;
   }
   .c-contentsArea {
     margin-left: 0 !important;
-    padding: 14px !important;
+    padding: 20px 18px !important;
+    width: 100% !important;
   }
-  .pulse-dashboard-container {
-    padding: 16px;
-    border-radius: var(--radius-lg);
-  }
-  .frontdesk-hero {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .frontdesk-kpi-row {
-    grid-template-columns: 1fr;
-  }
+
+  /* Offcanvas Drawer Navigation */
   .c-mainNavArea {
-    left: -230px !important;
-    transition: left 0.25s ease;
+    left: -270px !important;
+    width: 270px !important;
+    z-index: 1100 !important;
+    box-shadow: none;
   }
   .c-mainNavArea.is-active {
     left: 0 !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.18) !important;
   }
+
+  /* Fixed bottom conversion bar */
+  .c-conversionArea {
+    width: 100% !important;
+    margin-left: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  .c-conversionArea__container {
+    padding: 0 18px !important;
+  }
+
+  /* Dashboard Container Canvas */
+  .pulse-dashboard-container {
+    padding: 24px 20px;
+    border-radius: var(--radius-lg);
+  }
+
+  /* KPI Grid & Metrics */
+  .pulse-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .pulse-metrics-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  /* Hero header */
+  .pulse-hero-header {
+    gap: 14px;
+  }
+  .pulse-hero-title {
+    font-size: 24px;
+  }
+}
+
+/* Breakpoint 3: Mobile Landscape & Medium Mobile (max-width: 767px) */
+@media only screen and (max-width: 767px) {
+  .c-headerBar__container {
+    padding: 0 14px !important;
+  }
+  .c-contentsArea {
+    padding: 16px 12px !important;
+  }
+  .pulse-dashboard-container {
+    padding: 18px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  /* Hero Section Stacking */
+  .pulse-hero-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .pulse-hero-title-group {
+    gap: 4px;
+  }
+  .pulse-hero-title {
+    font-size: 22px;
+  }
+  .pulse-hero-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+  .btn-pulse-outline,
+  .btn-pulse-primary {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 14px;
+    font-size: 12.5px;
+  }
+
+  /* Sales Performance 3 cards stack on mobile */
+  .pulse-metrics-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* Search Pill turns into compact round icon */
+  .search-pill-text,
+  .c-headerBar__searchPill kbd {
+    display: none !important;
+  }
+  .c-headerBar__searchPill {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  /* Chart Header Wrap */
+  .pulse-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .pulse-pill-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pulse-pill-tab {
+    flex: 1;
+    text-align: center;
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+
+  /* Chart canvas height */
+  #pills-weekly,
+  #pills-monthly,
+  #pills-year {
+    height: 220px !important;
+  }
+
+  /* Order Status List Rows */
+  .pulse-order-status-row {
+    padding: 12px 16px;
+    min-height: 46px;
+  }
+
+  /* Touch-friendly table scroll */
   .table-responsive {
+    display: block !important;
+    width: 100% !important;
     overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+  }
+  .table-responsive > .table {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  /* Form & Subcontents on other admin pages */
+  .c-subContents {
+    padding: 14px !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .c-pageTitle {
+    padding-bottom: 14px !important;
+  }
+  .c-pageTitle__title {
+    font-size: 19px !important;
+  }
+
+  /* Conversion Area Buttons on Mobile */
+  .c-conversionArea {
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 10px 0 !important;
+  }
+  .c-conversionArea__container {
+    height: auto !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+  .c-conversionArea__leftBlock,
+  .c-conversionArea__rightBlock {
+    float: none !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .c-conversionArea__leftBlockItem,
+  .c-conversionArea__rightBlockItem {
+    height: auto !important;
+    display: inline-flex !important;
+  }
+}
+
+/* Breakpoint 4: Small Mobile Phones (max-width: 575px) */
+@media only screen and (max-width: 575px) {
+  /* Topbar header compact */
+  .c-headerBar__container {
+    padding: 0 10px !important;
+    gap: 8px;
+  }
+  .c-headerBar__left {
+    gap: 8px;
+    min-width: 0;
+  }
+  .breadcrumb-root,
+  .breadcrumb-sep {
+    display: none !important;
+  }
+  .breadcrumb-leaf {
+    font-size: 12.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+
+  .c-headerBar__right {
+    gap: 6px;
+  }
+  .storefront-link-text {
+    display: none !important;
+  }
+  .c-headerBar__storefrontLink {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  /* User Menu Avatar only */
+  .c-headerBar__userMenu {
+    padding: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    justify-content: center !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .user-menu-name,
+  .user-menu-chevron {
+    display: none !important;
+  }
+  .user-avatar-badge-small {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  /* KPI Cards Stack 1 column */
+  .pulse-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .pulse-kpi-card {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+  }
+  .kpi-value {
+    font-size: 26px;
+  }
+
+  /* News iframe */
+  .pulse-news-iframe {
+    min-height: 280px;
+  }
+
+  /* Plugins row compact */
+  .pulse-plugin-item {
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .pulse-plugin-thumb {
+    width: 52px;
+    height: 52px;
+  }
+  .pulse-plugin-name {
+    font-size: 12.5px;
+  }
+  .pulse-plugin-desc {
+    font-size: 11.5px;
+  }
+}
+
+/* Breakpoint 5: Extra Small Mobile Phones (max-width: 375px) */
+@media only screen and (max-width: 375px) {
+  .pulse-hero-title {
+    font-size: 20px;
+  }
+  .pulse-hero-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .c-headerBar__searchPill {
+    display: none !important;
+  }
+  .breadcrumb-leaf {
+    max-width: 90px;
   }
 }
