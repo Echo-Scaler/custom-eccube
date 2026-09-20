@@ -99,3 +99,29 @@ CSS ဖိုင်အသစ်များ ချက်ချင်းသက်
 ### (ဂ) ပစ္စည်းအသစ်များနှင့် ပုံများ ထပ်မံထည့်သွင်းခြင်း
 - ပစ္စည်းပုံအသစ်များကို `html/template/default/assets/img/product/` လမ်းကြောင်းအောက်တွင် ထည့်သွင်းအသုံးပြုနိုင်ပါသည်။
 - EC-CUBE Admin Panel (`/admin/product/product`) မှတစ်ဆင့် ပစ္စည်းအချက်အလက်များကို ပုံမှန်အတိုင်း စီမံခန့်ခွဲနိုင်ပါသည်။
+
+---
+
+## ၆။ Shopping Cart UI ပြန်လည်ရေးဆွဲခြင်း (Cart Redesign - `/cart`)
+
+ပေးပို့ထားသော Modern Checkout/Cart UI Mockup အတိုင်း **Shopping Cart Page (`/cart`)** ကို ခေတ်မီပြီး အဆင့်မြင့်သော ၂-ကော်လံ ကတ်ဒီဇိုင်း (2-Column Card-based Layout) ဖြင့် အသစ်တည်ဆောက်ခဲ့ပါသည် -
+
+### (က) ပါဝင်သော အဓိကကဏ္ဍများ
+1. **Review Item And Shipping (ပစ္စည်းစစ်ဆေးမှု ကတ်)**:
+   - Cart ထဲရှိ ပစ္စည်းတစ်ခုချင်းစီအတွက် Thumbnail ပုံ (AirPods Max ပန်းရောင်အပါအဝင်)၊ ကုန်ပစ္စည်းအမည်၊ Variant/Color၊ In Stock Tag နှင့် စုစုပေါင်းဈေးနှုန်းတို့ကို ပြသထားပါသည်။
+   - `[ - ] 01 [ + ]` Stepper ဖြင့် အရေအတွက် တိုး/လျှော့ခြင်းနှင့် အမှိုက်ပုံး Icon ဖြင့် ပစ္စည်းဖျက်ထုတ်ခြင်း (Delete) တို့ကို EC-CUBE ၏ မူလ Session CSRF နှင့် ချိတ်ဆက်ဆောင်ရွက်ထားပါသည်။
+   - Free Delivery သတ်မှတ်ချက်ပြည့်မီမှု အသိပေးချက် (Notice Banner) ပါဝင်ပါသည်။
+2. **Delivery Information (ပို့ဆောင်မည့် လိပ်စာအချက်အလက် ကတ်)**:
+   - အမည် (Name), လိပ်စာ (Address), မြို့ (City), စာတိုက်ကုဒ် (Zip Code), ဖုန်းနံပါတ် (Mobile) နှင့် အီးမေးလ် (Email) တို့ကို Key-Value ဇယားပုံစံ သန့်ရှင်းစွာ ပြသထားပါသည်။
+   - **`Edit Information` Pill Button**: နှိပ်လိုက်ပါက Modal Dialog ပွင့်လာပြီး လိပ်စာအချက်အလက်များကို တိုက်ရိုက်ပြင်ဆင်သိမ်းဆည်းနိုင်ကာ LocalStorage တွင် အလိုအလျောက် မှတ်သားထားပေးပါသည်။
+3. **Order Summery (အော်ဒါအကျဉ်းချုပ် ကတ်)**:
+   - Coupon Code ထည့်သွင်းနိုင်သော Input Box နှင့် အစိမ်းရောင်ရင့် (`#003d29`) Pill ခလုတ် `Apply coupon` ပါဝင်ပါသည်။
+   - Subtotal, Free Shipping, Discount နှင့် စုစုပေါင်းကျသင့်ငွေ (Total Amount) တွက်ချက်ပြသမှု။
+4. **Payment Details (ငွေပေးချေမှုနည်းလမ်းများ ကတ်)**:
+   - Cash on Delivery, Shopcart Card, Paypal နှင့် **Credit or Debit card** (အစိမ်းရောင် Active Dot ဖြင့် ရွေးချယ်ထားမှု)။
+   - Amazon Pay, Mastercard (Red/Yellow overlap) နှင့် VISA Brand Badges များ ထည့်သွင်းထားပါသည်။
+   - Email*, Card Holder Name* နှင့် Card Number ထည့်သွင်းရန် Form Fields များ။
+   - **`Proceed to Checkout`** Button: အော်ဒါဆက်လက်ဝယ်ယူရန် EC-CUBE ၏ Checkout Step (`cart_buystep`) သို့ ချိတ်ဆက်ပေးထားပါသည်။
+5. **Empty Cart State (ပစ္စည်းမရှိသေးသော အခြေအနေ)**:
+   - Cart ထဲတွင် ပစ္စည်းမရှိသေးပါက ခေတ်မီသော ခြင်းတောင်း Icon၊ ရှင်းလင်းချက်နှင့် `Start Shopping` Button ကို သပ်ရပ်စွာ ပြသပေးပါသည်။
+
