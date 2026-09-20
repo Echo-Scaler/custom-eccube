@@ -5438,7 +5438,7 @@ body.product_page .ec-layoutRole__main {
 }
 
 .sc-modal-backdrop.is-open {
-  display: flex;
+  display: flex !important;
   animation: scFadeIn 0.2s ease-out;
 }
 

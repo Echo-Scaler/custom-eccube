@@ -197,7 +197,7 @@ file that was distributed with this source code.
     {% if plugin_snippets is defined %}
     {{ include('snippet.twig', { snippets: plugin_snippets }) }}
     {% endif %}
-    <script src="{{ asset('assets/js/nav_shopcart.js') }}"></script>
+    <script src="{{ asset('assets/js/nav_shopcart.js') }}?v={{ 'now'|date('U') }}"></script>
     <script src="{{ asset('assets/js/customize.js', 'user_data') }}"></script>
 </body>
 

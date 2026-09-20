@@ -584,6 +584,138 @@ $(function () {
         var url = $(this).data('url');
         updateCartItem(this, 'remove', pid, url);
     });
+
+    // ==========================================
+    // Delivery Information Edit Modal
+    // ==========================================
+    function openDeliveryModal() {
+        var $modal = $('#scDeliveryModal');
+        if (!$modal.length) return;
+
+        // Pre-fill inputs with current text on page
+        $('#scInputName').val($('#scDelivName').text().trim());
+        $('#scInputAddress').val($('#scDelivAddress').text().trim());
+        $('#scInputCity').val($('#scDelivCity').text().trim());
+        $('#scInputZip').val($('#scDelivZip').text().trim());
+        $('#scInputMobile').val($('#scDelivMobile').text().trim());
+        $('#scInputEmail').val($('#scDelivEmail').text().trim());
+
+        $modal.addClass('is-open').fadeIn(150);
+        $('body').css('overflow', 'hidden');
+    }
+
+    function closeDeliveryModal() {
+        var $modal = $('#scDeliveryModal');
+        $modal.removeClass('is-open').fadeOut(150);
+        $('body').css('overflow', '');
+    }
+
+    // Open on Edit Information click
+    $(document).on('click', '#scEditDeliveryBtn', function (e) {
+        e.preventDefault();
+        openDeliveryModal();
+    });
+
+    // Close buttons
+    $(document).on('click', '#scModalCloseBtn, #scModalCancelBtn', function (e) {
+        e.preventDefault();
+        closeDeliveryModal();
+    });
+
+    // Close on backdrop click
+    $(document).on('click', '#scDeliveryModal', function (e) {
+        if ($(e.target).is('#scDeliveryModal')) {
+            closeDeliveryModal();
+        }
+    });
+
+    // Save Delivery Information
+    $(document).on('click', '#scModalSaveBtn', function (e) {
+        e.preventDefault();
+
+        var name = $('#scInputName').val().trim();
+        var address = $('#scInputAddress').val().trim();
+        var city = $('#scInputCity').val().trim();
+        var zip = $('#scInputZip').val().trim();
+        var mobile = $('#scInputMobile').val().trim();
+        var email = $('#scInputEmail').val().trim();
+
+        if (name) $('#scDelivName').text(name);
+        if (address) $('#scDelivAddress').text(address);
+        if (city) $('#scDelivCity').text(city);
+        if (zip) $('#scDelivZip').text(zip);
+        if (mobile) $('#scDelivMobile').text(mobile);
+        if (email) $('#scDelivEmail').text(email);
+
+        // Sync payment form fields if present
+        if (email) $('#scPaymentEmail').val(email);
+        if (name) $('#scCardHolder').val(name);
+
+        try {
+            var info = {
+                name: name,
+                address: address,
+                city: city,
+                zip: zip,
+                mobile: mobile,
+                email: email
+            };
+            localStorage.setItem('sc_delivery_info', JSON.stringify(info));
+        } catch (err) {}
+
+        closeDeliveryModal();
+    });
+
+    // Auto load saved delivery info from localStorage on page load
+    try {
+        var savedInfoStr = localStorage.getItem('sc_delivery_info');
+        if (savedInfoStr) {
+            var savedInfo = JSON.parse(savedInfoStr);
+            if (savedInfo.name) $('#scDelivName').text(savedInfo.name);
+            if (savedInfo.address) $('#scDelivAddress').text(savedInfo.address);
+            if (savedInfo.city) $('#scDelivCity').text(savedInfo.city);
+            if (savedInfo.zip) $('#scDelivZip').text(savedInfo.zip);
+            if (savedInfo.mobile) $('#scDelivMobile').text(savedInfo.mobile);
+            if (savedInfo.email) $('#scDelivEmail').text(savedInfo.email);
+
+            if (savedInfo.email && !$('#scPaymentEmail').val()) $('#scPaymentEmail').val(savedInfo.email);
+            if (savedInfo.name && !$('#scCardHolder').val()) $('#scCardHolder').val(savedInfo.name);
+        }
+    } catch (e) {}
+
+    // ==========================================
+    // Coupon Code Apply
+    // ==========================================
+    $(document).on('click', '#scCouponBtn', function (e) {
+        e.preventDefault();
+        var code = $('#scCouponInput').val().trim().toUpperCase();
+        var $fb = $('#scCouponFeedback');
+        if (!code) {
+            $fb.text('Please enter a valid coupon code.').removeClass('is-success').addClass('is-error').show();
+            return;
+        }
+        $fb.text('Coupon code "' + code + '" applied! 10% discount has been applied to your order.')
+           .removeClass('is-error').addClass('is-success').show();
+        $('#scDiscountRow').css('display', 'flex');
+        $('#scDiscountVal').text('-10%');
+    });
+
+    // ==========================================
+    // Payment Options Toggle
+    // ==========================================
+    $(document).on('click', '.sc-payment-option', function () {
+        $('.sc-payment-option').removeClass('is-active');
+        $(this).addClass('is-active');
+
+        var pType = $(this).data('payment-type');
+        if (pType === 'card') {
+            $('#scPaymentCardForm').slideDown(150);
+            $('#scPaymentBadges').slideDown(150);
+        } else {
+            $('#scPaymentCardForm').slideUp(150);
+            $('#scPaymentBadges').slideUp(150);
+        }
+    });
 });
 </script>
 {% endblock javascript %}
