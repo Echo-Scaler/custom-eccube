@@ -37,19 +37,19 @@ file that was distributed with this source code.
                 <!-- Language Selector -->
                 <div class="shopcart-dropdown shopcart-lang-dropdown">
                     <button class="shopcart-dropdown__toggle" type="button" aria-label="Language Selector">
-                        <span>{% if app.request.locale == 'ja' %}日本語{% elseif app.request.locale == 'my' %}မြန်မာ{% else %}Eng{% endif %}</span>
+                        <span>{% if app.request.locale == 'ja' %}🇯🇵 日本語{% elseif app.request.locale == 'my' %}🇲🇲 မြန်မာ{% else %}🇺🇸 Eng{% endif %}</span>
                         <i class="fas fa-chevron-down shopcart-chevron"></i>
                     </button>
                     <div class="shopcart-dropdown__menu">
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'en'})) }}"
-                            class="shopcart-dropdown__item {% if app.request.locale == 'en' or app.request.locale is empty %}is-active{% endif %}">
+                        <a href="{{ url('locale_switch', {'locale': 'en'}) }}"
+                            class="shopcart-dropdown__item {% if app.request.locale == 'en' %}is-active{% endif %}">
                             <span class="shopcart-flag">🇺🇸</span> English (Eng)
                         </a>
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'ja'})) }}"
+                        <a href="{{ url('locale_switch', {'locale': 'ja'}) }}"
                             class="shopcart-dropdown__item {% if app.request.locale == 'ja' %}is-active{% endif %}">
                             <span class="shopcart-flag">🇯🇵</span> 日本語 (ja)
                         </a>
-                        <a href="{{ path(app.request.get('_route')|default('homepage'), app.request.get('_route_params')|default({})|merge(app.request.query.all)|merge({'_locale': 'my'})) }}"
+                        <a href="{{ url('locale_switch', {'locale': 'my'}) }}"
                             class="shopcart-dropdown__item {% if app.request.locale == 'my' %}is-active{% endif %}">
                             <span class="shopcart-flag">🇲🇲</span> မြန်မာ (my)
                         </a>

@@ -98,138 +98,264 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block main %}
+    {% set AllCategories = repository('Eccube\\Entity\\Category').getList() %}
+
+    {# ─── Hidden search form ─────────────────────────────────────────── #}
+    <form name="form1" id="form1" method="get" action="?" style="display:none;">
+        {% for item in search_form %}
+            <input type="hidden" id="{{ item.vars.id }}"
+                   name="{{ item.vars.full_name }}"
+                   {% if item.vars.value is not empty %}value="{{ item.vars.value }}" {% endif %}/>
+        {% endfor %}
+    </form>
+
+    {# ─── Category error ─────────────────────────────────────────────── #}
     {% if search_form.category_id.vars.errors|length > 0 %}
-        <div class="ec-searchnavRole">
-            <p class="errormsg text-danger">{{ 'front.product.search__category_not_found'|trans }}</p>
+        <div class="plp-error-banner">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ 'front.product.search__category_not_found'|trans }}
         </div>
     {% else %}
-        <div class="ec-searchnavRole">
-            <form name="form1" id="form1" method="get" action="?">
-                {% for item in search_form %}
-                    <input type="hidden" id="{{ item.vars.id }}"
-                           name="{{ item.vars.full_name }}"
-                           {% if item.vars.value is not empty %}value="{{ item.vars.value }}" {% endif %}/>
-                {% endfor %}
-            </form>
-            <div class="ec-searchnavRole__topicpath">
-                <ol class="ec-topicpath">
-                    <li class="ec-topicpath__item"><a href="{{ url('product_list') }}">{{ 'front.product.all_category'|trans }}</a>
+
+    {# ─── Hero / Breadcrumb bar ──────────────────────────────────────── #}
+    <div class="plp-hero">
+        <div class="plp-hero__inner">
+            <ol class="plp-breadcrumb">
+                <li><a href="{{ url('product_list') }}"><i class="fas fa-home"></i> {{ 'front.product.all_category'|trans }}</a></li>
+                {% if Category is not null %}
+                    {% for Path in Category.path %}
+                        {% set path_name = (('category.' ~ Path.name)|trans != ('category.' ~ Path.name)) ? ('category.' ~ Path.name)|trans : Path.name %}
+                        <li class="plp-breadcrumb__sep"><i class="fas fa-chevron-right"></i></li>
+                        <li{% if loop.last %} class="plp-breadcrumb__current"{% endif %}>
+                            <a href="{{ url('product_list') }}?category_id={{ Path.id }}">{{ path_name }}</a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                {% if search_form.vars.value and search_form.vars.value.name %}
+                    <li class="plp-breadcrumb__sep"><i class="fas fa-chevron-right"></i></li>
+                    <li class="plp-breadcrumb__current">
+                        <span>{{ 'front.product.search_result__keyword'|trans({ '%name%': search_form.vars.value.name }) }}</span>
                     </li>
-                    {% if Category is not null %}
-                        {% for Path in Category.path %}
-                            {% set path_name = (('category.' ~ Path.name)|trans != ('category.' ~ Path.name)) ? ('category.' ~ Path.name)|trans : Path.name %}
-                            <li class="ec-topicpath__divider">|</li>
-                            <li class="ec-topicpath__item{% if loop.last %}--active{% endif %}"><a
-                                        href="{{ url('product_list') }}?category_id={{ Path.id }}">{{ path_name }}</a>
+                {% endif %}
+            </ol>
+
+            {% if Category is not null %}
+                {% set cat_name = (('category.' ~ Category.name)|trans != ('category.' ~ Category.name)) ? ('category.' ~ Category.name)|trans : Category.name %}
+                <h1 class="plp-hero__title">{{ cat_name }}</h1>
+            {% elseif search_form.vars.value and search_form.vars.value.name %}
+                <h1 class="plp-hero__title">Search: "{{ search_form.vars.value.name }}"</h1>
+            {% else %}
+                <h1 class="plp-hero__title">{{ 'front.product.all_category'|trans }}</h1>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ─── Main layout: Sidebar + Content ────────────────────────────── #}
+    <div class="plp-layout">
+
+        {# ── Left Sidebar ─────────────────────────────────────────────── #}
+        <aside class="plp-sidebar">
+            <div class="plp-sidebar__inner">
+                <div class="plp-sidebar__section">
+                    <h3 class="plp-sidebar__heading">
+                        <i class="fas fa-layer-group"></i> Categories
+                    </h3>
+                    <ul class="plp-cat-tree">
+                        <li class="plp-cat-tree__item{% if Category is null and not (search_form.vars.value and search_form.vars.value.name) %} is-active{% endif %}">
+                            <a href="{{ url('product_list') }}">
+                                <i class="fas fa-th-large"></i> All Products
+                            </a>
+                        </li>
+                        {% macro catTree(Cat, CurrentCategory) %}
+                            {% from _self import catTree %}
+                            {% set cat_label = (('category.' ~ Cat.name)|trans != ('category.' ~ Cat.name)) ? ('category.' ~ Cat.name)|trans : Cat.name %}
+                            {% set isActive = CurrentCategory is not null and CurrentCategory.id == Cat.id %}
+                            <li class="plp-cat-tree__item{% if isActive %} is-active{% endif %}{% if Cat.children|length > 0 %} has-children{% endif %}">
+                                <a href="{{ url('product_list') }}?category_id={{ Cat.id }}">
+                                    {% if Cat.children|length > 0 %}
+                                        <i class="fas fa-folder"></i>
+                                    {% else %}
+                                        <i class="fas fa-tag"></i>
+                                    {% endif %}
+                                    {{ cat_label }}
+                                    {% if Cat.children|length > 0 %}
+                                        <span class="plp-cat-tree__arrow"><i class="fas fa-chevron-right"></i></span>
+                                    {% endif %}
+                                </a>
+                                {% if Cat.children|length > 0 %}
+                                    <ul class="plp-cat-tree plp-cat-tree--sub">
+                                        {% for Child in Cat.children %}
+                                            {{ catTree(Child, CurrentCategory) }}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </li>
+                        {% endmacro %}
+                        {% from _self import catTree %}
+                        {% for Cat in AllCategories %}
+                            {{ catTree(Cat, Category) }}
                         {% endfor %}
-                    {% endif %}
-                    {% if search_form.vars.value and search_form.vars.value.name %}
-                        <li class="ec-topicpath__divider">|</li>
-                        <li class="ec-topicpath__item">{{ 'front.product.search_result__keyword'|trans({ '%name%': search_form.vars.value.name }) }}</li>
-                    {% endif %}
-                </ol>
-            </div>
-            <div class="ec-searchnavRole__infos">
-                <div class="ec-searchnavRole__counter">
+                    </ul>
+                </div>
+
+                {# Sort & display controls are in the toolbar (form fields can only render once) #}
+
+                </div>{# /.plp-sidebar__inner #}
+        </aside>
+
+        {# ── Main content area ─────────────────────────────────────────── #}
+        <div class="plp-main">
+
+            {# Sort toolbar #}
+            <div class="plp-toolbar">
+                <div class="plp-toolbar__count">
                     {% if pagination.totalItemCount > 0 %}
-                        {{ 'front.product.search_result__detail'|trans({ '%count%': pagination.totalItemCount })|raw }}
+                        <span class="plp-toolbar__count-num">{{ pagination.totalItemCount }}</span> products found
                     {% else %}
-                        <span>{{ 'front.product.search__product_not_found'|trans }}</span>
+                        <span>No products found</span>
                     {% endif %}
                 </div>
                 {% if pagination.totalItemCount > 0 %}
-                    <div class="ec-searchnavRole__actions">
-                        <div class="ec-select">
-                            {{ form_widget(search_form.disp_number, {'id': '', 'attr': {'class': 'disp-number'}}) }}
-                            {{ form_widget(search_form.orderby, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                    <div class="plp-toolbar__controls">
+                        <div class="plp-toolbar__select-wrap">
+                            <i class="fas fa-list-ol"></i>
+                            {{ form_widget(search_form.disp_number, {'id': '', 'attr': {'class': 'plp-toolbar__select disp-number'}}) }}
+                        </div>
+                        <div class="plp-toolbar__select-wrap">
+                            <i class="fas fa-sort-amount-down"></i>
+                            {{ form_widget(search_form.orderby, {'id': '', 'attr': {'class': 'plp-toolbar__select order-by'}}) }}
                         </div>
                     </div>
                 {% endif %}
             </div>
-        </div>
-        {% if pagination.totalItemCount > 0 %}
-            <div class="ec-shelfRole">
-                <ul class="ec-shelfGrid">
+
+            {# Product Grid #}
+            {% if pagination.totalItemCount > 0 %}
+                <ul class="plp-grid">
                     {% for Product in pagination %}
-                        <li class="ec-shelfGrid__item">
-                            <a href="{{ url('product_detail', {'id': Product.id}) }}">
-                                <p class="ec-shelfGrid__item-image">
-                                    <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" alt="{{ Product.name }}" {% if loop.index > 5 %} loading="lazy"{% endif %}>
-                                </p>
-                                <p>{{ Product.name }}</p>
-                                {% if Product.description_list %}
-                                    <p>{{ Product.description_list|raw|nl2br }}</p>
+                        <li class="plp-card">
+                            {# Image #}
+                            <a href="{{ url('product_detail', {'id': Product.id}) }}" class="plp-card__img-wrap">
+                                <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}"
+                                     alt="{{ Product.name }}"
+                                     class="plp-card__img"
+                                     {% if loop.index > 6 %} loading="lazy"{% endif %}>
+                                {# Wishlist button overlay #}
+                                <button type="button" class="plp-card__wishlist" aria-label="Add to Wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                {% if not Product.stock_find %}
+                                    <span class="plp-card__badge plp-card__badge--oos">Out of Stock</span>
                                 {% endif %}
-                                <p class="price02-default">
+                            </a>
+
+                            {# Info #}
+                            <div class="plp-card__body">
+                                <a href="{{ url('product_detail', {'id': Product.id}) }}" class="plp-card__name">{{ Product.name }}</a>
+
+                                {% if Product.description_list %}
+                                    <p class="plp-card__desc">{{ Product.description_list|striptags|slice(0, 72) }}{% if Product.description_list|length > 72 %}…{% endif %}</p>
+                                {% endif %}
+
+                                {# Static rating (visual only) #}
+                                <div class="plp-card__stars">
+                                    <span class="plp-card__stars-filled">★★★★</span><span class="plp-card__stars-empty">★</span>
+                                    <span class="plp-card__stars-count">({{ (Product.id * 17 + 43) % 150 + 10 }})</span>
+                                </div>
+
+                                {# Price #}
+                                <p class="plp-card__price">
                                     {% if Product.hasProductClass %}
                                         {% if Product.getPrice02Min == Product.getPrice02Max %}
                                             {{ Product.getPrice02IncTaxMin|price }}
                                         {% else %}
-                                            {{ Product.getPrice02IncTaxMin|price }} ～ {{ Product.getPrice02IncTaxMax|price }}
+                                            {{ Product.getPrice02IncTaxMin|price }} <span class="plp-card__price-sep">~</span> {{ Product.getPrice02IncTaxMax|price }}
                                         {% endif %}
                                     {% else %}
                                         {{ Product.getPrice02IncTaxMin|price }}
                                     {% endif %}
                                 </p>
-                            </a>
 
-                            {% if Product.stock_find %}
-                                {% set form = forms[Product.id] %}
-                                <form name="form{{ Product.id }}" id="productForm{{ Product.id }}" action="{{ url('product_add_cart', {id:Product.id}) }}" method="post">
-                                    <div class="ec-productRole__actions">
-                                        {% if form.classcategory_id1 is defined %}
-                                            <div class="ec-select">
-                                                {{ form_widget(form.classcategory_id1) }}
-                                                {{ form_errors(form.classcategory_id1) }}
-                                            </div>
-                                            {% if form.classcategory_id2 is defined %}
-                                                <div class="ec-select">
-                                                    {{ form_widget(form.classcategory_id2) }}
-                                                    {{ form_errors(form.classcategory_id2) }}
+                                {# Add to cart / Out of stock #}
+                                {% if Product.stock_find %}
+                                    {% set form = forms[Product.id] %}
+                                    <form name="form{{ Product.id }}" id="productForm{{ Product.id }}"
+                                          action="{{ url('product_add_cart', {id:Product.id}) }}" method="post"
+                                          class="plp-card__form">
+                                        <div class="plp-card__actions">
+                                            {% if form.classcategory_id1 is defined %}
+                                                <div class="plp-card__select-wrap">
+                                                    {{ form_widget(form.classcategory_id1) }}
+                                                    {{ form_errors(form.classcategory_id1) }}
                                                 </div>
+                                                {% if form.classcategory_id2 is defined %}
+                                                    <div class="plp-card__select-wrap">
+                                                        {{ form_widget(form.classcategory_id2) }}
+                                                        {{ form_errors(form.classcategory_id2) }}
+                                                    </div>
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                        <div class="ec-numberInput"><span>{{ 'common.quantity'|trans }}</span>
-                                            {{ form_widget(form.quantity, {'attr': {'class': 'quantity'}}) }}
-                                            {{ form_errors(form.quantity) }}
+                                            <div class="plp-card__qty-row">
+                                                <div class="plp-card__qty">
+                                                    {{ form_widget(form.quantity, {'attr': {'class': 'quantity', 'min': 1}}) }}
+                                                    {{ form_errors(form.quantity) }}
+                                                </div>
+                                                <button type="submit" class="plp-card__btn add-cart"
+                                                        data-cartid="{{ Product.id }}" form="productForm{{ Product.id }}">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    {{ 'front.product.add_cart'|trans }}
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    {{ form_rest(form) }}
-                                </form>
-                                <div class="ec-productRole__btn">
-                                    <button type="submit" class="ec-blockBtn--action add-cart" data-cartid="{{ Product.id }}" form="productForm{{ Product.id }}">
-                                        {{ 'front.product.add_cart'|trans }}
-                                    </button>
-                                </div>
-                            {% else %}
-                                <div class="ec-productRole__btn">
-                                    <button type="button" class="ec-blockBtn--action" disabled="disabled">
+                                        {{ form_rest(form) }}
+                                    </form>
+                                {% else %}
+                                    <button type="button" class="plp-card__btn plp-card__btn--disabled" disabled>
+                                        <i class="fas fa-ban"></i>
                                         {{ 'front.product.out_of_stock'|trans }}
                                     </button>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
-            </div>
-            <div class="ec-modal">
-                <div class="ec-modal-overlay">
-                    <div class="ec-modal-wrap">
-                        <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
-                        <div id="ec-modal-header" class="text-center">{{ 'front.product.add_cart_complete'|trans }}</div>
-                        <div class="ec-modal-box">
-                            <div class="ec-role">
-                                <span class="ec-inlineBtn--cancel">{{ 'front.product.continue'|trans }}</span>
-                                <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'common.go_to_cart'|trans }}</a>
+
+                {# Add to cart modal #}
+                <div class="ec-modal">
+                    <div class="ec-modal-overlay">
+                        <div class="ec-modal-wrap">
+                            <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
+                            <div id="ec-modal-header" class="text-center">{{ 'front.product.add_cart_complete'|trans }}</div>
+                            <div class="ec-modal-box">
+                                <div class="ec-role">
+                                    <span class="ec-inlineBtn--cancel">{{ 'front.product.continue'|trans }}</span>
+                                    <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'common.go_to_cart'|trans }}</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="ec-pagerRole">
-                {% include "pager.twig" with {'pages': pagination.paginationData} %}
-            </div>
-        {% endif %}
+
+                {# Pagination #}
+                <div class="plp-pagination">
+                    {% include "pager.twig" with {'pages': pagination.paginationData} %}
+                </div>
+
+            {% else %}
+                {# Empty state #}
+                <div class="plp-empty">
+                    <div class="plp-empty__icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h2 class="plp-empty__title">{{ 'front.product.search__product_not_found'|trans }}</h2>
+                    <p class="plp-empty__sub">Try browsing a different category or adjust your search.</p>
+                    <a href="{{ url('product_list') }}" class="plp-empty__btn">
+                        <i class="fas fa-th-large"></i> View All Products
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>{# /.plp-main #}
+    </div>{# /.plp-layout #}
     {% endif %}
 {% endblock %}
