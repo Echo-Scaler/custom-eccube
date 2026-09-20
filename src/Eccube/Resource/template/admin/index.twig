@@ -12,6 +12,7 @@ file that was distributed with this source code.
 
 {% block title %}{{ 'admin.home'|trans }}{% endblock %}
 {% block sub_title %}{% endblock %}
+{% block page_header %}{% endblock %}
 
 {% block javascript %}
     <script>
@@ -374,55 +375,4 @@ file that was distributed with this source code.
         </div>
     </div>
 
-    <!-- BOTTOM ROW: Recommended Plugins (Left) & Shop News (Right) -->
-    <div class="row g-4">
-        <!-- Recommended Plugins -->
-        <div class="col-lg-6">
-            <div id="ec-cube-plugin" class="pulse-panel-card h-100">
-                <div class="pulse-panel-header">
-                    <span class="pulse-panel-title">{{ 'admin.home.recommend_plugins_title'|trans }}</span>
-                    <a href="{{ url('admin_store_plugin_owners_search_page') }}" class="pulse-panel-link">
-                        {{ 'admin.home.recommend_plugins.owner_store'|trans }} &rarr;
-                    </a>
-                </div>
-                <div class="pulse-panel-body" style="max-height: 380px; overflow-y: auto;">
-                    {% if recommendedPlugins is not empty %}
-                        {% for plugin in recommendedPlugins %}
-                            <div class="pulse-plugin-item">
-                                <div class="pulse-plugin-thumb">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
-                                        <img src="{{ plugin.image }}" alt="{{ plugin.name }}">
-                                    </a>
-                                </div>
-                                <div class="pulse-plugin-info">
-                                    <a href="#" class="pulse-plugin-name" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
-                                        {{ plugin.name }}
-                                    </a>
-                                    <p class="pulse-plugin-desc">{{ plugin.short_description }}</p>
-                                </div>
-                            </div>
-                            {{ include('@admin/Store/plugin_detail_modal.twig', {'item': plugin} ) }}
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center py-4 text-muted">
-                            <i class="fa fa-plug fa-2x mb-2 d-block"></i>
-                            <span>No recommended plugins available at this time.</span>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Store News & Information -->
-        <div class="col-lg-6">
-            <div id="ec-cube-news" class="pulse-panel-card h-100">
-                <div class="pulse-panel-header">
-                    <span class="pulse-panel-title">{{ 'admin.home.news_title'|trans }}</span>
-                </div>
-                <div class="pulse-panel-body p-0">
-                    <iframe name="information" class="pulse-news-iframe" src="{{ eccube_config.eccube_info_url }}"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

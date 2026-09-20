@@ -91,11 +91,13 @@ file that was distributed with this source code.
     </div>
     <div class="c-curtain"></div>
     <div class="c-contentsArea">
+        {% block page_header %}
         <div class="c-pageTitle">
             <div class="c-pageTitle__titles">
                 <h2 class="c-pageTitle__title">{{ block('title') }}</h2><span class="c-pageTitle__subTitle">{{ block('sub_title') }}</span>
             </div>
         </div>
+        {% endblock %}
 
         {{ include('@admin/alert.twig') }}
         {{ include('@admin/info.twig') }}
