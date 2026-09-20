@@ -183,7 +183,7 @@ class ProductController extends AbstractController
                 AddCartType::class,
                 null,
                 [
-                    'product' => $ProductsAndClassCategories[$Product->getId()],
+                    'product' => $ProductsAndClassCategories[$Product->getId()] ?? $Product,
                     'allow_extra_fields' => true,
                 ]
             );

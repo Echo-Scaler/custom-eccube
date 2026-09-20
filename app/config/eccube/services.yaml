@@ -241,3 +241,11 @@ services:
     Eccube\Util\CacheUtil:
         arguments:
             $container: !tagged_locator { tag: 'cache.pool.clearer' }
+
+    # Custom: Session-based locale switcher listener
+    Customize\EventListener\LocaleListener:
+        arguments:
+            $defaultLocale: '%locale%'
+        tags:
+            - { name: kernel.event_subscriber }
+
