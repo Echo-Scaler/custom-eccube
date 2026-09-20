@@ -674,6 +674,10 @@ body.sidebar-collapsed .c-conversionArea {
 }
 
 /* Page Title on sub-pages (Products, Orders, Settings) */
+#page_admin_homepage .c-pageTitle {
+  display: none !important;
+}
+
 .c-pageTitle {
   background: transparent !important;
   padding: 0 0 20px 0 !important;
