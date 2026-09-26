@@ -579,11 +579,15 @@ admin.header.logout: ログアウト
 admin.header.last_login: 最終ログイン
 admin.header.change_password: パスワード変更
 admin.header.two_factor_auth: 2段階認証 設定
+admin.header.to_front: ショップ
 
 admin.login.enable_javascript: JavaScript を有効にしてご利用ください
 admin.login.login: ログイン
+admin.login.sub_title: 管理画面へようこそ。ログイン情報を入力してください。
 admin.login.login_id: ログインID
 admin.login.password: パスワード
+admin.login.remember_me: ログインIDを記憶する
+admin.login.signing_in: ログイン中...
 
 admin.change_password: パスワード変更
 admin.change_password.current_password: 現在のパスワード

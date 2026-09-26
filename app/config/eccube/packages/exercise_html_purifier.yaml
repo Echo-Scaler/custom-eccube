@@ -1,0 +1,3 @@
+exercise_html_purifier:
+    default_cache_serializer_path: '%kernel.project_dir%/var/htmlpurifier'
+    default_cache_serializer_permissions: 493
