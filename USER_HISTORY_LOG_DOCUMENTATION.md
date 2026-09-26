@@ -21,10 +21,12 @@
       ├───────────────────────────────┤                            ├───────────────────────────────┤
       │ • KernelEvents::RESPONSE      │                            │ • front.product.detail.*      │
       │   (Page Views & Navigation)   │                            │   (Product Views)             │
-      │ • SecurityEvents::LOGIN       │                            │ • front.shopping.complete.*   │
-      │   (Customer/Admin Login)      │                            │   (Order/Purchase Complete)   │
-      │ • LogoutEvent::class          │                            │ • front.entry.complete        │
-      │   (User Logout)               │                            │   (Customer Registration)     │
+      │ • SecurityEvents::LOGIN       │                            │ • front.product.cart.add.*    │
+      │   (Customer/Admin Login)      │                            │   (Cart Add Items)            │
+      │ • LogoutEvent::class          │                            │ • front.shopping.complete.*   │
+      │   (User Logout)               │                            │   (Order/Purchase Complete)   │
+      │                               │                            │ • front.entry.index.complete  │
+      │                               │                            │   (Customer Registration)     │
       │                               │                            │ • UserActionEvent::class      │
       │                               │                            │   (Custom Dispatched Actions) │
       └──────────────┬────────────────┘                            └──────────────┬────────────────┘
@@ -228,12 +230,13 @@ class UserHistoryNav implements EccubeNav
         tags:
             - { name: kernel.event_subscriber }
 
-    # Custom: User History Event Listener (product detail, shopping complete, registration, user action)
+    # Custom: User History Event Listener (product detail, cart add, shopping complete, registration, user action)
     Customize\EventListener\UserHistoryListener:
         tags:
             - { name: kernel.event_listener, event: front.product.detail.initialize, method: onProductDetail }
+            - { name: kernel.event_listener, event: front.product.cart.add.complete, method: onCartAdd }
             - { name: kernel.event_listener, event: front.shopping.complete.initialize, method: onShoppingComplete }
-            - { name: kernel.event_listener, event: front.entry.complete, method: onCustomerRegister }
+            - { name: kernel.event_listener, event: front.entry.index.complete, method: onCustomerRegister }
             - { name: kernel.event_listener, event: Customize\Event\UserActionEvent, method: onUserAction }
 
     # Custom: User History Navigation in Admin Menu

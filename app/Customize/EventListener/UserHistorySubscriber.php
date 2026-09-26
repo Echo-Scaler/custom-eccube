@@ -70,9 +70,14 @@ class UserHistorySubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Avoid log pollution from log download or log polling
+        // Avoid log pollution from log download or duplicate domain event routes
         $route = (string) $request->attributes->get('_route', '');
         if ($route === 'admin_setting_system_user_history_download') {
+            return;
+        }
+
+        // Avoid duplicate logging for routes handled with rich metadata by domain listeners
+        if (in_array($route, ['product_detail', 'product_add_cart', 'shopping_complete'], true)) {
             return;
         }
 

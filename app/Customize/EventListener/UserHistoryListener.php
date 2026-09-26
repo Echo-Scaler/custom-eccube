@@ -71,6 +71,46 @@ class UserHistoryListener
     }
 
     /**
+     * Triggered when a customer or guest adds a product to the cart.
+     * Event: front.product.cart.add.complete
+     */
+    public function onCartAdd(EventArgs $event): void
+    {
+        /** @var Product|null $product */
+        $product = $event->getArgument('Product');
+        $form = $event->getArgument('form');
+
+        $quantity = 1;
+        if ($form && isset($form['quantity'])) {
+            $quantity = (int) $form['quantity']->getData();
+        }
+
+        $request = $this->requestStack->getMainRequest();
+        $userInfo = $this->resolveUserInfo();
+
+        $details = [
+            'product_id' => $product ? $product->getId() : null,
+            'product_name' => $product ? $product->getName() : 'Product',
+            'quantity' => $quantity,
+        ];
+
+        $this->logger->log('CART_ADD', [
+            'user_type' => $userInfo['user_type'],
+            'user_id' => $userInfo['user_id'],
+            'user_name' => $userInfo['user_name'],
+            'user_email' => $userInfo['user_email'],
+            'ip' => $request ? $request->getClientIp() : '127.0.0.1',
+            'method' => 'POST',
+            'route' => $request ? (string) $request->attributes->get('_route', 'product_add_cart') : 'product_add_cart',
+            'url' => $request ? $request->getRequestUri() : '',
+            'status_code' => 200,
+            'referer' => $request ? (string) $request->headers->get('referer', '') : '',
+            'user_agent' => $request ? (string) $request->headers->get('user-agent', '') : '',
+            'details' => $details,
+        ]);
+    }
+
+    /**
      * Triggered when a customer completes checkout / purchase.
      * Event: front.shopping.complete.initialize
      */
@@ -111,7 +151,7 @@ class UserHistoryListener
 
     /**
      * Triggered when a new customer registers on the site.
-     * Event: front.entry.complete
+     * Event: front.entry.index.complete
      */
     public function onCustomerRegister(EventArgs $event): void
     {
