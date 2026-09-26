@@ -70,6 +70,11 @@ class UserHistorySubscriber implements EventSubscriberInterface
             return;
         }
 
+        // Exclude all admin panel requests completely (User History is customer/guest only)
+        if ($this->requestContext->isAdmin()) {
+            return;
+        }
+
         // Avoid log pollution from log download or duplicate domain event routes
         $route = (string) $request->attributes->get('_route', '');
         if ($route === 'admin_setting_system_user_history_download') {
@@ -82,6 +87,11 @@ class UserHistorySubscriber implements EventSubscriberInterface
         }
 
         $userInfo = $this->resolveUserInfo();
+
+        // Do not log if user is an administrator
+        if ($userInfo['user_type'] === 'admin') {
+            return;
+        }
 
         $this->logger->log('PAGE_VIEW', [
             'user_type' => $userInfo['user_type'],
@@ -96,14 +106,13 @@ class UserHistorySubscriber implements EventSubscriberInterface
             'referer' => (string) $request->headers->get('referer', ''),
             'user_agent' => (string) $request->headers->get('user-agent', ''),
             'details' => [
-                'is_admin' => $this->requestContext->isAdmin(),
                 'query' => $request->query->all(),
             ],
         ]);
     }
 
     /**
-     * Log user authentication login events.
+     * Log user authentication login events (front customer logins only).
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
@@ -111,22 +120,15 @@ class UserHistorySubscriber implements EventSubscriberInterface
         $token = $event->getAuthenticationToken();
         $user = $token ? $token->getUser() : null;
 
-        $userType = 'guest';
-        $userId = null;
-        $userName = 'Unknown User';
-        $userEmail = null;
-
-        if ($user instanceof Customer) {
-            $userType = 'customer';
-            $userId = $user->getId();
-            $userName = trim($user->getName01() . ' ' . $user->getName02()) ?: ($user->getEmail() ?: 'Customer #' . $user->getId());
-            $userEmail = $user->getEmail();
-        } elseif ($user instanceof Member) {
-            $userType = 'admin';
-            $userId = $user->getId();
-            $userName = $user->getName() ?: $user->getUsername();
-            $userEmail = $user->getUsername();
+        // Skip administrator logins; only track storefront customers
+        if (!($user instanceof Customer)) {
+            return;
         }
+
+        $userType = 'customer';
+        $userId = $user->getId();
+        $userName = trim($user->getName01() . ' ' . $user->getName02()) ?: ($user->getEmail() ?: 'Customer #' . $user->getId());
+        $userEmail = $user->getEmail();
 
         $this->logger->log('USER_LOGIN', [
             'user_type' => $userType,
@@ -141,14 +143,14 @@ class UserHistorySubscriber implements EventSubscriberInterface
             'referer' => (string) $request->headers->get('referer', ''),
             'user_agent' => (string) $request->headers->get('user-agent', ''),
             'details' => [
-                'auth_type' => $userType === 'customer' ? 'front_customer_login' : 'admin_member_login',
+                'auth_type' => 'front_customer_login',
                 'login_time' => date('Y-m-d H:i:s'),
             ],
         ]);
     }
 
     /**
-     * Log user logout events.
+     * Log user logout events (front customer logouts only).
      */
     public function onLogout(LogoutEvent $event): void
     {
@@ -156,22 +158,15 @@ class UserHistorySubscriber implements EventSubscriberInterface
         $token = $event->getToken();
         $user = $token ? $token->getUser() : null;
 
-        $userType = 'guest';
-        $userId = null;
-        $userName = 'Guest';
-        $userEmail = null;
-
-        if ($user instanceof Customer) {
-            $userType = 'customer';
-            $userId = $user->getId();
-            $userName = trim($user->getName01() . ' ' . $user->getName02()) ?: ($user->getEmail() ?: 'Customer #' . $user->getId());
-            $userEmail = $user->getEmail();
-        } elseif ($user instanceof Member) {
-            $userType = 'admin';
-            $userId = $user->getId();
-            $userName = $user->getName() ?: $user->getUsername();
-            $userEmail = $user->getUsername();
+        // Skip administrator logouts; only track storefront customers
+        if (!($user instanceof Customer)) {
+            return;
         }
+
+        $userType = 'customer';
+        $userId = $user->getId();
+        $userName = trim($user->getName01() . ' ' . $user->getName02()) ?: ($user->getEmail() ?: 'Customer #' . $user->getId());
+        $userEmail = $user->getEmail();
 
         $this->logger->log('USER_LOGOUT', [
             'user_type' => $userType,

@@ -183,13 +183,20 @@ class UserHistoryLogger
                 continue;
             }
 
+            $recordUserType = strtolower($record['user_type'] ?? 'guest');
+
+            // Hide administrator logs in user history page (user history is for customers & guests)
+            if ($recordUserType === 'admin') {
+                continue;
+            }
+
             // Event filter
             if ($filterEvent !== null && ($record['event'] ?? '') !== $filterEvent) {
                 continue;
             }
 
             // User type filter
-            if ($filterUserType !== null && strtolower($record['user_type'] ?? '') !== $filterUserType) {
+            if ($filterUserType !== null && $recordUserType !== $filterUserType) {
                 continue;
             }
 
@@ -263,6 +270,7 @@ class UserHistoryLogger
         $ips = [];
         $eventCounts = [];
         $userTypeCounts = [];
+        $totalCustomerEvents = 0;
 
         foreach ($lines as $line) {
             $record = json_decode($line, true);
@@ -270,9 +278,18 @@ class UserHistoryLogger
                 continue;
             }
 
+            $utype = strtolower($record['user_type'] ?? 'guest');
+
+            // Hide administrator logs in user history stats
+            if ($utype === 'admin') {
+                continue;
+            }
+
+            $totalCustomerEvents++;
+
             // Unique users
             if (!empty($record['user_id'])) {
-                $users[$record['user_type'] . '_' . $record['user_id']] = true;
+                $users[$utype . '_' . $record['user_id']] = true;
             } elseif (!empty($record['user_email'])) {
                 $users[$record['user_email']] = true;
             }
@@ -287,14 +304,13 @@ class UserHistoryLogger
             $eventCounts[$evt] = ($eventCounts[$evt] ?? 0) + 1;
 
             // User type counts
-            $utype = $record['user_type'] ?? 'guest';
             $userTypeCounts[$utype] = ($userTypeCounts[$utype] ?? 0) + 1;
         }
 
         arsort($eventCounts);
 
         return [
-            'total_events' => count($lines),
+            'total_events' => $totalCustomerEvents,
             'unique_users' => count($users),
             'unique_ips' => count($ips),
             'event_counts' => $eventCounts,
