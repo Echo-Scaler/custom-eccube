@@ -32,19 +32,22 @@ class EccubeBlockExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('eccube_block_*', function ($context, $name, array $parameters = []) {
-                if (!empty($parameters)) {
-                    $context = array_merge($context, $parameters);
-                }
-                $files = $this->blockTemplates;
-                foreach ($files as $file) {
-                    $template = $this->twig->load($file);
-                    if ($template->hasBlock($name, $context)) {
-                        return $template->renderBlock($name, $context);
-                    }
-                }
-                @trigger_error($name.' block is not found', E_USER_WARNING);
-            }, ['needs_context' => true, 'pre_escape' => 'html', 'is_safe' => ['html']]),
+            new TwigFunction('eccube_block_*', [$this, 'renderEccubeBlock'], ['needs_context' => true, 'pre_escape' => 'html', 'is_safe' => ['html']]),
         ];
+    }
+
+    public function renderEccubeBlock($context, $name, array $parameters = [])
+    {
+        if (!empty($parameters)) {
+            $context = array_merge($context, $parameters);
+        }
+        $files = $this->blockTemplates;
+        foreach ($files as $file) {
+            $template = $this->twig->load($file);
+            if ($template->hasBlock($name, $context)) {
+                return $template->renderBlock($name, $context);
+            }
+        }
+        @trigger_error($name.' block is not found', E_USER_WARNING);
     }
 }

@@ -91,8 +91,13 @@ class EccubeExtension extends AbstractExtension
     public function getTests()
     {
         return [
-            new TwigTest('integer', function ($value) { return  is_integer($value); }),
+            new TwigTest('integer', [$this, 'isInteger']),
         ];
+    }
+
+    public function isInteger($value)
+    {
+        return is_int($value);
     }
 
     /**

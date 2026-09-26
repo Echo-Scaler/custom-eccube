@@ -1,0 +1,535 @@
+{#
+User History Log Viewer
+Part of EC-CUBE Customization
+#}
+
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['setting', 'system', 'user_history'] %}
+
+{% block title %}{{ 'admin.setting.system.user_history_log'|trans }}{% endblock %}
+{% block sub_title %}{{ 'admin.setting.system'|trans }}{% endblock %}
+
+{% block stylesheet %}
+<style>
+    .kpi-card {
+        border-radius: 8px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    .badge-event-page-view { background-color: #64748b; color: #fff; }
+    .badge-event-login { background-color: #10b981; color: #fff; }
+    .badge-event-logout { background-color: #f59e0b; color: #fff; }
+    .badge-event-product-view { background-color: #8b5cf6; color: #fff; }
+    .badge-event-cart { background-color: #06b6d4; color: #fff; }
+    .badge-event-purchase { background-color: #ec4899; color: #fff; }
+    .badge-event-register { background-color: #3b82f6; color: #fff; }
+    .badge-user-customer { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .badge-user-guest { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-user-admin { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .badge-method-get { background-color: #e0f2fe; color: #0284c7; }
+    .badge-method-post { background-color: #dcfce7; color: #15803d; }
+    .badge-method-put { background-color: #fef9c3; color: #a16207; }
+    .badge-method-delete { background-color: #fee2e2; color: #b91c1c; }
+    .copy-btn { cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+    .copy-btn:hover { opacity: 1; }
+    .json-preview {
+        background-color: #1e293b;
+        color: #e2e8f0;
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.85rem;
+        max-height: 420px;
+        overflow-y: auto;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="c-outsideBlock">
+    <div class="c-outsideBlock__contents">
+        
+        {# Metric Statistics Cards #}
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card kpi-card bg-white p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-primary bg-opacity-10 text-primary me-3">
+                            <i class="fa fa-history"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-bold">{{ 'admin.setting.system.user_history_log.total_events'|trans }}</div>
+                            <div class="fs-4 fw-bold text-dark">{{ stats.total_events|number_format }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card kpi-card bg-white p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-success bg-opacity-10 text-success me-3">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-bold">{{ 'admin.setting.system.user_history_log.unique_users'|trans }}</div>
+                            <div class="fs-4 fw-bold text-dark">{{ stats.unique_users|number_format }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card kpi-card bg-white p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-info bg-opacity-10 text-info me-3">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-bold">{{ 'admin.setting.system.user_history_log.unique_ips'|trans }}</div>
+                            <div class="fs-4 fw-bold text-dark">{{ stats.unique_ips|number_format }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card kpi-card bg-white p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="kpi-icon bg-warning bg-opacity-10 text-warning me-3">
+                            <i class="fa fa-file-text-o"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-bold">{{ 'admin.setting.system.user_history_log.file_size'|trans }}</div>
+                            <div class="fs-4 fw-bold text-dark">
+                                {% set activeFileSize = '0 B' %}
+                                {% for f in files %}
+                                    {% if f.filename == current_file %}
+                                        {% set activeFileSize = f.size_formatted %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ activeFileSize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Filter & Control Card #}
+        <div class="card rounded border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-sliders me-2 text-primary fs-5"></i>
+                    <span class="card-title fw-bold mb-0">{{ 'admin.setting.system.user_history_log'|trans }}</span>
+                    <span class="badge bg-secondary ms-2">{{ current_file }}</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ path('admin_setting_system_user_history_download', { 'file': current_file, 'format': 'csv', 'event': filters.event, 'user_type': filters.user_type, 'keyword': filters.keyword, 'status_code': filters.status_code }) }}"
+                       class="btn btn-sm btn-outline-success">
+                        <i class="fa fa-download me-1"></i>{{ 'admin.setting.system.user_history_log.download_csv'|trans }}
+                    </a>
+                    <a href="{{ path('admin_setting_system_user_history_download', { 'file': current_file, 'format': 'raw' }) }}"
+                       class="btn btn-sm btn-outline-secondary">
+                        <i class="fa fa-file-code-o me-1"></i>{{ 'admin.setting.system.user_history_log.download_raw'|trans }}
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#clearLogModal">
+                        <i class="fa fa-trash-o me-1"></i>{{ 'admin.setting.system.user_history_log.clear_log'|trans }}
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="filterForm" method="get" action="{{ path('admin_setting_system_user_history') }}">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-3">
+                            <label class="form-label small fw-bold text-muted">Log File</label>
+                            <select name="file" class="form-select form-select-sm auto-submit">
+                                {% for f in files %}
+                                    <option value="{{ f.filename }}" {% if f.filename == current_file %}selected{% endif %}>
+                                        {{ f.filename }} ({{ f.size_formatted }})
+                                    </option>
+                                {% else %}
+                                    <option value="{{ current_file }}">{{ current_file }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label class="form-label small fw-bold text-muted">{{ 'admin.setting.system.user_history_log.event_type'|trans }}</label>
+                            <select name="event" class="form-select form-select-sm auto-submit">
+                                <option value="">{{ 'admin.setting.system.user_history_log.all_events'|trans }}</option>
+                                <option value="PAGE_VIEW" {% if filters.event == 'PAGE_VIEW' %}selected{% endif %}>PAGE_VIEW</option>
+                                <option value="USER_LOGIN" {% if filters.event == 'USER_LOGIN' %}selected{% endif %}>USER_LOGIN</option>
+                                <option value="USER_LOGOUT" {% if filters.event == 'USER_LOGOUT' %}selected{% endif %}>USER_LOGOUT</option>
+                                <option value="PRODUCT_VIEW" {% if filters.event == 'PRODUCT_VIEW' %}selected{% endif %}>PRODUCT_VIEW</option>
+                                <option value="CART_ACTION" {% if filters.event == 'CART_ACTION' %}selected{% endif %}>CART_ACTION</option>
+                                <option value="PURCHASE_COMPLETE" {% if filters.event == 'PURCHASE_COMPLETE' %}selected{% endif %}>PURCHASE_COMPLETE</option>
+                                <option value="CUSTOMER_REGISTER" {% if filters.event == 'CUSTOMER_REGISTER' %}selected{% endif %}>CUSTOMER_REGISTER</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label class="form-label small fw-bold text-muted">{{ 'admin.setting.system.user_history_log.user_type'|trans }}</label>
+                            <select name="user_type" class="form-select form-select-sm auto-submit">
+                                <option value="">{{ 'admin.setting.system.user_history_log.all_users'|trans }}</option>
+                                <option value="customer" {% if filters.user_type == 'customer' %}selected{% endif %}>{{ 'admin.setting.system.user_history_log.customer'|trans }}</option>
+                                <option value="guest" {% if filters.user_type == 'guest' %}selected{% endif %}>{{ 'admin.setting.system.user_history_log.guest'|trans }}</option>
+                                <option value="admin" {% if filters.user_type == 'admin' %}selected{% endif %}>{{ 'admin.setting.system.user_history_log.admin'|trans }}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <label class="form-label small fw-bold text-muted">{{ 'admin.common.search'|trans }}</label>
+                            <input type="text" name="keyword" class="form-control form-control-sm"
+                                   placeholder="{{ 'admin.setting.system.user_history_log.search_placeholder'|trans }}"
+                                   value="{{ filters.keyword }}">
+                        </div>
+                        <div class="col-12 col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-sm btn-primary flex-fill">
+                                <i class="fa fa-search me-1"></i>{{ 'admin.setting.system.user_history_log.filter_btn'|trans }}
+                            </button>
+                            <a href="{{ path('admin_setting_system_user_history', { 'file': current_file }) }}" class="btn btn-sm btn-outline-secondary">
+                                {{ 'admin.setting.system.user_history_log.reset_btn'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# Log Table Card #}
+        <div class="card rounded border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <span class="fw-bold text-dark">
+                    <i class="fa fa-list me-1 text-primary"></i>
+                    {% if logs.total > 0 %}
+                        {% set fromCount = (logs.page - 1) * logs.per_page + 1 %}
+                        {% set toCount = min(logs.page * logs.per_page, logs.total) %}
+                        {{ 'admin.setting.system.user_history_log.showing_count'|trans({'%total%': logs.total, '%from%': fromCount, '%to%': toCount}) }}
+                    {% else %}
+                        0 {{ 'admin.common.count'|trans }}
+                    {% endif %}
+                </span>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted mb-0">Per Page:</label>
+                    <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;"
+                            data-base-url="{{ path('admin_setting_system_user_history', { 'file': current_file, 'event': filters.event, 'user_type': filters.user_type, 'keyword': filters.keyword }) }}">
+                        <option value="25" {% if logs.per_page == 25 %}selected{% endif %}>25</option>
+                        <option value="50" {% if logs.per_page == 50 %}selected{% endif %}>50</option>
+                        <option value="100" {% if logs.per_page == 100 %}selected{% endif %}>100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 170px;">{{ 'admin.setting.system.user_history_log.time'|trans }}</th>
+                                <th style="width: 140px;">{{ 'admin.setting.system.user_history_log.event'|trans }}</th>
+                                <th style="width: 200px;">{{ 'admin.setting.system.user_history_log.user'|trans }}</th>
+                                <th>{{ 'admin.setting.system.user_history_log.request'|trans }}</th>
+                                <th style="width: 140px;">{{ 'admin.setting.system.user_history_log.ip_address'|trans }}</th>
+                                <th style="width: 80px;" class="text-center">{{ 'admin.setting.system.user_history_log.status'|trans }}</th>
+                                <th style="width: 90px;" class="text-center">{{ 'admin.setting.system.user_history_log.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in logs.items %}
+                                <tr>
+                                    {# Timestamp #}
+                                    <td class="text-nowrap">
+                                        <div class="fw-semibold text-dark">{{ item.timestamp|split(' ')[1] }}</div>
+                                        <div class="small text-muted">{{ item.timestamp|split(' ')[0] }}</div>
+                                    </td>
+
+                                    {# Event #}
+                                    <td>
+                                        {% if item.event == 'USER_LOGIN' %}
+                                            <span class="badge badge-event-login"><i class="fa fa-sign-in me-1"></i>LOGIN</span>
+                                        {% elseif item.event == 'USER_LOGOUT' %}
+                                            <span class="badge badge-event-logout"><i class="fa fa-sign-out me-1"></i>LOGOUT</span>
+                                        {% elseif item.event == 'PRODUCT_VIEW' %}
+                                            <span class="badge badge-event-product-view"><i class="fa fa-eye me-1"></i>PRODUCT</span>
+                                        {% elseif item.event == 'PURCHASE_COMPLETE' %}
+                                            <span class="badge badge-event-purchase"><i class="fa fa-shopping-bag me-1"></i>PURCHASE</span>
+                                        {% elseif item.event == 'CART_ACTION' %}
+                                            <span class="badge badge-event-cart"><i class="fa fa-shopping-cart me-1"></i>CART</span>
+                                        {% elseif item.event == 'CUSTOMER_REGISTER' %}
+                                            <span class="badge badge-event-register"><i class="fa fa-user-plus me-1"></i>REGISTER</span>
+                                        {% else %}
+                                            <span class="badge badge-event-page-view">{{ item.event }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    {# User #}
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                {% if item.user_type == 'customer' %}
+                                                    <i class="fa fa-user text-primary fs-5"></i>
+                                                {% elseif item.user_type == 'admin' %}
+                                                    <i class="fa fa-shield text-warning fs-5"></i>
+                                                {% else %}
+                                                    <i class="fa fa-user-circle-o text-muted fs-5"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark text-truncate" style="max-width: 150px;">
+                                                    {{ item.user_name }}
+                                                </div>
+                                                <div class="d-flex align-items-center gap-1">
+                                                    {% if item.user_type == 'customer' %}
+                                                        <span class="badge badge-user-customer">#{{ item.user_id }}</span>
+                                                    {% elseif item.user_type == 'admin' %}
+                                                        <span class="badge badge-user-admin">Admin</span>
+                                                    {% else %}
+                                                        <span class="badge badge-user-guest">Guest</span>
+                                                    {% endif %}
+                                                    {% if item.user_email %}
+                                                        <span class="small text-muted text-truncate" style="max-width: 110px;" title="{{ item.user_email }}">{{ item.user_email }}</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {# Request #}
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            {% set m = item.method|upper %}
+                                            <span class="badge {% if m == 'GET' %}badge-method-get{% elseif m == 'POST' %}badge-method-post{% elseif m == 'PUT' %}badge-method-put{% else %}badge-method-delete{% endif %}">
+                                                {{ m }}
+                                            </span>
+                                            {% if item.route %}
+                                                <code class="small text-secondary">{{ item.route }}</code>
+                                            {% endif %}
+                                        </div>
+                                        <div class="small text-truncate text-muted" style="max-width: 320px;" title="{{ item.url }}">
+                                            {{ item.url }}
+                                        </div>
+                                    </td>
+
+                                    {# IP Address #}
+                                    <td class="text-nowrap">
+                                        <code class="text-dark">{{ item.ip }}</code>
+                                        <i class="fa fa-copy copy-btn ms-1 text-muted btn-copy-ip" data-ip="{{ item.ip }}" title="{{ 'admin.setting.system.user_history_log.copy'|trans }}"></i>
+                                    </td>
+
+                                    {# Status #}
+                                    <td class="text-center">
+                                        {% if item.status_code >= 200 and item.status_code < 300 %}
+                                            <span class="badge bg-success bg-opacity-75">{{ item.status_code }}</span>
+                                        {% elseif item.status_code >= 300 and item.status_code < 400 %}
+                                            <span class="badge bg-info bg-opacity-75 text-dark">{{ item.status_code }}</span>
+                                        {% elseif item.status_code >= 400 and item.status_code < 500 %}
+                                            <span class="badge bg-warning bg-opacity-75 text-dark">{{ item.status_code }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ item.status_code }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    {# Actions / Details Modal Trigger #}
+                                    <td class="text-center">
+                                        <script type="application/json" id="data-log-{{ loop.index }}">{{ item|json_encode|raw }}</script>
+                                        <button type="button" class="btn btn-sm btn-outline-primary btn-view-detail"
+                                                data-target-id="data-log-{{ loop.index }}"
+                                                title="{{ 'admin.setting.system.user_history_log.details'|trans }}">
+                                            <i class="fa fa-info-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="fa fa-folder-open-o fa-3x mb-3 text-secondary opacity-50"></i>
+                                            <h6 class="fw-bold mb-2">{{ 'admin.setting.system.user_history_log.no_logs_found'|trans }}</h6>
+                                            <p class="small text-muted mb-3">{{ 'admin.setting.system.user_history_log.description'|trans }}</p>
+                                            
+                                            <form method="post" action="{{ path('admin_setting_system_user_history_generate_sample') }}" class="d-inline-block">
+                                                <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-magic me-1"></i>{{ 'admin.setting.system.user_history_log.generate_sample'|trans }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {# Pagination Footer #}
+            {% if logs.total_pages > 1 %}
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
+                    <div class="small text-muted">
+                        Page {{ logs.page }} of {{ logs.total_pages }}
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            {# Previous #}
+                            <li class="page-item {% if logs.page <= 1 %}disabled{% endif %}">
+                                <a class="page-link" href="{{ path('admin_setting_system_user_history', { 'file': current_file, 'event': filters.event, 'user_type': filters.user_type, 'keyword': filters.keyword, 'page': logs.page - 1, 'per_page': logs.per_page }) }}">
+                                    &laquo;
+                                </a>
+                            </li>
+
+                            {# Page numbers #}
+                            {% set startPage = max(1, logs.page - 2) %}
+                            {% set endPage = min(logs.total_pages, logs.page + 2) %}
+
+                            {% for p in startPage..endPage %}
+                                <li class="page-item {% if p == logs.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ path('admin_setting_system_user_history', { 'file': current_file, 'event': filters.event, 'user_type': filters.user_type, 'keyword': filters.keyword, 'page': p, 'per_page': logs.per_page }) }}">
+                                        {{ p }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                            {# Next #}
+                            <li class="page-item {% if logs.page >= logs.total_pages %}disabled{% endif %}">
+                                <a class="page-link" href="{{ path('admin_setting_system_user_history', { 'file': current_file, 'event': filters.event, 'user_type': filters.user_type, 'keyword': filters.keyword, 'page': logs.page + 1, 'per_page': logs.per_page }) }}">
+                                    &raquo;
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{# Clear Log Confirmation Modal #}
+<div class="modal fade" id="clearLogModal" tabindex="-1" aria-labelledby="clearLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{{ path('admin_setting_system_user_history_clear') }}">
+                <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+                <input type="hidden" name="file" value="{{ current_file }}">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="clearLogModalLabel">
+                        <i class="fa fa-exclamation-triangle me-2"></i>{{ 'admin.setting.system.user_history_log.clear_log'|trans }}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">{{ 'admin.setting.system.user_history_log.clear_confirm'|trans }}</p>
+                    <div class="alert alert-warning mb-0 py-2 small">
+                        <strong>Target:</strong> {{ current_file }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash me-1"></i>{{ 'admin.setting.system.user_history_log.clear_log'|trans }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Log Entry Detail Modal #}
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="detailModalLabel">
+                    <i class="fa fa-code me-2 text-primary"></i>{{ 'admin.setting.system.user_history_log.details'|trans }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small text-muted" id="detailModalId"></span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnCopyJson">
+                        <i class="fa fa-copy me-1"></i>{{ 'admin.setting.system.user_history_log.copy'|trans }} JSON
+                    </button>
+                </div>
+                <pre class="json-preview mb-0" id="detailModalContent"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'admin.setting.system.user_history_log.close'|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentDetailData = null;
+
+        // Auto submit on select change
+        document.querySelectorAll('.auto-submit').forEach(function(el) {
+            el.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+        });
+
+        // Per page selector
+        const perPageSelect = document.getElementById('perPageSelect');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', function() {
+                const baseUrl = this.getAttribute('data-base-url');
+                location.href = baseUrl + '&per_page=' + this.value;
+            });
+        }
+
+        // Copy IP buttons
+        document.querySelectorAll('.btn-copy-ip').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const ip = this.getAttribute('data-ip');
+                if (!ip) return;
+                navigator.clipboard.writeText(ip).then(function() {
+                    alert('{{ 'admin.setting.system.user_history_log.copied'|trans }}: ' + ip);
+                });
+            });
+        });
+
+        // View detail buttons
+        document.querySelectorAll('.btn-view-detail').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target-id');
+                const scriptEl = document.getElementById(targetId);
+                if (!scriptEl) return;
+                try {
+                    currentDetailData = JSON.parse(scriptEl.textContent);
+                    document.getElementById('detailModalId').innerText = 'ID: ' + (currentDetailData.id || 'N/A') + ' | ' + (currentDetailData.timestamp || '');
+                    document.getElementById('detailModalContent').textContent = JSON.stringify(currentDetailData, null, 2);
+                    const modalEl = document.getElementById('detailModal');
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                } catch (e) {
+                    console.error('Failed to parse log record JSON', e);
+                }
+            });
+        });
+
+        // Copy JSON button
+        const btnCopyJson = document.getElementById('btnCopyJson');
+        if (btnCopyJson) {
+            btnCopyJson.addEventListener('click', function() {
+                if (!currentDetailData) return;
+                navigator.clipboard.writeText(JSON.stringify(currentDetailData, null, 2)).then(function() {
+                    alert('{{ 'admin.setting.system.user_history_log.copied'|trans }}');
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

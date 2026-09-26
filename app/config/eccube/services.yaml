@@ -249,3 +249,28 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    # Custom: User History Logger service
+    Customize\Service\UserHistoryLogger:
+        public: true
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    # Custom: User History Event Subscriber (kernel request/response, login, logout)
+    Customize\EventListener\UserHistorySubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Custom: User History Event Listener (product detail, shopping complete, registration, user action)
+    Customize\EventListener\UserHistoryListener:
+        tags:
+            - { name: kernel.event_listener, event: front.product.detail.initialize, method: onProductDetail }
+            - { name: kernel.event_listener, event: front.shopping.complete.initialize, method: onShoppingComplete }
+            - { name: kernel.event_listener, event: front.entry.complete, method: onCustomerRegister }
+            - { name: kernel.event_listener, event: Customize\Event\UserActionEvent, method: onUserAction }
+
+    # Custom: User History Navigation in Admin Menu
+    Customize\Nav\UserHistoryNav:
+        tags:
+            - { name: eccube.nav }
+
+
