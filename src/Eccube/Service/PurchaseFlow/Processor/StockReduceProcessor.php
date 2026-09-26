@@ -79,18 +79,24 @@ class StockReduceProcessor extends AbstractPurchaseProcessor
         }
 
         foreach ($itemHolder->getProductOrderItems() as $item) {
+            $ProductClass = $item->getProductClass();
             // 在庫が無制限かチェックし、制限ありなら在庫数をチェック
-            if (!$item->getProductClass()->isStockUnlimited()) {
+            if (!$ProductClass->isStockUnlimited()) {
                 // 在庫チェックあり
                 /* @var ProductStock $productStock */
-                $productStock = $item->getProductClass()->getProductStock();
-                if ($productStock->getProductClassId() === null) {
+                $productStock = $ProductClass->getProductStock();
+                if (!$productStock) {
+                    $productStock = new ProductStock();
+                    $productStock->setProductClass($ProductClass);
+                    $productStock->setStock($ProductClass->getStock() ?? 0);
+                    $ProductClass->setProductStock($productStock);
+                    $this->entityManager->persist($productStock);
+                } elseif ($productStock->getProductClassId() === null) {
                     // 在庫に対してロックを実行
                     $this->entityManager->lock($productStock, LockMode::PESSIMISTIC_WRITE);
                     $this->entityManager->refresh($productStock);
-                    $productStock->setProductClassId($item->getProductClass()->getId());
+                    $productStock->setProductClassId($ProductClass->getId());
                 }
-                $ProductClass = $item->getProductClass();
                 $stock = $callback($productStock->getStock(), $item->getQuantity());
                 if ($stock < 0) {
                     throw new ShoppingException(trans('purchase_flow.over_stock', ['%name%' => $ProductClass->formattedProductName()]));
