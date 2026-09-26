@@ -498,6 +498,178 @@ class UserHistoryLogger
         }
     }
 
+    /**
+     * Retrieve, filter, and paginate history log entries for a specific individual user.
+     * Can aggregate across all available log files or a specific file.
+     *
+     * @param string $userType 'customer' | 'admin' | 'guest'
+     * @param string $identifier User ID, email, or IP
+     * @param string|null $filename Specific log file, or null/'all' to scan all available log files
+     * @param array $filters ['event' => string, 'keyword' => string]
+     * @param int $page
+     * @param int $perPage
+     * @return array
+     */
+    public function getUserLogs(
+        string $userType,
+        string $identifier,
+        ?string $filename = null,
+        array $filters = [],
+        int $page = 1,
+        int $perPage = 25
+    ): array {
+        $filesToScan = [];
+        if ($filename && $filename !== 'all') {
+            $path = $this->getLogFilePath($filename);
+            if ($path) {
+                $filesToScan[] = $path;
+            }
+        } else {
+            foreach ($this->getLogFiles() as $fileInfo) {
+                $filesToScan[] = $fileInfo['path'];
+            }
+        }
+
+        $userTypeLower = strtolower(trim($userType));
+        $identifierLower = mb_strtolower(trim($identifier));
+        $filterEvent = !empty($filters['event']) ? strtoupper(trim($filters['event'])) : null;
+        $filterKeyword = !empty($filters['keyword']) ? mb_strtolower(trim($filters['keyword'])) : null;
+
+        $matched = [];
+        $uniqueIps = [];
+        $eventBreakdown = [];
+        $firstSeen = null;
+        $lastSeen = null;
+        $detectedUserInfo = [
+            'user_type' => $userTypeLower,
+            'user_id' => is_numeric($identifier) ? (int) $identifier : null,
+            'user_name' => null,
+            'user_email' => null,
+        ];
+
+        foreach ($filesToScan as $filePath) {
+            $lines = @file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            if ($lines === false || empty($lines)) {
+                continue;
+            }
+
+            foreach ($lines as $line) {
+                $record = json_decode($line, true);
+                if (!is_array($record)) {
+                    continue;
+                }
+
+                $recordUserType = strtolower($record['user_type'] ?? 'guest');
+                $recordUserId = (string) ($record['user_id'] ?? '');
+                $recordUserEmail = mb_strtolower(trim($record['user_email'] ?? ''));
+                $recordIp = trim($record['ip'] ?? '');
+                $recordUserName = trim($record['user_name'] ?? '');
+
+                // Check if this record belongs to the requested user
+                $isMatch = false;
+                if ($userTypeLower === 'customer') {
+                    if ($recordUserType === 'customer' && ($recordUserId === $identifier || $recordUserEmail === $identifierLower)) {
+                        $isMatch = true;
+                    }
+                } elseif ($userTypeLower === 'admin') {
+                    if ($recordUserType === 'admin' && ($recordUserId === $identifier || $recordUserEmail === $identifierLower || mb_strtolower($recordUserName) === $identifierLower)) {
+                        $isMatch = true;
+                    }
+                } else { // guest
+                    if ($recordUserType === 'guest' && ($recordIp === $identifier || $recordUserEmail === $identifierLower || mb_strtolower($recordUserName) === $identifierLower)) {
+                        $isMatch = true;
+                    }
+                }
+
+                // If identifier is an email and matches regardless of user_type
+                if (!$isMatch && filter_var($identifier, FILTER_VALIDATE_EMAIL) && $recordUserEmail === $identifierLower) {
+                    $isMatch = true;
+                }
+
+                if (!$isMatch) {
+                    continue;
+                }
+
+                // Extract latest user profile info from records
+                if (!$detectedUserInfo['user_name'] && !empty($record['user_name']) && $record['user_name'] !== 'Guest') {
+                    $detectedUserInfo['user_name'] = $record['user_name'];
+                }
+                if (!$detectedUserInfo['user_email'] && !empty($record['user_email'])) {
+                    $detectedUserInfo['user_email'] = $record['user_email'];
+                }
+                if (!$detectedUserInfo['user_id'] && !empty($record['user_id'])) {
+                    $detectedUserInfo['user_id'] = $record['user_id'];
+                }
+
+                // Track stats across all matched records
+                $ev = $record['event'] ?? 'UNKNOWN';
+                $eventBreakdown[$ev] = ($eventBreakdown[$ev] ?? 0) + 1;
+
+                if (!empty($record['ip'])) {
+                    $uniqueIps[$record['ip']] = ($uniqueIps[$record['ip']] ?? 0) + 1;
+                }
+
+                $ts = $record['timestamp'] ?? null;
+                if ($ts) {
+                    if ($lastSeen === null || $ts > $lastSeen) {
+                        $lastSeen = $ts;
+                    }
+                    if ($firstSeen === null || $ts < $firstSeen) {
+                        $firstSeen = $ts;
+                    }
+                }
+
+                // Filter by event type if requested
+                if ($filterEvent !== null && $ev !== $filterEvent) {
+                    continue;
+                }
+
+                // Filter by keyword if requested
+                if ($filterKeyword !== null) {
+                    $searchContent = mb_strtolower(
+                        ($record['url'] ?? '') . ' ' .
+                        ($record['route'] ?? '') . ' ' .
+                        ($record['ip'] ?? '') . ' ' .
+                        json_encode($record['details'] ?? [])
+                    );
+                    if (mb_strpos($searchContent, $filterKeyword) === false) {
+                        continue;
+                    }
+                }
+
+                $matched[] = $record;
+            }
+        }
+
+        // Sort all matched events descending by timestamp (newest first)
+        usort($matched, function ($a, $b) {
+            return strcmp($b['timestamp'] ?? '', $a['timestamp'] ?? '');
+        });
+
+        $total = count($matched);
+        $totalPages = max(1, (int) ceil($total / $perPage));
+        $page = max(1, min($page, $totalPages));
+        $offset = ($page - 1) * $perPage;
+        $items = array_slice($matched, $offset, $perPage);
+
+        return [
+            'items' => $items,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => $totalPages,
+            'user_info' => $detectedUserInfo,
+            'stats' => [
+                'total_events' => array_sum($eventBreakdown),
+                'filtered_total' => $total,
+                'event_breakdown' => $eventBreakdown,
+                'unique_ips' => array_keys($uniqueIps),
+                'first_seen' => $firstSeen,
+                'last_seen' => $lastSeen,
+            ],
+        ];
+    }
+
     private function formatFileSize(int $bytes): string
     {
         if ($bytes < 1024) {

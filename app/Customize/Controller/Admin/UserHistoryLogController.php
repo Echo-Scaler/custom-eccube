@@ -9,20 +9,30 @@ namespace Customize\Controller\Admin;
 
 use Customize\Service\UserHistoryLogger;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\CustomerRepository;
+use Eccube\Repository\MemberRepository;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserHistoryLogController extends AbstractController
 {
     private UserHistoryLogger $logger;
+    private CustomerRepository $customerRepository;
+    private MemberRepository $memberRepository;
 
-    public function __construct(UserHistoryLogger $logger)
-    {
+    public function __construct(
+        UserHistoryLogger $logger,
+        CustomerRepository $customerRepository,
+        MemberRepository $memberRepository
+    ) {
         $this->logger = $logger;
+        $this->customerRepository = $customerRepository;
+        $this->memberRepository = $memberRepository;
     }
 
     /**
@@ -148,5 +158,139 @@ class UserHistoryLogController extends AbstractController
 
         $defaultFile = $this->logger->getDefaultLogFileName();
         return $this->redirectToRoute('admin_setting_system_user_history', ['file' => $defaultFile]);
+    }
+
+    /**
+     * Display dedicated history timeline and profile for an individual user.
+     *
+     * @Route("/%eccube_admin_route%/setting/system/user_history/user/{user_type}/{identifier}", name="admin_setting_system_user_history_user", methods={"GET"})
+     * @Route("/%eccube_admin_route%/log/user/{user_type}/{identifier}", name="admin_log_user_history_user", methods={"GET"})
+     */
+    public function userDetail(string $user_type, string $identifier, Request $request): Response
+    {
+        $files = $this->logger->getLogFiles();
+        $selectedFile = $request->query->get('file', 'all');
+
+        $filters = [
+            'event' => $request->query->get('event', ''),
+            'keyword' => $request->query->get('keyword', ''),
+        ];
+
+        $page = max(1, (int) $request->query->get('page', 1));
+        $perPage = max(10, min(200, (int) $request->query->get('per_page', 25)));
+
+        $userData = $this->logger->getUserLogs($user_type, $identifier, $selectedFile, $filters, $page, $perPage);
+
+        // Fetch database entity if available (Customer or Member)
+        $customer = null;
+        $member = null;
+
+        if (strtolower($user_type) === 'customer') {
+            if (is_numeric($identifier)) {
+                $customer = $this->customerRepository->find((int) $identifier);
+            }
+            if (!$customer && filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+                $customer = $this->customerRepository->findOneBy(['email' => $identifier]);
+            }
+        } elseif (strtolower($user_type) === 'admin') {
+            if (is_numeric($identifier)) {
+                $member = $this->memberRepository->find((int) $identifier);
+            }
+            if (!$member) {
+                $member = $this->memberRepository->findOneBy(['login_id' => $identifier]);
+            }
+        }
+
+        return $this->render('@admin/Setting/System/user_history_detail.twig', [
+            'user_type' => $user_type,
+            'identifier' => $identifier,
+            'customer' => $customer,
+            'member' => $member,
+            'user_info' => $userData['user_info'],
+            'stats' => $userData['stats'],
+            'logs' => $userData,
+            'files' => $files,
+            'selected_file' => $selectedFile,
+            'filters' => $filters,
+            'per_page' => $perPage,
+        ]);
+    }
+
+    /**
+     * Download CSV logs for this specific user.
+     *
+     * @Route("/%eccube_admin_route%/setting/system/user_history/user/{user_type}/{identifier}/download", name="admin_setting_system_user_history_user_download", methods={"GET"})
+     */
+    public function downloadUser(string $user_type, string $identifier, Request $request): StreamedResponse
+    {
+        $selectedFile = $request->query->get('file', 'all');
+        $filters = [
+            'event' => $request->query->get('event', ''),
+            'keyword' => $request->query->get('keyword', ''),
+        ];
+
+        // Fetch all matching records without pagination
+        $userData = $this->logger->getUserLogs($user_type, $identifier, $selectedFile, $filters, 1, 10000);
+        $items = $userData['items'] ?? [];
+
+        $cleanIdentifier = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $identifier);
+        $filename = sprintf('user_history_%s_%s_%s.csv', $user_type, $cleanIdentifier, date('Ymd_His'));
+
+        $response = new StreamedResponse(function () use ($items) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 BOM for Microsoft Excel compatibility
+            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // CSV Header
+            fputcsv($handle, [
+                'Log ID',
+                'Timestamp',
+                'Event Type',
+                'User Type',
+                'User ID',
+                'User Name',
+                'User Email',
+                'IP Address',
+                'HTTP Method',
+                'Route',
+                'URL',
+                'Status Code',
+                'Referer',
+                'User Agent',
+                'Action Details (JSON)',
+            ]);
+
+            foreach ($items as $item) {
+                fputcsv($handle, [
+                    $item['id'] ?? '',
+                    $item['timestamp'] ?? '',
+                    $item['event'] ?? '',
+                    $item['user_type'] ?? '',
+                    $item['user_id'] ?? '',
+                    $item['user_name'] ?? '',
+                    $item['user_email'] ?? '',
+                    $item['ip'] ?? '',
+                    $item['method'] ?? '',
+                    $item['route'] ?? '',
+                    $item['url'] ?? '',
+                    $item['status_code'] ?? '',
+                    $item['referer'] ?? '',
+                    $item['user_agent'] ?? '',
+                    json_encode($item['details'] ?? [], JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 }

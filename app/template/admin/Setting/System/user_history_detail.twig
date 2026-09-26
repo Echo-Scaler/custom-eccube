@@ -1,0 +1,679 @@
+{#
+User History Detail & Timeline Viewer
+Part of EC-CUBE Customization - User History Logging
+#}
+
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['log', 'user_history'] %}
+
+{% block title %}{{ user_info.user_name ?: identifier }} - {{ 'admin.setting.system.user_history_log.user_details'|trans|default('User Activity Details') }}{% endblock %}
+{% block sub_title %}{{ 'admin.setting.system.user_history_log'|trans }}{% endblock %}
+
+{% block stylesheet %}
+<style>
+    .user-profile-header {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+    .user-avatar-large {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .user-avatar-admin {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+    .user-avatar-guest {
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        box-shadow: 0 4px 12px rgba(71, 85, 105, 0.3);
+    }
+    .user-stat-badge {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(8px);
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-size: 13px;
+    }
+    .kpi-card {
+        border-radius: 10px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .kpi-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    .badge-event-page-view { background-color: #64748b; color: #fff; }
+    .badge-event-login { background-color: #10b981; color: #fff; }
+    .badge-event-logout { background-color: #f59e0b; color: #fff; }
+    .badge-event-product-view { background-color: #8b5cf6; color: #fff; }
+    .badge-event-cart { background-color: #06b6d4; color: #fff; }
+    .badge-event-purchase { background-color: #ec4899; color: #fff; }
+    .badge-event-register { background-color: #3b82f6; color: #fff; }
+    .badge-method-get { background-color: #e0f2fe; color: #0284c7; }
+    .badge-method-post { background-color: #dcfce7; color: #15803d; }
+    .badge-method-put { background-color: #fef9c3; color: #a16207; }
+    .badge-method-delete { background-color: #fee2e2; color: #b91c1c; }
+    .ip-copy-btn {
+        opacity: 0.5;
+        transition: opacity 0.15s;
+        cursor: pointer;
+    }
+    .ip-copy-btn:hover {
+        opacity: 1;
+    }
+    .timeline-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+    .filter-pill {
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 13px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #475569;
+        transition: all 0.15s ease;
+    }
+    .filter-pill:hover, .filter-pill.active {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+    }
+    .json-code-box {
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 16px;
+        font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 12.5px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="c-outsideBlock">
+    <div class="c-outsideBlock__contents">
+
+        {# Top Breadcrumb & Actions Bar #}
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+            <div>
+                <a href="{{ url('admin_setting_system_user_history') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-arrow-left me-1"></i> {{ 'admin.setting.system.user_history_log.back_to_all'|trans|default('Back to All Logs') }}
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ url('admin_setting_system_user_history_user_download', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword }) }}" class="btn btn-ec-regular btn-sm">
+                    <i class="fa fa-download me-1"></i> {{ 'admin.setting.system.user_history_log.download_user_csv'|trans|default('Export User CSV') }}
+                </a>
+                {% if customer %}
+                    <a href="{{ url('admin_customer_edit', { id: customer.id }) }}" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="fa fa-user me-1"></i> {{ 'admin.customer.customer_edit'|trans|default('Edit Customer Profile') }}
+                    </a>
+                {% elseif member %}
+                    <a href="{{ url('admin_setting_system_member_edit', { id: member.id }) }}" target="_blank" class="btn btn-warning btn-sm text-dark">
+                        <i class="fa fa-shield me-1"></i> {{ 'admin.setting.system.member_management'|trans|default('Edit Admin Account') }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# User Profile Header Card #}
+        <div class="user-profile-header">
+            <div class="d-flex flex-wrap align-items-center gap-4">
+                {# Avatar #}
+                <div class="user-avatar-large {% if user_type == 'admin' %}user-avatar-admin{% elseif user_type == 'guest' %}user-avatar-guest{% endif %}">
+                    {% if user_type == 'customer' %}
+                        {{ (user_info.user_name ?: (customer ? customer.name01 : 'C'))|slice(0, 2)|upper }}
+                    {% elseif user_type == 'admin' %}
+                        <i class="fa fa-shield"></i>
+                    {% else %}
+                        <i class="fa fa-user-secret"></i>
+                    {% endif %}
+                </div>
+
+                {# Info #}
+                <div class="flex-grow-1">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                        <h3 class="mb-0 text-white fw-bold">
+                            {% if customer %}
+                                {{ customer.name01 }} {{ customer.name02 }}
+                            {% elseif member %}
+                                {{ member.name }}
+                            {% else %}
+                                {{ user_info.user_name ?: (user_type == 'guest' ? 'Guest Visitor' : identifier) }}
+                            {% endif %}
+                        </h3>
+                        {% if user_type == 'customer' %}
+                            <span class="badge bg-primary text-white px-2 py-1 fs-6">Customer #{{ customer ? customer.id : (user_info.user_id ?: identifier) }}</span>
+                        {% elseif user_type == 'admin' %}
+                            <span class="badge bg-warning text-dark px-2 py-1 fs-6">Administrator #{{ member ? member.id : identifier }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary text-white px-2 py-1 fs-6">Guest Visitor</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center gap-3 text-white-50 small mb-2">
+                        {% if customer and customer.email %}
+                            <span><i class="fa fa-envelope me-1"></i>{{ customer.email }}</span>
+                        {% elseif user_info.user_email %}
+                            <span><i class="fa fa-envelope me-1"></i>{{ user_info.user_email }}</span>
+                        {% endif %}
+
+                        {% if customer and customer.phoneNumber %}
+                            <span><i class="fa fa-phone me-1"></i>{{ customer.phoneNumber }}</span>
+                        {% endif %}
+
+                        {% if customer and customer.pref %}
+                            <span><i class="fa fa-map-marker me-1"></i>{{ customer.pref }} {{ customer.addr01 }}</span>
+                        {% endif %}
+
+                        {% if stats.first_seen %}
+                            <span><i class="fa fa-calendar me-1"></i>First Seen: {{ stats.first_seen|date('Y/m/d H:i') }}</span>
+                        {% endif %}
+
+                        {% if stats.last_seen %}
+                            <span><i class="fa fa-clock-o me-1"></i>Last Active: {{ stats.last_seen|date('Y/m/d H:i') }}</span>
+                        {% endif %}
+                    </div>
+
+                    {# Customer Lifetime stats if available #}
+                    {% if customer %}
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="user-stat-badge">
+                                <i class="fa fa-shopping-bag me-1 text-info"></i>
+                                Orders: <strong>{{ customer.buyTimes ?: 0 }}</strong>
+                            </span>
+                            <span class="user-stat-badge">
+                                <i class="fa fa-jpy me-1 text-warning"></i>
+                                Lifetime Spend: <strong>{{ (customer.buyTotal ?: 0)|price }}</strong>
+                            </span>
+                            {% if customer.createDate %}
+                                <span class="user-stat-badge">
+                                    <i class="fa fa-user-plus me-1 text-success"></i>
+                                    Member Since: <strong>{{ customer.createDate|date('Y/m/d') }}</strong>
+                                </span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# KPI Metric Cards #}
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fa fa-bolt"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Total Actions</div>
+                            <h4 class="mb-0 fw-bold">{{ stats.total_events }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-info bg-opacity-10 text-info">
+                            <i class="fa fa-globe"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Page Views</div>
+                            <h4 class="mb-0 fw-bold">{{ stats.event_breakdown['PAGE_VIEW'] ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-purple bg-opacity-10 text-purple" style="color: #8b5cf6;">
+                            <i class="fa fa-eye"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Product Views</div>
+                            <h4 class="mb-0 fw-bold">{{ stats.event_breakdown['PRODUCT_VIEW'] ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-cyan bg-opacity-10 text-cyan" style="color: #06b6d4;">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Cart Adds</div>
+                            <h4 class="mb-0 fw-bold">{{ (stats.event_breakdown['CART_ADD'] ?? 0) + (stats.event_breakdown['CART_ACTION'] ?? 0) }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-pink bg-opacity-10 text-pink" style="color: #ec4899;">
+                            <i class="fa fa-shopping-bag"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Purchases</div>
+                            <h4 class="mb-0 fw-bold">{{ stats.event_breakdown['PURCHASE_COMPLETE'] ?? 0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card kpi-card border-0 shadow-sm h-100 bg-white">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="kpi-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fa fa-map-pin"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">IP Addresses</div>
+                            <h4 class="mb-0 fw-bold">{{ stats.unique_ips|length }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Filter & Control Card #}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-3">
+                <form method="get" action="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier }) }}" class="row g-2 align-items-center">
+                    {# File selector #}
+                    <div class="col-12 col-md-4">
+                        <label class="small text-muted mb-1 fw-bold">Date / Log File Scope</label>
+                        <select name="file" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="all" {% if selected_file == 'all' %}selected{% endif %}>All Available Log Files (Historical Aggregate)</option>
+                            {% for f in files %}
+                                <option value="{{ f.filename }}" {% if selected_file == f.filename %}selected{% endif %}>
+                                    {{ f.date }} ({{ f.size_formatted|default('') }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {# Keyword search #}
+                    <div class="col-12 col-md-4">
+                        <label class="small text-muted mb-1 fw-bold">Search User Actions</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white border-end-0"><i class="fa fa-search text-muted"></i></span>
+                            <input type="text" name="keyword" class="form-control form-control-sm border-start-0" placeholder="Search by URL, route, product or order info..." value="{{ filters.keyword }}">
+                        </div>
+                    </div>
+
+                    {# Event Type dropdown #}
+                    <div class="col-12 col-md-2">
+                        <label class="small text-muted mb-1 fw-bold">Event Type</label>
+                        <select name="event" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="">All Events</option>
+                            <option value="PAGE_VIEW" {% if filters.event == 'PAGE_VIEW' %}selected{% endif %}>PAGE_VIEW</option>
+                            <option value="PRODUCT_VIEW" {% if filters.event == 'PRODUCT_VIEW' %}selected{% endif %}>PRODUCT_VIEW</option>
+                            <option value="CART_ADD" {% if filters.event == 'CART_ADD' %}selected{% endif %}>CART_ADD</option>
+                            <option value="PURCHASE_COMPLETE" {% if filters.event == 'PURCHASE_COMPLETE' %}selected{% endif %}>PURCHASE_COMPLETE</option>
+                            <option value="USER_LOGIN" {% if filters.event == 'USER_LOGIN' %}selected{% endif %}>USER_LOGIN</option>
+                            <option value="USER_LOGOUT" {% if filters.event == 'USER_LOGOUT' %}selected{% endif %}>USER_LOGOUT</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-2 d-flex align-items-end gap-1 mt-auto">
+                        <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                            <i class="fa fa-filter me-1"></i> Filter
+                        </button>
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file }) }}" class="btn btn-light btn-sm" title="Reset Filters">
+                            <i class="fa fa-refresh"></i>
+                        </a>
+                    </div>
+                </form>
+
+                {# Quick Event Filter Pills #}
+                <div class="d-flex flex-wrap gap-2 mt-3 pt-2 border-top">
+                    <span class="small text-muted align-self-center me-1">Quick Filters:</span>
+                    <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file }) }}" class="filter-pill {% if not filters.event %}active{% endif %}">
+                        All ({{ stats.total_events }})
+                    </a>
+                    {% if stats.event_breakdown['PAGE_VIEW'] is defined %}
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: 'PAGE_VIEW' }) }}" class="filter-pill {% if filters.event == 'PAGE_VIEW' %}active{% endif %}">
+                            <span class="timeline-dot" style="background:#64748b;"></span> Page Views ({{ stats.event_breakdown['PAGE_VIEW'] }})
+                        </a>
+                    {% endif %}
+                    {% if stats.event_breakdown['PRODUCT_VIEW'] is defined %}
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: 'PRODUCT_VIEW' }) }}" class="filter-pill {% if filters.event == 'PRODUCT_VIEW' %}active{% endif %}">
+                            <span class="timeline-dot" style="background:#8b5cf6;"></span> Product Views ({{ stats.event_breakdown['PRODUCT_VIEW'] }})
+                        </a>
+                    {% endif %}
+                    {% if stats.event_breakdown['CART_ADD'] is defined or stats.event_breakdown['CART_ACTION'] is defined %}
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: 'CART_ADD' }) }}" class="filter-pill {% if filters.event == 'CART_ADD' %}active{% endif %}">
+                            <span class="timeline-dot" style="background:#06b6d4;"></span> Cart ({{ (stats.event_breakdown['CART_ADD'] ?? 0) + (stats.event_breakdown['CART_ACTION'] ?? 0) }})
+                        </a>
+                    {% endif %}
+                    {% if stats.event_breakdown['PURCHASE_COMPLETE'] is defined %}
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: 'PURCHASE_COMPLETE' }) }}" class="filter-pill {% if filters.event == 'PURCHASE_COMPLETE' %}active{% endif %}">
+                            <span class="timeline-dot" style="background:#ec4899;"></span> Purchases ({{ stats.event_breakdown['PURCHASE_COMPLETE'] }})
+                        </a>
+                    {% endif %}
+                    {% if stats.event_breakdown['USER_LOGIN'] is defined %}
+                        <a href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: 'USER_LOGIN' }) }}" class="filter-pill {% if filters.event == 'USER_LOGIN' %}active{% endif %}">
+                            <span class="timeline-dot" style="background:#10b981;"></span> Logins ({{ stats.event_breakdown['USER_LOGIN'] }})
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Activity Timeline / Table #}
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa fa-history text-primary"></i>
+                    <h6 class="mb-0 fw-bold">User Activity Timeline</h6>
+                    <span class="badge bg-secondary rounded-pill">{{ logs.total }} events</span>
+                </div>
+                <div class="text-muted small">
+                    Showing {{ logs.total > 0 ? (logs.page - 1) * logs.per_page + 1 : 0 }} - {{ min(logs.page * logs.per_page, logs.total) }} of {{ logs.total }}
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted small text-uppercase">
+                        <tr>
+                            <th style="width: 170px;">Date / Time</th>
+                            <th style="width: 130px;">Event</th>
+                            <th>Action / Route / URL</th>
+                            <th style="width: 150px;">IP Address</th>
+                            <th style="width: 90px;" class="text-center">Status</th>
+                            <th style="width: 80px;" class="text-center">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if logs.items|length > 0 %}
+                            {% for item in logs.items %}
+                                <tr>
+                                    {# Date / Time #}
+                                    <td>
+                                        <div class="fw-bold text-dark font-monospace small">
+                                            {{ item.timestamp|date('H:i:s') }}
+                                        </div>
+                                        <div class="text-muted" style="font-size: 11.5px;">
+                                            {{ item.timestamp|date('Y-m-d') }}
+                                        </div>
+                                    </td>
+
+                                    {# Event #}
+                                    <td>
+                                        {% if item.event == 'USER_LOGIN' %}
+                                            <span class="badge badge-event-login"><i class="fa fa-sign-in me-1"></i>LOGIN</span>
+                                        {% elseif item.event == 'USER_LOGOUT' %}
+                                            <span class="badge badge-event-logout"><i class="fa fa-sign-out me-1"></i>LOGOUT</span>
+                                        {% elseif item.event == 'PRODUCT_VIEW' %}
+                                            <span class="badge badge-event-product-view"><i class="fa fa-eye me-1"></i>PRODUCT</span>
+                                        {% elseif item.event == 'PURCHASE_COMPLETE' %}
+                                            <span class="badge badge-event-purchase"><i class="fa fa-shopping-bag me-1"></i>PURCHASE</span>
+                                        {% elseif item.event == 'CART_ACTION' or item.event == 'CART_ADD' %}
+                                            <span class="badge badge-event-cart"><i class="fa fa-shopping-cart me-1"></i>CART</span>
+                                        {% elseif item.event == 'CUSTOMER_REGISTER' %}
+                                            <span class="badge badge-event-register"><i class="fa fa-user-plus me-1"></i>REGISTER</span>
+                                        {% else %}
+                                            <span class="badge badge-event-page-view">{{ item.event }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    {# Action / Route / URL #}
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            {% set m = item.method|upper %}
+                                            <span class="badge {% if m == 'GET' %}badge-method-get{% elseif m == 'POST' %}badge-method-post{% elseif m == 'PUT' %}badge-method-put{% else %}badge-method-delete{% endif %}">
+                                                {{ m }}
+                                            </span>
+                                            <span class="font-monospace text-dark fw-bold small">
+                                                {{ item.route ?: 'unnamed_route' }}
+                                            </span>
+                                        </div>
+                                        <div class="text-muted font-monospace text-truncate" style="max-width: 520px; font-size: 12px;" title="{{ item.url }}">
+                                            {{ item.url }}
+                                        </div>
+
+                                        {# Quick Highlight for Product or Purchase #}
+                                        {% if item.event == 'PRODUCT_VIEW' and item.details.product_name is defined %}
+                                            <div class="mt-1 small text-purple" style="color: #7c3aed;">
+                                                <i class="fa fa-cube me-1"></i><strong>{{ item.details.product_name }}</strong> (ID: {{ item.details.product_id }})
+                                            </div>
+                                        {% elseif item.event == 'CART_ADD' and item.details.product_name is defined %}
+                                            <div class="mt-1 small text-info" style="color: #0284c7;">
+                                                <i class="fa fa-cart-plus me-1"></i>Added <strong>{{ item.details.product_name }}</strong> &times; {{ item.details.quantity }}
+                                            </div>
+                                        {% elseif item.event == 'PURCHASE_COMPLETE' and item.details.order_no is defined %}
+                                            <div class="mt-1 small text-success fw-bold">
+                                                <i class="fa fa-check-circle me-1"></i>Order: {{ item.details.order_no }} (Total: {{ item.details.total|price }})
+                                            </div>
+                                        {% endif %}
+                                    </td>
+
+                                    {# IP #}
+                                    <td>
+                                        <div class="d-flex align-items-center gap-1 font-monospace small">
+                                            <span>{{ item.ip }}</span>
+                                            <i class="fa fa-clone ip-copy-btn text-muted" title="Copy IP" onclick="copyText('{{ item.ip }}', this)"></i>
+                                        </div>
+                                    </td>
+
+                                    {# Status #}
+                                    <td class="text-center font-monospace">
+                                        {% if item.status_code >= 200 and item.status_code < 300 %}
+                                            <span class="badge bg-success bg-opacity-75">{{ item.status_code }}</span>
+                                        {% elseif item.status_code >= 300 and item.status_code < 400 %}
+                                            <span class="badge bg-info bg-opacity-75 text-dark">{{ item.status_code }}</span>
+                                        {% elseif item.status_code >= 400 and item.status_code < 500 %}
+                                            <span class="badge bg-warning bg-opacity-75 text-dark">{{ item.status_code }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ item.status_code }}</span>
+                                        {% endif %}
+                                    </td>
+
+                                    {# Details #}
+                                    <td class="text-center">
+                                        <script type="application/json" id="user-log-item-{{ loop.index }}">{{ item|json_encode|raw }}</script>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm p-1 px-2"
+                                                onclick="openDetailsModalById('user-log-item-{{ loop.index }}')"
+                                                title="View Action Details">
+                                            <i class="fa fa-info-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="fa fa-inbox fa-3x mb-3 d-block text-secondary"></i>
+                                    <h5>No user activity records found for this filter</h5>
+                                    <p class="small text-muted mb-0">Try changing the Date scope or clearing your keyword filter.</p>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination #}
+            {% if logs.total_pages > 1 %}
+                <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
+                    <div class="text-muted small">
+                        Page {{ logs.page }} of {{ logs.total_pages }}
+                    </div>
+                    <ul class="pagination pagination-sm mb-0">
+                        {# First #}
+                        <li class="page-item {% if logs.page <= 1 %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword, page: 1 }) }}">&laquo;</a>
+                        </li>
+                        {# Prev #}
+                        <li class="page-item {% if logs.page <= 1 %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword, page: logs.page - 1 }) }}">&lsaquo;</a>
+                        </li>
+
+                        {% set startPage = max(1, logs.page - 2) %}
+                        {% set endPage = min(logs.total_pages, logs.page + 2) %}
+                        {% for p in startPage..endPage %}
+                            <li class="page-item {% if p == logs.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword, page: p }) }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+
+                        {# Next #}
+                        <li class="page-item {% if logs.page >= logs.total_pages %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword, page: logs.page + 1 }) }}">&rsaquo;</a>
+                        </li>
+                        {# Last #}
+                        <li class="page-item {% if logs.page >= logs.total_pages %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url('admin_setting_system_user_history_user', { user_type: user_type, identifier: identifier, file: selected_file, event: filters.event, keyword: filters.keyword, page: logs.total_pages }) }}">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{# Action Details Modal #}
+<div class="modal fade" id="userActionDetailModal" tabindex="-1" aria-labelledby="userActionDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="userActionDetailModalLabel">
+                    <i class="fa fa-info-circle me-1 text-primary"></i> Action Log Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2 mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted small">Timestamp</div>
+                        <div class="fw-bold font-monospace small" id="modalTimestamp">-</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted small">Event</div>
+                        <div class="fw-bold" id="modalEvent">-</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted small">HTTP Method & Status</div>
+                        <div class="font-monospace small" id="modalStatus">-</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted small">IP Address</div>
+                        <div class="font-monospace small" id="modalIp">-</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="text-muted small">Requested URL</div>
+                    <div class="font-monospace small p-2 bg-light rounded text-break" id="modalUrl">-</div>
+                </div>
+
+                <div class="mb-2 d-flex align-items-center justify-content-between">
+                    <span class="fw-bold small text-muted">Payload & Action Details (JSON)</span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary py-0" onclick="copyModalJson(this)">
+                        <i class="fa fa-copy me-1"></i> Copy JSON
+                    </button>
+                </div>
+                <pre class="json-code-box mb-0"><code id="modalJsonContent"></code></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function copyText(text, elem) {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(text).then(function() {
+            var origClass = elem.className;
+            elem.className = 'fa fa-check text-success';
+            setTimeout(function() {
+                elem.className = origClass;
+            }, 1500);
+        });
+    }
+
+    var currentModalJson = '';
+
+    function openDetailsModalById(elemId) {
+        var scriptEl = document.getElementById(elemId);
+        if (!scriptEl) return;
+        try {
+            var data = JSON.parse(scriptEl.textContent);
+            showDetailsModal(data);
+        } catch (e) {
+            console.error('Failed to parse log item JSON', e);
+        }
+    }
+
+    function showDetailsModal(data) {
+        document.getElementById('modalTimestamp').innerText = data.timestamp || '-';
+        document.getElementById('modalEvent').innerText = data.event || '-';
+        document.getElementById('modalStatus').innerText = (data.method || 'GET') + ' ' + (data.status_code || 200);
+        document.getElementById('modalIp').innerText = data.ip || '-';
+        document.getElementById('modalUrl').innerText = data.url || '-';
+
+        currentModalJson = JSON.stringify(data, null, 2);
+        document.getElementById('modalJsonContent').innerText = currentModalJson;
+
+        var modal = new bootstrap.Modal(document.getElementById('userActionDetailModal'));
+        modal.show();
+    }
+
+    function copyModalJson(btn) {
+        if (!navigator.clipboard || !currentModalJson) return;
+        navigator.clipboard.writeText(currentModalJson).then(function() {
+            var orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-check text-success me-1"></i> Copied!';
+            setTimeout(function() {
+                btn.innerHTML = orig;
+            }, 1800);
+        });
+    }
+</script>
+{% endblock %}
