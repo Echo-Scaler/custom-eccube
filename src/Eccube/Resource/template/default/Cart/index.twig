@@ -13,253 +13,710 @@ file that was distributed with this source code.
 {% set body_class = 'cart_page' %}
 
 {% block main %}
-
-    <div class="ec-role">
-        <div class="ec-pageHeader">
-            <h1>{{ 'front.cart.title'|trans }}</h1>
+<div class="sc-cart-wrapper">
+    <div class="sc-cart-container">
+        <!-- Breadcrumb Navigation -->
+        <div class="sc-cart-breadcrumb">
+            <a href="{{ path('homepage') }}"><i class="fa-solid fa-house"></i> Home</a>
+            <span class="sc-cart-breadcrumb-sep">/</span>
+            <span class="sc-cart-breadcrumb-current">Shopping Cart</span>
         </div>
-    </div>
 
-    <div class="ec-cartRole">
-        <div class="ec-cartRole__progress">
-            <ul class="ec-progress">
-                {% set step = 1 %}
-                <li class="ec-progress__item is-complete">
-                    <div class="ec-progress__number">{{ step }}{% set step = step + 1 %}
-                    </div>
-                    <div class="ec-progress__label">{{ 'front.cart.nav__cart_items'|trans }}
-                    </div>
-                </li>
-                {% if is_granted('ROLE_USER') == false %}
-                    <li class="ec-progress__item">
-                        <div class="ec-progress__number">{{ step }}{% set step = step + 1 %}
-                        </div>
-                        <div class="ec-progress__label">{{ 'front.cart.nav__customer_info'|trans }}
-                        </div>
-                    </li>
-                {% endif %}
-                <li class="ec-progress__item">
-                    <div class="ec-progress__number">{{ step }}{% set step = step + 1 %}
-                    </div>
-                    <div class="ec-progress__label">{{ 'front.cart.nav__order'|trans }}
-                    </div>
-                </li>
-                <li class="ec-progress__item">
-                    <div class="ec-progress__number">{{ step }}{% set step = step + 1 %}
-                    </div>
-                    <div class="ec-progress__label">{{ 'front.cart.nav__confirm'|trans }}
-                    </div>
-                </li>
-                <li class="ec-progress__item">
-                    <div class="ec-progress__number">{{ step }}{% set step = step + 1 %}
-                    </div>
-                    <div class="ec-progress__label">{{ 'front.cart.nav__complete'|trans }}
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <!-- Flash Messages & Errors -->
         {% set productStr = app.session.flashbag.get('eccube.front.request.product') %}
         {% for error in app.session.flashbag.get('eccube.front.request.error') %}
             {% set idx = loop.index0 %}
-            <div class="ec-cartRole__error">
-                <div class="ec-alert-warning">
-                    <div class="ec-alert-warning__inner">
-                        <div class="ec-alert-warning__inner__item">
-                            <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
-                            <div class="ec-alert-warning__text">
-                                {% if productStr[idx] is defined %}
-                                    {{ error|trans({'%product%':productStr[idx]})|nl2br }}
-                                {% else %}
-                                    {{ error|trans|nl2br }}
+            <div class="ec-alert-warning" style="margin-bottom: 20px;">
+                <div class="ec-alert-warning__inner">
+                    <div class="ec-alert-warning__inner__item">
+                        <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
+                        <div class="ec-alert-warning__text">
+                            {% if productStr[idx] is defined %}
+                                {{ error|trans({'%product%':productStr[idx]})|nl2br }}
+                            {% else %}
+                                {{ error|trans|nl2br }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% for error in app.session.flashbag.get('eccube.front.cart.error') %}
+            <div class="ec-alert-warning" style="margin-bottom: 20px;">
+                <div class="ec-alert-warning__inner">
+                    <div class="ec-alert-warning__inner__item">
+                        <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
+                        <div class="ec-alert-warning__text">{{ error|trans|nl2br }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if totalQuantity > 0 %}
+            {% for CartIndex, Cart in Carts %}
+                {% set cartKey = Cart.cart_key %}
+                
+                {% for error in app.session.flashbag.get('eccube.front.cart.' ~ cartKey ~ '.request.error') %}
+                    <div class="ec-alert-warning" style="margin-bottom: 20px;">
+                        <div class="ec-alert-warning__inner">
+                            <div class="ec-alert-warning__inner__item">
+                                <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
+                                <div class="ec-alert-warning__text">{{ error|trans|nl2br }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="sc-cart-grid">
+                    <!-- ====================================================
+                         LEFT COLUMN: Items & Delivery Information
+                         ==================================================== -->
+                    <div class="sc-cart-col-left">
+                        
+                        <!-- 1. Review Item And Shipping Card -->
+                        <div class="sc-cart-card">
+                            <div class="sc-card-header">
+                                <h2 class="sc-card-title">Review Item And Shipping</h2>
+                            </div>
+
+                            <div class="sc-item-list">
+                                {% for CartItem in Cart.CartItems %}
+                                    {% set ProductClass = CartItem.ProductClass %}
+                                    {% set Product = ProductClass.Product %}
+                                    {% set isAirpods = (Product.id == 2) or ('Airpods' in Product.name) %}
+
+                                    <div class="sc-item-row" id="scItemRow_{{ ProductClass.id }}" data-product-class-id="{{ ProductClass.id }}">
+                                        <!-- Item Image & Info -->
+                                        <div class="sc-item-left">
+                                            <div class="sc-item-thumb">
+                                                <a href="{{ url('product_detail', {id : Product.id} ) }}">
+                                                    {% if isAirpods %}
+                                                        <img src="{{ asset('assets/img/product/airpods_max_pink.jpg') }}" alt="{{ Product.name }}">
+                                                    {% else %}
+                                                        <img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}" alt="{{ Product.name }}">
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                            <div class="sc-item-details">
+                                                <a class="sc-item-title" href="{{ url('product_detail', {id : Product.id} ) }}">
+                                                    {{ Product.name }}
+                                                </a>
+
+                                                <div class="sc-item-variant">
+                                                    {% if ProductClass.ClassCategory1 and ProductClass.ClassCategory1.id %}
+                                                        {{ ProductClass.ClassCategory1.ClassName.name }}: {{ ProductClass.ClassCategory1 }}
+                                                    {% elseif isAirpods %}
+                                                        Color: Pink
+                                                    {% endif %}
+                                                    {% if ProductClass.ClassCategory2 and ProductClass.ClassCategory2.id %}
+                                                        &nbsp;|&nbsp; {{ ProductClass.ClassCategory2.ClassName.name }}: {{ ProductClass.ClassCategory2 }}
+                                                    {% endif %}
+                                                </div>
+
+                                                <span class="sc-item-stock-tag">
+                                                    <i class="fa-solid fa-check"></i> In Stock
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Item Price & Quantity Stepper -->
+                                        <div class="sc-item-right">
+                                            <div class="sc-item-price" id="scItemPrice_{{ ProductClass.id }}">{{ CartItem.total_price|price }}</div>
+                                            
+                                            <div class="sc-item-qty-container">
+                                                <span class="sc-item-qty-label">Quantity:</span>
+                                                <div class="sc-qty-stepper">
+                                                    <a href="javascript:void(0)" 
+                                                       class="sc-qty-btn sc-qty-down {% if CartItem.quantity <= 1 %}is-disabled{% endif %}" 
+                                                       data-url="{{ url('cart_handle_item', {'operation': 'down', 'productClassId': ProductClass.id}) }}" 
+                                                       data-product-class-id="{{ ProductClass.id }}"
+                                                       title="Decrease quantity">
+                                                        <i class="fa-solid fa-minus"></i>
+                                                    </a>
+
+                                                    <span class="sc-qty-value" id="scQtyVal_{{ ProductClass.id }}">
+                                                        {{ CartItem.quantity < 10 ? '0' ~ CartItem.quantity : CartItem.quantity }}
+                                                    </span>
+
+                                                    <a href="javascript:void(0)" 
+                                                       class="sc-qty-btn sc-qty-up" 
+                                                       data-url="{{ url('cart_handle_item', {'operation': 'up', 'productClassId': ProductClass.id}) }}" 
+                                                       data-product-class-id="{{ ProductClass.id }}"
+                                                       title="Increase quantity">
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Delete button -->
+                                                <a href="javascript:void(0)" 
+                                                   class="sc-item-remove-btn sc-qty-remove" 
+                                                   data-url="{{ url('cart_handle_item', {'operation': 'remove', 'productClassId': ProductClass.id }) }}" 
+                                                   data-product-class-id="{{ ProductClass.id }}"
+                                                   data-message="Are you sure you want to remove this item from your cart?"
+                                                   title="Remove item">
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Free Shipping Progress / Status -->
+                            <div id="scFreeShippingNotice">
+                                {% if BaseInfo.delivery_free_amount %}
+                                    {% if is_delivery_free[cartKey] %}
+                                        <div class="sc-free-shipping-notice">
+                                            <i class="fa-solid fa-truck-fast sc-free-shipping-icon"></i>
+                                            <div>
+                                                <strong>Free Delivery Qualified!</strong> Your order qualifies for free standard shipping.
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="sc-free-shipping-notice">
+                                            <i class="fa-solid fa-truck sc-free-shipping-icon"></i>
+                                            <div>
+                                                Add <strong>{{ least[cartKey]|price }}</strong> more to your order to unlock <strong>Free Standard Shipping</strong>!
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        {% for error in app.session.flashbag.get('eccube.front.cart.error') %}
-            <div class="ec-cartRole__error">
-                <div class="ec-alert-warning">
-                    <div class="ec-alert-warning__inner">
-                        <div class="ec-alert-warning__inner__item">
-                            <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
-                            <div class="ec-alert-warning__text">
-                                {{ error|trans|nl2br }}
+
+                        <!-- 2. Delivery Information Card -->
+                        <div class="sc-cart-card">
+                            <div class="sc-card-header">
+                                <h2 class="sc-card-title">Delivery Information</h2>
+                                <button type="button" class="sc-edit-btn" id="scEditDeliveryBtn">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit Information
+                                </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        {% if totalQuantity > 0 %}
-            <div class="ec-cartRole__totalText">
-                <p>
-                    {{ 'front.cart.total_price'|trans({ '%price%': totalPrice|price })|raw }}
-                </p>
-            </div>
-            {% if Carts|length > 1 %}
-                <div class="ec-cartRole__error">
-                    <div class="ec-alert-warning">
-                        <div class="ec-alert-warning__inner">
-                            <div class="ec-alert-warning__inner__item">
-                                <div class="ec-alert-warning__text">
-                                    {{ 'front.cart.divide_cart'|trans|nl2br }}
+
+                            <div class="sc-delivery-grid">
+                                <div class="sc-delivery-label">Name:</div>
+                                <div class="sc-delivery-value" id="scDelivName">
+                                    {% if app.user and (app.user.name01 or app.user.name02) %}
+                                        {{ app.user.name01 }} {{ app.user.name02 }}
+                                    {% else %}
+                                        Wade Warren
+                                    {% endif %}
+                                </div>
+
+                                <div class="sc-delivery-label">Address:</div>
+                                <div class="sc-delivery-value" id="scDelivAddress">
+                                    {% if app.user and app.user.addr01 %}
+                                        {{ app.user.addr01 }} {{ app.user.addr02 }}
+                                    {% else %}
+                                        4140 Parker Rd. Allentown, New Mexico 31134
+                                    {% endif %}
+                                </div>
+
+                                <div class="sc-delivery-label">City:</div>
+                                <div class="sc-delivery-value" id="scDelivCity">
+                                    {% if app.user and app.user.pref %}
+                                        {{ app.user.pref.name }}
+                                    {% else %}
+                                        Austin
+                                    {% endif %}
+                                </div>
+
+                                <div class="sc-delivery-label">Zip Code:</div>
+                                <div class="sc-delivery-value" id="scDelivZip">
+                                    {% if app.user and app.user.postal_code %}
+                                        {{ app.user.postal_code }}
+                                    {% else %}
+                                        85486
+                                    {% endif %}
+                                </div>
+
+                                <div class="sc-delivery-label">Mobile:</div>
+                                <div class="sc-delivery-value" id="scDelivMobile">
+                                    {% if app.user and app.user.phone_number %}
+                                        {{ app.user.phone_number }}
+                                    {% else %}
+                                        +447700960054
+                                    {% endif %}
+                                </div>
+
+                                <div class="sc-delivery-label">Email:</div>
+                                <div class="sc-delivery-value" id="scDelivEmail">
+                                    {% if app.user and app.user.email %}
+                                        {{ app.user.email }}
+                                    {% else %}
+                                        georgia.young@example.com
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
-            {% endif %}
 
-            <form name="form" id="form_cart" class="ec-cartRole" method="post" action="{{ url('cart') }}">
+                    <!-- ====================================================
+                         RIGHT COLUMN: Order Summary & Payment Details
+                         ==================================================== -->
+                    <div class="sc-cart-col-right">
+                        
+                        <!-- 3. Order Summery Card -->
+                        <div class="sc-cart-card">
+                            <div class="sc-card-header">
+                                <h2 class="sc-card-title">Order Summery</h2>
+                            </div>
 
-                {% for CartIndex,Cart in Carts %}
-                    {% set cartKey = Cart.cart_key %}
-                    {% for error in app.session.flashbag.get('eccube.front.cart.' ~ cartKey ~ '.request.error') %}
-                        <div class="ec-cartRole__error">
-                            <div class="ec-alert-warning">
-                                <div class="ec-alert-warning__inner">
-                                    <div class="ec-alert-warning__inner__item">
-                                        <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
-                                        <div class="ec-alert-warning__text">
-                                            {{ error|trans|nl2br }}
-                                        </div>
+                            <!-- Coupon Code Box -->
+                            <div class="sc-coupon-wrapper">
+                                <input type="text" id="scCouponInput" class="sc-coupon-input" placeholder="Enter Coupon Code">
+                                <button type="button" id="scCouponBtn" class="sc-coupon-btn">Apply coupon</button>
+                            </div>
+                            <div id="scCouponFeedback" class="sc-coupon-feedback"></div>
+
+                            <!-- Price Breakdown -->
+                            <div class="sc-summary-list">
+                                <div class="sc-summary-row">
+                                    <span>Items Subtotal</span>
+                                    <span id="scSummarySubtotal">{{ Cart.totalPrice|price }}</span>
+                                </div>
+                                <div class="sc-summary-row">
+                                    <span>Shipping & Handling</span>
+                                    <span style="color: #16a34a; font-weight: 600;">Free</span>
+                                </div>
+                                <div class="sc-summary-row" id="scDiscountRow" style="display: none;">
+                                    <span>Discount (Coupon)</span>
+                                    <span id="scDiscountVal" style="color: #16a34a; font-weight: 600;">-10%</span>
+                                </div>
+                                <div class="sc-summary-row">
+                                    <span>Estimated Tax</span>
+                                    <span>Included</span>
+                                </div>
+                                <div class="sc-summary-row is-total">
+                                    <span>Total</span>
+                                    <span class="sc-total-val" id="scTotalVal">{{ Cart.totalPrice|price }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Payment Details Card -->
+                        <div class="sc-cart-card">
+                            <div class="sc-card-header">
+                                <h2 class="sc-card-title">Payment Details</h2>
+                            </div>
+
+                            <!-- Payment Method Radios -->
+                            <div class="sc-payment-options">
+                                <!-- Option: Cash on Delivery -->
+                                <div class="sc-payment-option" data-payment-type="cod">
+                                    <span class="sc-radio-bullet"></span>
+                                    <span class="sc-payment-label">Cash on Delivery</span>
+                                </div>
+
+                                <!-- Option: Shopcart Card -->
+                                <div class="sc-payment-option" data-payment-type="shopcart">
+                                    <span class="sc-radio-bullet"></span>
+                                    <span class="sc-payment-label">Shopcart Card</span>
+                                </div>
+
+                                <!-- Option: Paypal -->
+                                <div class="sc-payment-option" data-payment-type="paypal">
+                                    <span class="sc-radio-bullet"></span>
+                                    <span class="sc-payment-label">Paypal</span>
+                                    <i class="fa-brands fa-paypal" style="color: #003087; font-size: 18px;"></i>
+                                </div>
+
+                                <!-- Option: Credit or Debit card (Active by default) -->
+                                <div>
+                                    <div class="sc-payment-option is-active" data-payment-type="card">
+                                        <span class="sc-radio-bullet"></span>
+                                        <span class="sc-payment-label">Credit or Debit card</span>
+                                    </div>
+
+                                    <!-- Badges: Amazon, Mastercard, VISA -->
+                                    <div class="sc-payment-badges" id="scPaymentBadges">
+                                        <span class="sc-badge-chip amazon">
+                                            <i class="fa-brands fa-amazon-pay"></i> amazon
+                                        </span>
+                                        <span class="sc-badge-chip mastercard" title="Mastercard">
+                                            <span class="sc-badge-circle red"></span>
+                                            <span class="sc-badge-circle yellow"></span>
+                                        </span>
+                                        <span class="sc-badge-chip visa">VISA</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
 
-                    <div class="ec-cartRole__cart">
-                        <div class="ec-cartTable">
-                            <ol class="ec-cartHeader">
-                                <li class="ec-cartHeader__label">{{ 'front.cart.delete'|trans }}</li>
-                                <li class="ec-cartHeader__label">{{ 'front.cart.product'|trans }}</li>
-                                <li class="ec-cartHeader__label">{{ 'common.quantity'|trans }}</li>
-                                <li class="ec-cartHeader__label">{{ 'common.subtotal'|trans }}</li>
-                            </ol>
-                            {% for CartItem in Cart.CartItems %}
-                                {% set ProductClass = CartItem.ProductClass %}
-                                {% set Product = ProductClass.Product %}
-                                <ul class="ec-cartRow">
-                                    <li class="ec-cartRow__delColumn">
-                                        <a href="{{ url('cart_handle_item', {'operation': 'remove', 'productClassId': ProductClass.id }) }}" {{ csrf_token_for_anchor() }} class="ec-icon" data-method="put" data-message="カートから商品を削除してもよろしいですか?">
-                                            <img src="{{ asset('assets/icon/cross.svg') }}" alt="delete">
-                                        </a>
-                                    </li>
-                                    <li class="ec-cartRow__contentColumn">
-                                        <div class="ec-cartRow__img">
-                                            <a target="_blank" href="{{ url('product_detail', {id : Product.id} ) }}">
-                                                <img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}" alt="{{ Product.name }}"/>
-                                            </a>
-                                        </div>
-                                        <div class="ec-cartRow__summary">
-                                            <div class="ec-cartRow__name">
-                                                <a target="_blank" href="{{ url('product_detail', {id : Product.id} ) }}">{{ Product.name }}</a>
-                                                {% if ProductClass.ClassCategory1 and ProductClass.ClassCategory1.id %}
-                                                    <br>{{ ProductClass.ClassCategory1.ClassName.name }}：{{ ProductClass.ClassCategory1 }}
-                                                {% endif %}
-                                                {% if ProductClass.ClassCategory2 and ProductClass.ClassCategory2.id %}
-                                                    <br>{{ ProductClass.ClassCategory2.ClassName.name }}：{{ ProductClass.ClassCategory2 }}
-                                                {% endif %}
-                                            </div>
-                                            <div class="ec-cartRow__unitPrice">{{ CartItem.price|price }}</div>
-                                            <div class="ec-cartRow__sutbtotalSP">{{ 'common.subtotal__with_separator'|trans }}{{ CartItem.total_price|price }}</div>
-                                        </div>
-                                    </li>
-                                    <li class="ec-cartRow__amountColumn">
-                                        <div class="ec-cartRow__amount">{{ CartItem.quantity|number_format }}</div>
-                                        <div class="ec-cartRow__amountSP">{{ 'common.quantity__with_separator'|trans }}{{ CartItem.quantity|number_format }}</div>
-                                        <div class="ec-cartRow__amountUpDown">
-                                            {% if CartItem.quantity > 1 %}
-                                                <a href="{{ url('cart_handle_item', {'operation': 'down', 'productClassId': ProductClass.id}) }}" {{ csrf_token_for_anchor() }} class="ec-cartRow__amountDownButton load-overlay" data-method="put" data-confirm="false">
-                                                    <span class="ec-cartRow__amountDownButton__icon"><img src="{{ asset('assets/icon/minus-dark.svg') }}" alt="reduce"></span>
-                                                </a>
-                                            {% else %}
-                                                <div class="ec-cartRow__amountDownButtonDisabled">
-                                                    <span class="ec-cartRow__amountDownButton__icon"><img src="{{ asset('assets/icon/minus.svg') }}" alt="reduce"></span>
-                                                </div>
-                                            {% endif %}
-                                            <a href="{{ url('cart_handle_item', {'operation': 'up', 'productClassId': ProductClass.id}) }}" {{ csrf_token_for_anchor() }} class="ec-cartRow__amountUpButton load-overlay" data-method="put" data-confirm="false">
-                                                <span class="ec-cartRow__amountUpButton__icon"><img src="{{ asset('assets/icon/plus-dark.svg') }}" alt="increase"></span>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="ec-cartRow__subtotalColumn">
-                                        <div class="ec-cartRow__sutbtotal">{{ CartItem.total_price|price }}</div>
-                                    </li>
-                                </ul>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="ec-cartRole__progress">
-                        {% if BaseInfo.delivery_free_amount and BaseInfo.delivery_free_quantity %}
-                            <br/>
-                            {% if is_delivery_free[cartKey] %}
-                                {{ 'front.cart.delivery_fee_free__now'|trans }}
-                            {% else %}
-                                {{ 'front.cart.delivery_fee_free__price_and_quantity'|trans({ '%price%': least[cartKey]|price, '%quantity%': quantity[cartKey]|number_format })|raw }}
-                            {% endif %}
-                        {% elseif BaseInfo.delivery_free_amount %}
-                            <br/>
-                            {% if is_delivery_free[cartKey] %}
-                                {{ 'front.cart.delivery_fee_free__now'|trans }}
-                            {% else %}
-                                {{ 'front.cart.delivery_fee_free__price'|trans({ '%price%': least[cartKey]|price })|raw }}
-                            {% endif %}
-                        {% elseif BaseInfo.delivery_free_quantity %}
-                            <br/>
-                            {% if is_delivery_free[cartKey] %}
-                                {{ 'front.cart.delivery_fee_free__now'|trans }}
-                            {% else %}
-                                {{ 'front.cart.delivery_fee_free__quantity'|trans({ '%quantity%': quantity[cartKey]|number_format })|raw }}
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    <div class="ec-cartRole__actions">
-                        <div class="ec-cartRole__total">{{ 'common.total__with_separator'|trans }}<span class="ec-cartRole__totalAmount">{{ Cart.totalPrice|price }}</span>
-                        </div>
-                        <a class="ec-blockBtn--action" href="{{ path('cart_buystep', {'cart_key':cartKey}) }}">{{ 'front.cart.checkout'|trans }}</a>
-                        {% if loop.last %}
-                            <a class="ec-blockBtn--cancel" href="{{ path('homepage') }}">{{ 'front.cart.continue'|trans }}</a>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </form>
-        {% else %}
-            {% for CartIndex,Cart in Carts %}
-                {% set cartKey = Cart.cart_key %}
-                {% for error in app.session.flashbag.get('eccube.front.cart.' ~ cartKey ~ '.request.error') %}
-                    <div class="ec-cartRole__error">
-                        <div class="ec-alert-warning">
-                            <div class="ec-alert-warning__inner">
-                                <div class="ec-alert-warning__inner__item">
-                                    <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
-                                    <div class="ec-alert-warning__text">
-                                        {{ error|trans|nl2br }}
-                                    </div>
+                            <!-- Credit Card Form Fields -->
+                            <div class="sc-payment-form" id="scPaymentCardForm">
+                                <div class="sc-form-group">
+                                    <label class="sc-form-label" for="scPaymentEmail">Email*</label>
+                                    <input type="email" id="scPaymentEmail" class="sc-form-input" placeholder="Type here...">
+                                </div>
+
+                                <div class="sc-form-group">
+                                    <label class="sc-form-label" for="scCardHolder">Card Holder Name*</label>
+                                    <input type="text" id="scCardHolder" class="sc-form-input" placeholder="Type here...">
+                                </div>
+
+                                <div class="sc-form-group">
+                                    <label class="sc-form-label" for="scCardNumber">Card Number*</label>
+                                    <input type="text" id="scCardNumber" class="sc-form-input" placeholder="•••• •••• •••• ••••" maxlength="19">
                                 </div>
                             </div>
+
+                            <!-- Actions -->
+                            <div class="sc-cart-actions">
+                                <a class="sc-btn-checkout" href="{{ path('cart_buystep', {'cart_key': cartKey}) }}">
+                                    <i class="fa-solid fa-lock"></i> Proceed to Checkout
+                                </a>
+                                {% if loop.last %}
+                                    <a class="sc-btn-continue" href="{{ path('homepage') }}">
+                                        <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <div class="sc-secure-badge">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>256-Bit SSL Encrypted & Secure Checkout</span>
+                            </div>
                         </div>
+
                     </div>
-                {% endfor %}
+                </div>
             {% endfor %}
-            <div class="ec-role">
-                <div class="ec-off3Grid">
-                    <div class="ec-off3Grid__cell">
-                        <div class="ec-alert-warning">
-                            <div class="ec-alert-warning__inner">
-                                <div class="ec-alert-warning__inner__item">
-                                    <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
-                                    <div class="ec-alert-warning__text">{{ 'front.cart.no_items'|trans }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        {% else %}
+            <!-- ====================================================
+                 EMPTY CART STATE
+                 ==================================================== -->
+            <div class="sc-empty-cart-card">
+                <div class="sc-empty-cart-icon">
+                    <i class="fa-solid fa-basket-shopping"></i>
                 </div>
+                <h2 class="sc-empty-cart-title">Your Cart is Empty</h2>
+                <p class="sc-empty-cart-desc">
+                    Looks like you haven't added anything to your cart yet. Discover our premium audio gear, wireless headphones, and accessories!
+                </p>
+                <a class="sc-btn-checkout" href="{{ path('product_list') }}" style="max-width: 240px; margin: 0 auto;">
+                    <i class="fa-solid fa-bag-shopping"></i> Start Shopping
+                </a>
             </div>
         {% endif %}
     </div>
+</div>
 
-{% endblock %}
+<!-- ====================================================
+     MODAL: EDIT DELIVERY INFORMATION
+     ==================================================== -->
+<div class="sc-modal-backdrop" id="scDeliveryModal">
+    <div class="sc-modal-box">
+        <div class="sc-modal-header">
+            <h3 class="sc-modal-title">Edit Delivery Information</h3>
+            <button type="button" class="sc-modal-close" id="scModalCloseBtn">&times;</button>
+        </div>
+
+        <div class="sc-modal-grid">
+            <div class="sc-form-group is-full">
+                <label class="sc-form-label" for="scInputName">Full Name</label>
+                <input type="text" id="scInputName" class="sc-form-input" placeholder="e.g. Wade Warren">
+            </div>
+
+            <div class="sc-form-group is-full">
+                <label class="sc-form-label" for="scInputAddress">Street Address</label>
+                <input type="text" id="scInputAddress" class="sc-form-input" placeholder="e.g. 4140 Parker Rd.">
+            </div>
+
+            <div class="sc-form-group">
+                <label class="sc-form-label" for="scInputCity">City</label>
+                <input type="text" id="scInputCity" class="sc-form-input" placeholder="e.g. Austin">
+            </div>
+
+            <div class="sc-form-group">
+                <label class="sc-form-label" for="scInputZip">Zip / Postal Code</label>
+                <input type="text" id="scInputZip" class="sc-form-input" placeholder="e.g. 85486">
+            </div>
+
+            <div class="sc-form-group is-full">
+                <label class="sc-form-label" for="scInputMobile">Mobile Phone</label>
+                <input type="tel" id="scInputMobile" class="sc-form-input" placeholder="e.g. +447700960054">
+            </div>
+
+            <div class="sc-form-group is-full">
+                <label class="sc-form-label" for="scInputEmail">Email Address</label>
+                <input type="email" id="scInputEmail" class="sc-form-input" placeholder="e.g. georgia.young@example.com">
+            </div>
+        </div>
+
+        <div class="sc-modal-actions">
+            <button type="button" class="sc-modal-btn-cancel" id="scModalCancelBtn">Cancel</button>
+            <button type="button" class="sc-modal-btn-save" id="scModalSaveBtn">Save Information</button>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block javascript %}
+<script>
+$(function () {
+    var isUpdating = false;
+
+    function updateCartItem(btn, operation, productClassId, url) {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        var $btn = $(btn);
+        var $row = $('#scItemRow_' + productClassId);
+        var $qtyVal = $('#scQtyVal_' + productClassId);
+        var $downBtn = $row.find('.sc-qty-down');
+        var $priceVal = $('#scItemPrice_' + productClassId);
+
+        // Visual feedback
+        $qtyVal.css('opacity', '0.4');
+        $btn.css('pointer-events', 'none');
+
+        var csrfToken = $('meta[name="eccube-csrf-token"]').attr('content');
+
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            headers: {
+                'ECCUBE-CSRF-TOKEN': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            dataType: 'json'
+        }).done(function (res) {
+            if (res && res.success) {
+                if (res.empty || res.totalQuantity === 0) {
+                    location.reload();
+                    return;
+                }
+
+                if (operation === 'remove' || res.quantity === 0) {
+                    $row.fadeOut(200, function () {
+                        $(this).remove();
+                        if ($('.sc-item-row').length === 0) {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    // Update quantity display with bounce animation
+                    $qtyVal.text(res.formattedQuantity);
+                    $qtyVal.css({ transform: 'scale(1.25)', transition: 'transform 0.15s ease' });
+                    setTimeout(function () {
+                        $qtyVal.css('transform', 'scale(1)');
+                    }, 150);
+
+                    // Update item price
+                    if (res.itemTotalPrice) {
+                        $priceVal.text(res.itemTotalPrice);
+                    }
+
+                    // Update down button disabled state
+                    if (res.quantity <= 1) {
+                        $downBtn.addClass('is-disabled');
+                    } else {
+                        $downBtn.removeClass('is-disabled');
+                    }
+                }
+
+                // Update Order Summary subtotal & total
+                if (res.totalPrice) {
+                    $('#scSummarySubtotal').text(res.totalPrice);
+                    $('#scTotalVal').text(res.totalPrice);
+                }
+
+                // Update Header Cart Count Badge
+                if (typeof res.totalQuantity !== 'undefined') {
+                    $('.shopcart-cart-count-badge').text(res.totalQuantity);
+                    $('.shopcart-cart-preview-header span').text('Shopping Cart (' + res.totalQuantity + ')');
+                }
+
+                // Update Free Shipping Notice
+                if (res.isDeliveryFree) {
+                    $('#scFreeShippingNotice').html(
+                        '<div class="sc-free-shipping-notice">' +
+                        '<i class="fa-solid fa-truck-fast sc-free-shipping-icon"></i>' +
+                        '<div><strong>Free Delivery Qualified!</strong> Your order qualifies for free standard shipping.</div>' +
+                        '</div>'
+                    );
+                } else if (res.formattedLeast) {
+                    $('#scFreeShippingNotice').html(
+                        '<div class="sc-free-shipping-notice">' +
+                        '<i class="fa-solid fa-truck sc-free-shipping-icon"></i>' +
+                        '<div>Add <strong>' + res.formattedLeast + '</strong> more to your order to unlock <strong>Free Standard Shipping</strong>!</div>' +
+                        '</div>'
+                    );
+                }
+            } else {
+                location.reload();
+            }
+        }).fail(function (xhr) {
+            console.error('AJAX cart update failed:', xhr);
+            location.reload();
+        }).always(function () {
+            $qtyVal.css('opacity', '1');
+            $btn.css('pointer-events', 'auto');
+            isUpdating = false;
+        });
+    }
+
+    // Bind AJAX Quantity Up
+    $(document).on('click', '.sc-qty-up', function (e) {
+        e.preventDefault();
+        var pid = $(this).data('product-class-id');
+        var url = $(this).data('url');
+        updateCartItem(this, 'up', pid, url);
+    });
+
+    // Bind AJAX Quantity Down
+    $(document).on('click', '.sc-qty-down', function (e) {
+        e.preventDefault();
+        if ($(this).hasClass('is-disabled')) return;
+        var pid = $(this).data('product-class-id');
+        var url = $(this).data('url');
+        updateCartItem(this, 'down', pid, url);
+    });
+
+    // Bind AJAX Delete Item
+    $(document).on('click', '.sc-qty-remove', function (e) {
+        e.preventDefault();
+        var msg = $(this).data('message') || 'Are you sure you want to remove this item from your cart?';
+        if (!confirm(msg)) return;
+        var pid = $(this).data('product-class-id');
+        var url = $(this).data('url');
+        updateCartItem(this, 'remove', pid, url);
+    });
+
+    // ==========================================
+    // Delivery Information Edit Modal
+    // ==========================================
+    function openDeliveryModal() {
+        var $modal = $('#scDeliveryModal');
+        if (!$modal.length) return;
+
+        // Pre-fill inputs with current text on page
+        $('#scInputName').val($('#scDelivName').text().trim());
+        $('#scInputAddress').val($('#scDelivAddress').text().trim());
+        $('#scInputCity').val($('#scDelivCity').text().trim());
+        $('#scInputZip').val($('#scDelivZip').text().trim());
+        $('#scInputMobile').val($('#scDelivMobile').text().trim());
+        $('#scInputEmail').val($('#scDelivEmail').text().trim());
+
+        $modal.addClass('is-open').fadeIn(150);
+        $('body').css('overflow', 'hidden');
+    }
+
+    function closeDeliveryModal() {
+        var $modal = $('#scDeliveryModal');
+        $modal.removeClass('is-open').fadeOut(150);
+        $('body').css('overflow', '');
+    }
+
+    // Open on Edit Information click
+    $(document).on('click', '#scEditDeliveryBtn', function (e) {
+        e.preventDefault();
+        openDeliveryModal();
+    });
+
+    // Close buttons
+    $(document).on('click', '#scModalCloseBtn, #scModalCancelBtn', function (e) {
+        e.preventDefault();
+        closeDeliveryModal();
+    });
+
+    // Close on backdrop click
+    $(document).on('click', '#scDeliveryModal', function (e) {
+        if ($(e.target).is('#scDeliveryModal')) {
+            closeDeliveryModal();
+        }
+    });
+
+    // Save Delivery Information
+    $(document).on('click', '#scModalSaveBtn', function (e) {
+        e.preventDefault();
+
+        var name = $('#scInputName').val().trim();
+        var address = $('#scInputAddress').val().trim();
+        var city = $('#scInputCity').val().trim();
+        var zip = $('#scInputZip').val().trim();
+        var mobile = $('#scInputMobile').val().trim();
+        var email = $('#scInputEmail').val().trim();
+
+        if (name) $('#scDelivName').text(name);
+        if (address) $('#scDelivAddress').text(address);
+        if (city) $('#scDelivCity').text(city);
+        if (zip) $('#scDelivZip').text(zip);
+        if (mobile) $('#scDelivMobile').text(mobile);
+        if (email) $('#scDelivEmail').text(email);
+
+        // Sync payment form fields if present
+        if (email) $('#scPaymentEmail').val(email);
+        if (name) $('#scCardHolder').val(name);
+
+        try {
+            var info = {
+                name: name,
+                address: address,
+                city: city,
+                zip: zip,
+                mobile: mobile,
+                email: email
+            };
+            localStorage.setItem('sc_delivery_info', JSON.stringify(info));
+        } catch (err) {}
+
+        closeDeliveryModal();
+    });
+
+    // Auto load saved delivery info from localStorage on page load
+    try {
+        var savedInfoStr = localStorage.getItem('sc_delivery_info');
+        if (savedInfoStr) {
+            var savedInfo = JSON.parse(savedInfoStr);
+            if (savedInfo.name) $('#scDelivName').text(savedInfo.name);
+            if (savedInfo.address) $('#scDelivAddress').text(savedInfo.address);
+            if (savedInfo.city) $('#scDelivCity').text(savedInfo.city);
+            if (savedInfo.zip) $('#scDelivZip').text(savedInfo.zip);
+            if (savedInfo.mobile) $('#scDelivMobile').text(savedInfo.mobile);
+            if (savedInfo.email) $('#scDelivEmail').text(savedInfo.email);
+
+            if (savedInfo.email && !$('#scPaymentEmail').val()) $('#scPaymentEmail').val(savedInfo.email);
+            if (savedInfo.name && !$('#scCardHolder').val()) $('#scCardHolder').val(savedInfo.name);
+        }
+    } catch (e) {}
+
+    // ==========================================
+    // Coupon Code Apply
+    // ==========================================
+    $(document).on('click', '#scCouponBtn', function (e) {
+        e.preventDefault();
+        var code = $('#scCouponInput').val().trim().toUpperCase();
+        var $fb = $('#scCouponFeedback');
+        if (!code) {
+            $fb.text('Please enter a valid coupon code.').removeClass('is-success').addClass('is-error').show();
+            return;
+        }
+        $fb.text('Coupon code "' + code + '" applied! 10% discount has been applied to your order.')
+           .removeClass('is-error').addClass('is-success').show();
+        $('#scDiscountRow').css('display', 'flex');
+        $('#scDiscountVal').text('-10%');
+    });
+
+    // ==========================================
+    // Payment Options Toggle
+    // ==========================================
+    $(document).on('click', '.sc-payment-option', function () {
+        $('.sc-payment-option').removeClass('is-active');
+        $(this).addClass('is-active');
+
+        var pType = $(this).data('payment-type');
+        if (pType === 'card') {
+            $('#scPaymentCardForm').slideDown(150);
+            $('#scPaymentBadges').slideDown(150);
+        } else {
+            $('#scPaymentCardForm').slideUp(150);
+            $('#scPaymentBadges').slideUp(150);
+        }
+    });
+});
+</script>
+{% endblock javascript %}
+

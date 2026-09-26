@@ -236,10 +236,28 @@ file that was distributed with this source code.
                 $disp.text(currentVal);
             });
 
-            // Buy Now (Submit to cart and proceed)
+            // Buy Now: Add to cart and proceed directly to checkout (2-click purchase)
             $('#btnBuyNow').on('click', function(e) {
                 e.preventDefault();
-                $('#form1').submit();
+                {% if form.classcategory_id1 is defined %}
+                if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
+                    $('#classcategory_id1')[0].setCustomValidity('{{ 'front.product.product_class_unselected'|trans }}');
+                    return true;
+                }
+                {% endif %}
+                if (typeof loadingOverlay === 'function') {
+                    loadingOverlay();
+                }
+                $.ajax({
+                    url: $('#form1').attr('action'),
+                    type: 'POST',
+                    data: $('#form1').serialize(),
+                    dataType: 'html'
+                }).done(function() {
+                    window.location.href = "{{ path('shopping') }}";
+                }).fail(function() {
+                    $('#form1').submit();
+                });
             });
 
             // Add to Cart AJAX

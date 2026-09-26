@@ -592,5 +592,188 @@ document.addEventListener('DOMContentLoaded', function () {
     tickCountdown();
     setInterval(tickCountdown, 1000);
   }
+
+  /* ========================================================================
+     Shopcart Modern Cart UI Behaviors (Mockup Redesign)
+     ======================================================================== */
+  
+  // 1. Delivery Information Edit Modal
+  var editDeliveryBtn = document.getElementById('scEditDeliveryBtn');
+  var deliveryModal = document.getElementById('scDeliveryModal');
+  var modalCloseBtn = document.getElementById('scModalCloseBtn');
+  var modalCancelBtn = document.getElementById('scModalCancelBtn');
+  var modalSaveBtn = document.getElementById('scModalSaveBtn');
+
+  // Fields in DOM
+  var scDelivName = document.getElementById('scDelivName');
+  var scDelivAddress = document.getElementById('scDelivAddress');
+  var scDelivCity = document.getElementById('scDelivCity');
+  var scDelivZip = document.getElementById('scDelivZip');
+  var scDelivMobile = document.getElementById('scDelivMobile');
+  var scDelivEmail = document.getElementById('scDelivEmail');
+
+  // Input Fields in Modal
+  var scInputName = document.getElementById('scInputName');
+  var scInputAddress = document.getElementById('scInputAddress');
+  var scInputCity = document.getElementById('scInputCity');
+  var scInputZip = document.getElementById('scInputZip');
+  var scInputMobile = document.getElementById('scInputMobile');
+  var scInputEmail = document.getElementById('scInputEmail');
+
+  // Load saved delivery info from localStorage
+  try {
+    var savedInfoStr = localStorage.getItem('sc_delivery_info');
+    if (savedInfoStr) {
+      var savedInfo = JSON.parse(savedInfoStr);
+      if (savedInfo.name && scDelivName) scDelivName.textContent = savedInfo.name;
+      if (savedInfo.address && scDelivAddress) scDelivAddress.textContent = savedInfo.address;
+      if (savedInfo.city && scDelivCity) scDelivCity.textContent = savedInfo.city;
+      if (savedInfo.zip && scDelivZip) scDelivZip.textContent = savedInfo.zip;
+      if (savedInfo.mobile && scDelivMobile) scDelivMobile.textContent = savedInfo.mobile;
+      if (savedInfo.email && scDelivEmail) scDelivEmail.textContent = savedInfo.email;
+    }
+  } catch (e) {
+    console.error('Failed to load delivery info:', e);
+  }
+
+  function openDeliveryModal() {
+    if (!deliveryModal) return;
+    if (scInputName && scDelivName) scInputName.value = scDelivName.textContent.trim();
+    if (scInputAddress && scDelivAddress) scInputAddress.value = scDelivAddress.textContent.trim();
+    if (scInputCity && scDelivCity) scInputCity.value = scDelivCity.textContent.trim();
+    if (scInputZip && scDelivZip) scInputZip.value = scDelivZip.textContent.trim();
+    if (scInputMobile && scDelivMobile) scInputMobile.value = scDelivMobile.textContent.trim();
+    if (scInputEmail && scDelivEmail) scInputEmail.value = scDelivEmail.textContent.trim();
+
+    deliveryModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDeliveryModal() {
+    if (!deliveryModal) return;
+    deliveryModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  if (editDeliveryBtn) {
+    editDeliveryBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      openDeliveryModal();
+    });
+  }
+
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeDeliveryModal);
+  if (modalCancelBtn) modalCancelBtn.addEventListener('click', closeDeliveryModal);
+
+  if (deliveryModal) {
+    deliveryModal.addEventListener('click', function (e) {
+      if (e.target === deliveryModal) closeDeliveryModal();
+    });
+  }
+
+  if (modalSaveBtn) {
+    modalSaveBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var info = {
+        name: scInputName ? scInputName.value.trim() : '',
+        address: scInputAddress ? scInputAddress.value.trim() : '',
+        city: scInputCity ? scInputCity.value.trim() : '',
+        zip: scInputZip ? scInputZip.value.trim() : '',
+        mobile: scInputMobile ? scInputMobile.value.trim() : '',
+        email: scInputEmail ? scInputEmail.value.trim() : ''
+      };
+
+      if (scDelivName && info.name) scDelivName.textContent = info.name;
+      if (scDelivAddress && info.address) scDelivAddress.textContent = info.address;
+      if (scDelivCity && info.city) scDelivCity.textContent = info.city;
+      if (scDelivZip && info.zip) scDelivZip.textContent = info.zip;
+      if (scDelivMobile && info.mobile) scDelivMobile.textContent = info.mobile;
+      if (scDelivEmail && info.email) scDelivEmail.textContent = info.email;
+
+      // Sync payment email input if present
+      var paymentEmailInput = document.getElementById('scPaymentEmail');
+      if (paymentEmailInput && info.email) {
+        paymentEmailInput.value = info.email;
+      }
+      var cardHolderInput = document.getElementById('scCardHolder');
+      if (cardHolderInput && info.name) {
+        cardHolderInput.value = info.name;
+      }
+
+      try {
+        localStorage.setItem('sc_delivery_info', JSON.stringify(info));
+      } catch (err) {}
+
+      closeDeliveryModal();
+    });
+  }
+
+  // 2. Coupon Code Apply
+  var couponBtn = document.getElementById('scCouponBtn');
+  var couponInput = document.getElementById('scCouponInput');
+  var couponFeedback = document.getElementById('scCouponFeedback');
+  var discountRow = document.getElementById('scDiscountRow');
+  var discountVal = document.getElementById('scDiscountVal');
+  var totalValEl = document.getElementById('scTotalVal');
+
+  if (couponBtn && couponInput) {
+    couponBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var code = couponInput.value.trim().toUpperCase();
+      if (!code) {
+        if (couponFeedback) {
+          couponFeedback.textContent = 'Please enter a valid coupon code.';
+          couponFeedback.className = 'sc-coupon-feedback is-error';
+        }
+        return;
+      }
+
+      // Simulate coupon application
+      if (couponFeedback) {
+        couponFeedback.textContent = 'Coupon code "' + code + '" applied! 10% discount has been applied to your order.';
+        couponFeedback.className = 'sc-coupon-feedback is-success';
+      }
+      if (discountRow) {
+        discountRow.style.display = 'flex';
+      }
+      if (discountVal) {
+        discountVal.textContent = '-10%';
+      }
+    });
+  }
+
+  // 3. Payment Method Radio Selection
+  var paymentOptions = document.querySelectorAll('.sc-payment-option');
+  var paymentCardForm = document.getElementById('scPaymentCardForm');
+  var paymentCardBadges = document.getElementById('scPaymentBadges');
+
+  paymentOptions.forEach(function (option) {
+    option.addEventListener('click', function () {
+      paymentOptions.forEach(function (opt) {
+        opt.classList.remove('is-active');
+      });
+      option.classList.add('is-active');
+
+      var pType = option.getAttribute('data-payment-type');
+      if (pType === 'card') {
+        if (paymentCardForm) paymentCardForm.style.display = 'flex';
+        if (paymentCardBadges) paymentCardBadges.style.display = 'flex';
+      } else {
+        if (paymentCardForm) paymentCardForm.style.display = 'none';
+        if (paymentCardBadges) paymentCardBadges.style.display = 'none';
+      }
+    });
+  });
+
+  // Pre-fill payment email and cardholder from delivery info if available
+  var paymentEmailEl = document.getElementById('scPaymentEmail');
+  var cardHolderEl = document.getElementById('scCardHolder');
+  if (paymentEmailEl && scDelivEmail && !paymentEmailEl.value) {
+    paymentEmailEl.value = scDelivEmail.textContent.trim();
+  }
+  if (cardHolderEl && scDelivName && !cardHolderEl.value) {
+    cardHolderEl.value = scDelivName.textContent.trim();
+  }
 });
+
 

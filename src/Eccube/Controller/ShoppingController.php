@@ -364,15 +364,51 @@ class ShoppingController extends AbstractShoppingController
                 }
             }
 
-            $this->entityManager->flush();
+            // Direct 1-Step Checkout: Complete order and route directly to complete page
+            try {
+                log_info('[注文確認/直接注文] 注文処理を開始します.', [$Order->getId()]);
 
-            log_info('[注文確認] 注文確認画面を表示します.');
+                // 決済実行(前処理)
+                if ($response = $this->executeApply($paymentMethod)) {
+                    return $response;
+                }
 
-            return [
-                'form' => $form->createView(),
-                'Order' => $Order,
-                'activeTradeLaws' => $activeTradeLaws,
-            ];
+                // 決済実行
+                if ($response = $this->executeCheckout($paymentMethod)) {
+                    return $response;
+                }
+
+                $this->entityManager->flush();
+
+                // カート削除
+                log_info('[注文確認/直接注文] カートをクリアします.', [$Order->getId()]);
+                $this->cartService->clear();
+
+                // 受注IDをセッションにセット
+                $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
+
+                // メール送信
+                log_info('[注文確認/直接注文] 注文メールの送信を行います.', [$Order->getId()]);
+                $this->mailService->sendOrderMail($Order);
+                $this->entityManager->flush();
+
+                log_info('[注文確認/直接注文] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
+
+                return $this->redirectToRoute('shopping_complete');
+            } catch (ShoppingException $e) {
+                log_error('[注文確認/直接注文] 購入エラーが発生しました.', [$e->getMessage()]);
+
+                $this->entityManager->rollback();
+                $this->addError($e->getMessage());
+
+                return $this->redirectToRoute('shopping');
+            } catch (\Exception $e) {
+                log_error('[注文確認/直接注文] 予期しないエラーが発生しました.', [$e->getMessage()]);
+
+                $this->addError('front.shopping.system_error');
+
+                return $this->redirectToRoute('shopping');
+            }
         }
 
         log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);

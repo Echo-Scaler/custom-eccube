@@ -25,6 +25,7 @@ use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseFlowResult;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -195,7 +196,7 @@ class CartController extends AbstractController
      *     }
      * )
      */
-    public function handleCartItem($operation, $productClassId)
+    public function handleCartItem(Request $request, $operation, $productClassId)
     {
         log_info('カート明細操作開始', ['operation' => $operation, 'product_class_id' => $productClassId]);
 
@@ -206,6 +207,10 @@ class CartController extends AbstractController
 
         if (is_null($ProductClass)) {
             log_info('商品が存在しないため、カート画面へredirect', ['operation' => $operation, 'product_class_id' => $productClassId]);
+
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['success' => false, 'message' => 'Product not found'], 404);
+            }
 
             return $this->redirectToRoute('cart');
         }
@@ -228,6 +233,58 @@ class CartController extends AbstractController
         $this->execPurchaseFlow($Carts);
 
         log_info('カート演算処理終了', ['operation' => $operation, 'product_class_id' => $productClassId]);
+
+        if ($request->isXmlHttpRequest()) {
+            $itemQuantity = 0;
+            $itemTotalPrice = 0;
+            $itemUnitPrice = 0;
+            $totalPrice = 0;
+            $totalQuantity = 0;
+            $itemsCount = 0;
+
+            foreach ($Carts as $Cart) {
+                $totalPrice += $Cart->getTotalPrice();
+                $totalQuantity += $Cart->getQuantity();
+                foreach ($Cart->getCartItems() as $CartItem) {
+                    $itemsCount++;
+                    if ($CartItem->getProductClass()->getId() == $ProductClass->getId()) {
+                        $itemQuantity = $CartItem->getQuantity();
+                        $itemTotalPrice = $CartItem->getTotalPrice();
+                        $itemUnitPrice = $CartItem->getPrice();
+                    }
+                }
+            }
+
+            $locale = $this->eccubeConfig['locale'];
+            $currency = $this->eccubeConfig['currency'];
+            $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+            $least = 0;
+            $isDeliveryFree = false;
+            if ($this->baseInfo->getDeliveryFreeAmount()) {
+                if ($this->baseInfo->getDeliveryFreeAmount() <= $totalPrice) {
+                    $isDeliveryFree = true;
+                } else {
+                    $least = $this->baseInfo->getDeliveryFreeAmount() - $totalPrice;
+                }
+            }
+
+            return new JsonResponse([
+                'success' => true,
+                'operation' => $operation,
+                'productClassId' => $ProductClass->getId(),
+                'quantity' => $itemQuantity,
+                'formattedQuantity' => $itemQuantity < 10 ? '0' . $itemQuantity : (string)$itemQuantity,
+                'itemTotalPrice' => $formatter->formatCurrency($itemTotalPrice, $currency),
+                'itemUnitPrice' => $formatter->formatCurrency($itemUnitPrice, $currency),
+                'totalPrice' => $formatter->formatCurrency($totalPrice, $currency),
+                'totalQuantity' => $totalQuantity,
+                'itemsCount' => $itemsCount,
+                'isDeliveryFree' => $isDeliveryFree,
+                'formattedLeast' => $formatter->formatCurrency($least, $currency),
+                'empty' => ($totalQuantity === 0),
+            ]);
+        }
 
         return $this->redirectToRoute('cart');
     }
