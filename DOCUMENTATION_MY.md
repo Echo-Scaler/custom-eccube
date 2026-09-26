@@ -125,3 +125,89 @@ CSS ဖိုင်အသစ်များ ချက်ချင်းသက်
 5. **Empty Cart State (ပစ္စည်းမရှိသေးသော အခြေအနေ)**:
    - Cart ထဲတွင် ပစ္စည်းမရှိသေးပါက ခေတ်မီသော ခြင်းတောင်း Icon၊ ရှင်းလင်းချက်နှင့် `Start Shopping` Button ကို သပ်ရပ်စွာ ပြသပေးပါသည်။
 
+---
+
+## ၇။ Checkout Page UI ပြန်လည်ရေးဆွဲခြင်း (Checkout Redesign - `/shopping`)
+
+ပေးပို့ထားသော Modern Checkout UI Mockup အတိုင်း **Checkout Page (`/shopping`)** ကို ခေတ်မီပြီး အဆင့်မြင့်သော ၂-ကော်လံ ကတ်ဒီဇိုင်း (2-Column Responsive Layout) ဖြင့် အသစ်ပြန်လည်ရေးဆွဲ တည်ဆောက်ခဲ့ပါသည် -
+
+### (က) အဓိက ပါဝင်သော အစိတ်အပိုင်းများနှင့် လုပ်ဆောင်ချက်များ
+
+1. **Page Title & Divider (စာမျက်နှာခေါင်းစဉ်)**:
+   - စာမျက်နှာအပေါ်ဆုံးတွင် `Checkout` ခေါင်းစဉ်ကြီးနှင့် ပါးလွှာသော အောက်ခံစည်းမျဉ်း (Divider Line) ထည့်သွင်းထားပါသည်။
+
+2. **4-Step Progress Stepper (အဆင့် ၄ ဆင့်ပြ တိုးတက်မှုဘား)**:
+   - စာမျက်နှာအလယ်တွင် အဝိုင်းများနှင့် လိုင်းများဖြင့် ချိတ်ဆက်ထားသော Stepper ဘား ထည့်သွင်းထားပါသည် -
+     - `[1 Cart]` (ပြီးစီးခဲ့ပြီးသော အဆင့် - Dark Slate)
+     - `(2 Checkout)` (လက်ရှိရောက်ရှိနေသော အဆင့် - Mint/Teal `#42b4a5` Highlight အဝိုင်းနှင့် စာသား)
+     - `[3 Review]` (နောက်တစ်ဆင့် - Dark Slate)
+     - `[4 Order Placed]` (နောက်ဆုံးအဆင့် - Dark Slate)
+
+3. **ဘယ်ဘက်ကော်လံ (Left Column - Order Details)**:
+   - **Customer Information Card**:
+     - အပေါ်ဘက်တွင် အခိုးအငွေ့ရောင် ခေါင်းစဉ်ဘား (`#f1f3f5`) ဖြင့် `Customer Information` ဟု ဖော်ပြထားပါသည်။
+     - ဝယ်ယူသူ၏ အမည် (wai wai)၊ Kana (ウエイ ウエイ)၊ Company (kirawai)၊ စာတိုက်ကုဒ် (〒 2660031)၊ လိပ်စာအပြည့်အစုံ၊ ဖုန်းနံပါတ်နှင့် အီးမေးလ်တို့ကို စနစ်တကျ ပြသပေးပါသည်။
+     - ဧည့်သည်အသုံးပြုသူ (Guest User) ဖြစ်ပါက `Change` Pill ခလုတ်နှိပ်၍ အချက်အလက်များ တိုက်ရိုက်ပြင်ဆင်နိုင်သော Inline Edit စနစ် အပြည့်အဝ အလုပ်လုပ်ပါသည်။
+   - **Delivery Information Card**:
+     - `Delivery Information` ခေါင်းစဉ်ဘားနှင့် အောက်တွင် `Delivery to` ခေါင်းစဉ်ခွဲဘေးတွင် `Change` Pill ခလုတ် ပါရှိပါသည်။
+     - မှာယူထားသော ပစ္စည်းများ (Ordered Items) တွင် AirPods Max ပန်းရောင်အရည်အသွေးမြင့် Thumbnail ပုံ၊ ခေါင်းစဉ်၊ အရေအတွက်နှင့် Subtotal (`¥ 3,080 × 1 Subtotal: ¥ 3,080`) တို့ကို Mockup အတိုင်း တိကျစွာ ပြသပေးပါသည်။
+     - ပို့ဆောင်ရမည့်သူ၏ လိပ်စာနှင့် ဖုန်းနံပါတ် အသေးစိတ် block ပါဝင်ပါသည်။
+     - ပို့ဆောင်ရေးရွေးချယ်မှုများအတွက် **Delivery Provider**, **Delivery Date** နှင့် **Delivery Time** Dropdowns (၃) ခုကို ခေတ်မီ Form Controls များဖြင့် စီစဉ်ထားပါသည်။
+   - **Payment Method Card**:
+     - ငွေပေးချေမှုနည်းလမ်းများ (Postal Transfer, Registered Mail, Bank Transfer, Cash on Delivery) ကို Card-based Radio Selection ဖြင့် ပြသထားပြီး ရွေးချယ်မှုအလိုက် Dynamic ပြောင်းလဲမှုကို ထိန်းသိမ်းထားပါသည်။
+   - **Points & Message to Store**:
+     - Point အသုံးပြုနိုင်မှုနှင့် စတိုးဆိုင်သို့ မှာကြားလိုသည့် အမှာစကား (Message/Notes) ရေးသားနိုင်သော ခေတ်မီ Textarea ပါဝင်ပါသည်။
+
+4. **ညာဘက်ကော်လံ (Right Column - Sticky Order Summary)**:
+   - စခရင်အောက်သို့ Scroll လုပ်ရာတွင် အတူတကွ လိုက်ပါလာသော Sticky Sidebar ဖြစ်ပါသည် -
+     - **Subtotal**: `¥ 3,080`
+     - **Charges**: `¥ 0`
+     - **Shipping Charge**: `¥ 1,000`
+     - **Total**: `¥ 4,080 Tax Incl.` (စာလုံးကြီး မည်းနက်)
+     - **Payment Total**: `¥ 4,080 Tax Incl.` (Mockup အတိုင်း ထင်ရှားသော Coral Red `#e0564c` အရောင်ဖြင့် ပြသထားပါသည်)
+     - **အခွန်ခွဲခြမ်းမှု (Tax Breakdown)**: `[ 10 %  ¥ 4,080 (Tax amount ¥ 371) ]`
+     - **Points Used**: `0 pt`
+     - **Points Earned**: `28 pt` (မည်းနက် စာလုံးကြီး)
+     - **Action Buttons**:
+       - **`Review` Button**: Mockup အတိုင်း ထင်ရှားသော Coral Red (`#e0564c`) အရောင် Solid Button ဖြင့် Order Confirm အဆင့်သို့ သွားရောက်နိုင်ပါသည်။
+       - **`Go Back to Cart` Button**: Dark Slate (`#3d4454`) အရောင် Button ဖြင့် Cart စာမျက်နှာ (`/cart`) သို့ ပြန်လည်လှည့်သွားနိုင်ပါသည်။
+
+### (ခ) ပြင်ဆင်ရေးသားခဲ့သည့် ဖိုင်များ
+
+| ဖိုင်လမ်းကြောင်း (File Path) | အမျိုးအစား | ပြင်ဆင်ချက် အကျဉ်းချုပ် |
+| :--- | :---: | :--- |
+| [`src/Eccube/Resource/template/default/Shopping/index.twig`](file:///Users/kyawwaiyan/Documents/my-Home-tech/ec-cube-main/src/Eccube/Resource/template/default/Shopping/index.twig) | `MODIFY` | Checkout စာမျက်နှာ HTML ဖွဲ့စည်းပုံကို 4-step stepper နှင့် 2-column layout အသစ်ဖြင့် အစားထိုးရေးသားခဲ့ခြင်း။ |
+| [`html/template/default/assets/css/nav_shopcart.css`](file:///Users/kyawwaiyan/Documents/my-Home-tech/ec-cube-main/html/template/default/assets/css/nav_shopcart.css) | `MODIFY` | Checkout Page၊ Stepper၊ Custom Cards၊ Sticky Order Summary နှင့် Action Buttons များအတွက် CSS စတိုင်များ ထည့်သွင်းခြင်း။ |
+
+### (ဂ) Cache ရှင်းလင်းခြင်းနှင့် စစ်ဆေးခြင်း
+အပြောင်းအလဲများကို ချက်ချင်းစစ်ဆေးရန် Docker Container ထဲတွင် အောက်ပါ Command ကို Run နိုင်ပါသည် -
+```bash
+docker exec ec-cube-main-ec-cube-1 bin/console cache:clear --no-warmup
+```
+
+---
+
+## ၈။ Checkout အဆင့်များ လျှော့ချခြင်း (Reduce Checkout Steps & 3-Step Conversion Model)
+
+အသုံးပြုသူများ အော်ဒါတင်ရာတွင် လွယ်ကူမြန်ဆန်စေရန်နှင့် E-commerce စီးပွားရေးပုံစံအရ အရောင်းတက်လာစေရန်အတွက် မူလ ၄-၅ ဆင့်ပါသော Checkout Flow ကို **၃ ဆင့်တည်းဖြင့် ပြီးပြည့်စုံသော Modern 3-Step Checkout Funnel** အဖြစ် ပြောင်းလဲတည်ဆောက်ခဲ့ပါသည် -
+
+### (က) အဆင့်လျှော့ချမှု နှိုင်းယှဉ်ချက် (Conversion Funnel Comparison)
+
+1. **ယခင် မူလ Flow (Legacy 4–5 Steps)**:
+   `[1 Cart]` ──> `[Login / Guest]` ──> `[2 Checkout Form]` ──> `[3 Review / Confirm]` ──> `[4 Order Placed]`
+   - အားနည်းချက်- အချက်အလက်များကို Checkout တွင် ဖြည့်စွက်ပြီးသားဖြစ်သော်လည်း Review Confirm စာမျက်နှာတွင် ထပ်မံအတည်ပြုခိုင်းသဖြင့် အသုံးပြုသူ ၂၀% မှ ၃၀% အထိ အော်ဒါမပြီးပြတ်ဘဲ စာမျက်နှာမှ ထွက်ခွာသွားခြင်း (Cart Abandonment) ဖြစ်ပေါ်စေပါသည်။
+2. **ယခု ပြုပြင်ထားသော Flow (Modern 3-Step Model)**:
+   `[1 Cart]` ────────────── `(2 Checkout & Pay)` ────────────── `[3 Order Placed]`
+   - အားသာချက်- Checkout စာမျက်နှာ (`/shopping`) တစ်ခုတည်းတွင် ပို့ဆောင်မည့်လိပ်စာ၊ နည်းလမ်း၊ ငွေပေးချေမှုနှင့် ကျသင့်ငွေအားလုံးကို တိကျစွာ ပြသထားပြီးဖြစ်သဖြင့် **`Place an Order`** ခလုတ်ကို နှိပ်လိုက်သည်နှင့် Order အတည်ပြုပြီးစီးကာ Complete စာမျက်နှာ (`/shopping/complete`) သို့ တိုက်ရိုက် ရောက်ရှိစေပါသည်။
+
+### (ခ) အဓိက အဆင့်မြှင့်တင်ထားသော အချက်များ
+
+1. **3-Step Stepper ဒီဇိုင်း**:
+   - `Cart`, `Checkout`, `Order Placed` ဟူသော အဆင့် (၃) ခုဖြင့် ရှင်းလင်းကျစ်လျစ်စွာ ဖော်ပြထားပါသည်။
+2. **Direct Order Placement (`ShoppingController.php`)**:
+   - `/shopping` မှ Submit လုပ်လိုက်ပါက ပေးချေမှုနည်းလမ်းကို စစ်ဆေးအတည်ပြုပြီး Order ကို တိုက်ရိုက် Commit လုပ်ကာ Order Mail ပေးပို့ပြီး `/shopping/complete` သို့ တိုက်ရိုက် ဦးတည်စေပါသည်။
+3. **ခေတ်မီ Order Complete Page (`/shopping/complete`)**:
+   - အစိမ်းရောင် Checkmark Icon Animation၊ Order Number Badge (`#0000000X`)၊ ပို့ဆောင်မည့်လိပ်စာ အကျဉ်းချုပ်နှင့် ငွေပေးချေမှုအခြေအနေတို့ကို ဖော်ပြပေးထားပါသည်။
+4. **Product Detail မှ Express "Buy Now" (2-Click Purchase)**:
+   - ပစ္စည်းစာမျက်နှာ (`/products/detail/2`) တွင် **`Buy Now`** ခလုတ်ကို နှိပ်လိုက်ပါက Cart ကို ကျော်ခွပြီး Checkout စာမျက်နှာသို့ တိုက်ရိုက်ရောက်ရှိစေသဖြင့် Click (၂) ချက်တည်းဖြင့် ဝယ်ယူမှုပြီးစီးနိုင်ပါသည်။
+
