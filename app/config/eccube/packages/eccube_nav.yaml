@@ -85,6 +85,19 @@ parameters:
                 maintenance:
                     name: admin.content.maintenance_management
                     url: admin_content_maintenance
+        log:
+            name: admin.log.log_management
+            icon: fa-history
+            children:
+                user_history:
+                    name: admin.setting.system.user_history_log
+                    url: admin_setting_system_user_history
+                system_log:
+                    name: admin.setting.system.log_display
+                    url: admin_setting_system_log
+                login_history:
+                    name: admin.setting.system.login_history
+                    url: admin_setting_system_login_history
         setting:
             name: admin.setting
             icon: fa-cog
@@ -141,6 +154,9 @@ parameters:
                         log:
                             name: admin.setting.system.log_display
                             url: admin_setting_system_log
+                        user_history:
+                            name: admin.setting.system.user_history_log
+                            url: admin_setting_system_user_history
                         masterdata:
                             name: admin.setting.system.master_data_management
                             url: admin_setting_system_masterdata

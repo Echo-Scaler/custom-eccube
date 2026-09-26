@@ -238,37 +238,60 @@ class UserHistoryNav implements EccubeNav
 
     # Custom: User History Navigation in Admin Menu
     Customize\Nav\UserHistoryNav:
+        class: Customize\Nav\UserHistoryNav
+        public: true
         tags:
             - { name: eccube.nav }
 ```
 
 ---
 
+### အဆင့် (၁၀) - Admin Sidebar Navigation တည်ဆောက်မှု (Top-Level Activity & Logs Menu)
+မူလ EC-CUBE တွင် Logs များကို `Settings > System Settings` အောက်တွင် (၃) ဆင့်တိမ်မြှုပ်ထားသဖြင့် ချက်ချင်းမတွေ့နိုင်သည့် အခက်အခဲကို ဖြေရှင်းရန်အတွက်-
+1. **ထိပ်တန်းအဆင့် Sidebar Menu အဖြစ် ထုတ်ဖော်ပြသခြင်း**:
+   - Sidebar တွင် **ACTIVITY & LOGS (ログ管理)** ဟူသော သီးသန့် Category နှင့် Menu ကို ထည့်သွင်းထားပါသည်။
+   - ၎င်းအောက်တွင် တိုက်ရိုက် ကြည့်ရှုနိုင်သည့် အစိတ်အပိုင်း (၃) ခု ပါဝင်ပါသည်-
+     - **User History Logs** (`admin_setting_system_user_history` သို့မဟုတ် `/admin/log/user_history`)
+     - **System Logs** (`admin_setting_system_log`)
+     - **Login History** (`admin_setting_system_login_history`)
+2. **မူလ လမ်းကြောင်း (`Settings > System Settings`) တွင်လည်း မပျောက်မပျက် ဆက်လက်ထားရှိခြင်း**:
+   - `Settings > System Settings > User History Logs` အဖြစ်လည်း ဆက်လက်ဝင်ရောက်နိုင်ပါသည်။
+
+---
+
 ## ၄။ စနစ်စမ်းသပ်စစ်ဆေးခြင်း (Testing & Verification)
 
 ### ၁။ Cache ရှင်းလင်းခြင်း (Cache Clear)
+> [!IMPORTANT]
+> EC-CUBE ကို Docker ဖြင့် အသုံးပြုနေပါက Docker Container အတွင်းရှိ Cache ကိုပါ ရှင်းလင်းပေးရန် လိုအပ်ပါသည်။
+
 ```bash
+# Docker Container အတွင်း Cache ရှင်းလင်းရန် (အဓိက)
+docker exec ec-cube-main-ec-cube-1 bin/console cache:clear
+
+# Host စက်ပေါ်ရှိ Cache ရှင်းလင်းရန်
 php -d memory_limit=1G bin/console cache:clear --no-warmup
 ```
 
 ### ၂။ Event Dispatcher ချိတ်ဆက်မှု စစ်ဆေးခြင်း
 ```bash
 # UserHistorySubscriber ကို စစ်ဆေးရန်
-php bin/console debug:event-dispatcher "kernel.response"
+docker exec ec-cube-main-ec-cube-1 bin/console debug:event-dispatcher "kernel.response"
 
 # UserHistoryListener ကို စစ်ဆေးရန်
-php bin/console debug:event-dispatcher "front.product.detail.initialize"
+docker exec ec-cube-main-ec-cube-1 bin/console debug:event-dispatcher "front.product.detail.initialize"
 ```
 
 ### ၃။ Route စာရင်း စစ်ဆေးခြင်း
 ```bash
-php bin/console debug:router admin_setting_system_user_history
+docker exec ec-cube-main-ec-cube-1 bin/console debug:router admin_setting_system_user_history
+docker exec ec-cube-main-ec-cube-1 bin/console debug:router admin_log_user_history
 ```
-*ရလဒ်: `/admin/setting/system/user_history` လမ်းကြောင်း အောင်မြင်စွာ တည်ဆောက်ပြီးဖြစ်ကြောင်း တွေ့ရပါမည်။*
+*ရလဒ်: `/admin/setting/system/user_history` နှင့် `/admin/log/user_history` လမ်းကြောင်းနှစ်ခုစလုံး အောင်မြင်စွာ တည်ဆောက်ပြီးဖြစ်ကြောင်း တွေ့ရပါမည်။*
 
 ### ၄။ Log ရေးသားမှုနှင့် Admin Page ဝင်ရောက်ကြည့်ရှုခြင်း
-1. Admin Panel သို့ ဝင်ရောက်ပါ (`http://localhost:8000/admin/`)။
-2. ဘယ်ဘက် Sidebar ရှိ **設定 > システム設定 > ユーザー履歴ログ** ကို နှိပ်ပါ။
+1. Admin Panel သို့ ဝင်ရောက်ပါ (`http://localhost:8080/admin/`)။
+2. ဘယ်ဘက် Sidebar ရှိ **ACTIVITY & LOGS > Logs & History > User History Logs** (သို့မဟုတ် **設定 > システム設定 > ユーザー履歴ログ**) ကို နှိပ်ပါ။
 3. အကယ်၍ Log မရှိသေးပါက စာမျက်နှာပေါ်ရှိ **「サンプルログを生成」 (Generate Sample Logs)** ခလုတ်ကို နှိပ်၍ ချက်ချင်း စမ်းသပ်နိုင်ပါသည်။
 4. Front Page (`/`, `/products/detail/2`, `/mypage/login`) စာမျက်နှာများသို့ သွားရောက်ကြည့်ရှုပါက နောက်ကွယ်မှ အလိုအလျောက် Log ရေးသားနေမည် ဖြစ်ပါသည်။
 

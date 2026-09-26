@@ -1,3 +1,7 @@
+admin.log.log_management: 'Logs & History'
+admin.log.system_log: 'System Logs'
+admin.log.user_history: 'User History Logs'
+admin.log.login_history: 'Login History'
 admin.setting.system.user_history_log: 'User History Logs'
 admin.setting.system.user_history_log.description: 'Monitor user actions, page visits, product views, logins, and purchases recorded via EventListener & EventSubscriber.'
 admin.setting.system.user_history_log.event_type: 'Event Type'

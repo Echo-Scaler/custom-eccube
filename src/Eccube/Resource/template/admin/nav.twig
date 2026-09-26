@@ -46,6 +46,8 @@ file that was distributed with this source code.
             {% for key1, level1 in eccubeNav %}
                 {% if loop.first %}
                     <span class="nav-category-label">MANAGEMENT</span>
+                {% elseif key1 == 'log' %}
+                    <span class="nav-category-label">ACTIVITY &amp; LOGS</span>
                 {% elseif key1 == 'setting' %}
                     <span class="nav-category-label">SETTINGS</span>
                 {% elseif key1 == 'store' %}
@@ -53,34 +55,36 @@ file that was distributed with this source code.
                 {% endif %}
                 <li class="c-mainNavArea__navItem">
                     {% if level1.children is defined and level1.children|length > 0 %}
-                        <a class="c-mainNavArea__navItemTitle{{ active_menus(menus)[0] != key1 ? ' collapsed' }}"
+                        {% set isLevel1Active = (active_menus(menus)[0] == key1) or (key1 == 'log' and (active_menus(menus)[1] in ['user_history', 'log', 'system_log', 'login_history'] or active_menus(menus)[2] in ['user_history', 'log', 'system_log', 'login_history'])) %}
+                        <a class="c-mainNavArea__navItemTitle{{ not isLevel1Active ? ' collapsed' }}"
                            data-bs-toggle="collapse" href="#nav-{{ key1 }}"
-                           aria-expanded="{{ active_menus(menus)[0] == key1 ? 'true' : 'false' }}"
+                           aria-expanded="{{ isLevel1Active ? 'true' : 'false' }}"
                            aria-controls="nav-{{ key1 }}">
                             <i class="fa {{ level1.icon }} fa-fw" aria-hidden="true"></i>
                             <span>{{ level1.name|trans }}</span>
                         </a>
-                        <ul class="collapse {% if active_menus(menus)[0] == key1 %} show{% endif %}" id="nav-{{ key1 }}">
+                        <ul class="collapse {% if isLevel1Active %} show{% endif %}" id="nav-{{ key1 }}">
                             {% for key2, level2 in level1.children %}
                                 <li>
                                     {% if level2.children is defined and level2.children|length > 0 %}
-                                        <a class="c-mainNavArea__navItemSubTitle{{ active_menus(menus)[1] != key2 ? ' collapsed' }}"
+                                        {% set isLevel2Active = (active_menus(menus)[1] == key2) %}
+                                        <a class="c-mainNavArea__navItemSubTitle{{ not isLevel2Active ? ' collapsed' }}"
                                            data-bs-toggle="collapse" href="#nav-{{ key2 }}"
-                                           aria-expanded="{{ active_menus(menus)[1] != key2 ? 'true' : 'false' }}"
+                                           aria-expanded="{{ isLevel2Active ? 'true' : 'false' }}"
                                            aria-controls="nav-{{ key2 }}">
                                             <span>{{ level2.name|trans }}</span>
                                         </a>
-                                        <ul class="collapse{{ active_menus(menus)[1] == key2 ? ' show' }}" id="nav-{{ key2 }}">
+                                        <ul class="collapse{% if isLevel2Active %} show{% endif %}" id="nav-{{ key2 }}">
                                             {% for key3, level3 in level2.children %}
                                                 <li>
-                                                    <a class="c-mainNavArea__subLink{{ active_menus(menus)[2] == key3 ? ' is-active' : '' }}" href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}">
+                                                    <a class="c-mainNavArea__subLink{{ (active_menus(menus)[2] == key3 or app.request.get('_route') == level3.url) ? ' is-active' : '' }}" href="{{ url(level3.url, level3.param is defined ? level3.param : []) }}">
                                                         <span>{{ level3.name|trans }}</span>
                                                     </a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
                                     {% else %}
-                                        <a class="c-mainNavArea__subLink{{ active_menus(menus)[1] == key2 ? ' is-active' : '' }}" href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}">
+                                        <a class="c-mainNavArea__subLink{{ (active_menus(menus)[1] == key2 or app.request.get('_route') == level2.url) ? ' is-active' : '' }}" href="{{ url(level2.url, level2.param is defined ? level2.param : []) }}">
                                             <span>{{ level2.name|trans }}</span>
                                         </a>
                                     {% endif %}

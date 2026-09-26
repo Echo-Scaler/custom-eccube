@@ -1,3 +1,7 @@
+admin.log.log_management: 'ログ管理'
+admin.log.system_log: 'システムログ表示'
+admin.log.user_history: 'ユーザー履歴ログ'
+admin.log.login_history: 'ログイン履歴'
 admin.setting.system.user_history_log: 'ユーザー履歴ログ'
 admin.setting.system.user_history_log.description: '顧客やゲストユーザーのアクセス履歴、商品閲覧、ログイン、購入完了などの行動ログを確認できます。'
 admin.setting.system.user_history_log.event_type: 'イベント種別'

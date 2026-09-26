@@ -270,6 +270,8 @@ services:
 
     # Custom: User History Navigation in Admin Menu
     Customize\Nav\UserHistoryNav:
+        class: Customize\Nav\UserHistoryNav
+        public: true
         tags:
             - { name: eccube.nav }
 

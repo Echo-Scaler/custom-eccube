@@ -29,6 +29,7 @@ class UserHistoryLogController extends AbstractController
      * Display the private User History Log viewer page.
      *
      * @Route("/%eccube_admin_route%/setting/system/user_history", name="admin_setting_system_user_history", methods={"GET"})
+     * @Route("/%eccube_admin_route%/log/user_history", name="admin_log_user_history", methods={"GET"})
      */
     public function index(Request $request): Response
     {
