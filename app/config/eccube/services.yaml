@@ -249,11 +249,18 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    # Custom: IP Location & Region Resolver
+    Customize\Service\IpLocationResolver:
+        public: true
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
     # Custom: User History Logger service
     Customize\Service\UserHistoryLogger:
         public: true
         arguments:
             $projectDir: '%kernel.project_dir%'
+            $ipResolver: '@Customize\Service\IpLocationResolver'
 
     # Custom: User History Event Subscriber (kernel request/response, login, logout)
     Customize\EventListener\UserHistorySubscriber:

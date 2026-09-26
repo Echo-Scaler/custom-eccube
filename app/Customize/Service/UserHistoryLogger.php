@@ -10,13 +10,15 @@ namespace Customize\Service;
 class UserHistoryLogger
 {
     private string $logDir;
+    private ?IpLocationResolver $ipResolver;
 
-    public function __construct(string $projectDir)
+    public function __construct(string $projectDir, ?IpLocationResolver $ipResolver = null)
     {
         $this->logDir = rtrim($projectDir, '/') . '/var/log/user_history';
         if (!is_dir($this->logDir)) {
             @mkdir($this->logDir, 0775, true);
         }
+        $this->ipResolver = $ipResolver;
     }
 
     /**
@@ -35,6 +37,10 @@ class UserHistoryLogger
         $today = $now->format('Y-m-d');
         $filePath = $this->logDir . '/user_history_' . $today . '.log';
 
+        $ip = $data['ip'] ?? '127.0.0.1';
+        $region = $data['region'] ?? ($this->ipResolver ? $this->ipResolver->formatRegion($ip) : '');
+        $countryCode = $data['country_code'] ?? ($this->ipResolver ? $this->ipResolver->getCountryCode($ip) : '');
+
         $record = [
             'id' => uniqid('uh_', true),
             'timestamp' => $now->format('Y-m-d H:i:s'),
@@ -43,7 +49,9 @@ class UserHistoryLogger
             'user_id' => $data['user_id'] ?? null,
             'user_name' => $data['user_name'] ?? 'Guest',
             'user_email' => $data['user_email'] ?? null,
-            'ip' => $data['ip'] ?? '127.0.0.1',
+            'ip' => $ip,
+            'region' => $region,
+            'country_code' => $countryCode,
             'method' => strtoupper($data['method'] ?? 'GET'),
             'route' => $data['route'] ?? '',
             'url' => $data['url'] ?? '',
@@ -205,12 +213,19 @@ class UserHistoryLogger
                 continue;
             }
 
-            // Keyword filter (searches across name, email, IP, URL, route, and details)
+            // Ensure region is populated
+            if (empty($record['region']) && !empty($record['ip']) && $this->ipResolver) {
+                $record['region'] = $this->ipResolver->formatRegion($record['ip']);
+                $record['country_code'] = $this->ipResolver->getCountryCode($record['ip']);
+            }
+
+            // Keyword filter (searches across name, email, IP, region, URL, route, and details)
             if ($filterKeyword !== null) {
                 $searchContent = mb_strtolower(
                     ($record['user_name'] ?? '') . ' ' .
                     ($record['user_email'] ?? '') . ' ' .
                     ($record['ip'] ?? '') . ' ' .
+                    ($record['region'] ?? '') . ' ' .
                     ($record['url'] ?? '') . ' ' .
                     ($record['route'] ?? '') . ' ' .
                     json_encode($record['details'] ?? [])
@@ -352,6 +367,7 @@ class UserHistoryLogger
             'User Name',
             'User Email',
             'IP Address',
+            'Region',
             'HTTP Method',
             'Route',
             'URL',
@@ -369,6 +385,7 @@ class UserHistoryLogger
                 $item['user_name'] ?? '',
                 $item['user_email'] ?? '',
                 $item['ip'] ?? '',
+                $item['region'] ?? '',
                 $item['method'] ?? '',
                 $item['route'] ?? '',
                 $item['url'] ?? '',
@@ -553,6 +570,7 @@ class UserHistoryLogger
 
         $matched = [];
         $uniqueIps = [];
+        $uniqueRegions = [];
         $eventBreakdown = [];
         $firstSeen = null;
         $lastSeen = null;
@@ -625,6 +643,16 @@ class UserHistoryLogger
                     $uniqueIps[$record['ip']] = ($uniqueIps[$record['ip']] ?? 0) + 1;
                 }
 
+                // Ensure region is populated
+                if (empty($record['region']) && !empty($record['ip']) && $this->ipResolver) {
+                    $record['region'] = $this->ipResolver->formatRegion($record['ip']);
+                    $record['country_code'] = $this->ipResolver->getCountryCode($record['ip']);
+                }
+
+                if (!empty($record['region'])) {
+                    $uniqueRegions[$record['region']] = ($uniqueRegions[$record['region']] ?? 0) + 1;
+                }
+
                 $ts = $record['timestamp'] ?? null;
                 if ($ts) {
                     if ($lastSeen === null || $ts > $lastSeen) {
@@ -646,6 +674,7 @@ class UserHistoryLogger
                         ($record['url'] ?? '') . ' ' .
                         ($record['route'] ?? '') . ' ' .
                         ($record['ip'] ?? '') . ' ' .
+                        ($record['region'] ?? '') . ' ' .
                         json_encode($record['details'] ?? [])
                     );
                     if (mb_strpos($searchContent, $filterKeyword) === false) {
@@ -668,6 +697,9 @@ class UserHistoryLogger
         $offset = ($page - 1) * $perPage;
         $items = array_slice($matched, $offset, $perPage);
 
+        arsort($uniqueRegions);
+        $primaryRegion = !empty($uniqueRegions) ? array_key_first($uniqueRegions) : null;
+
         return [
             'items' => $items,
             'total' => $total,
@@ -680,6 +712,8 @@ class UserHistoryLogger
                 'filtered_total' => $total,
                 'event_breakdown' => $eventBreakdown,
                 'unique_ips' => array_keys($uniqueIps),
+                'unique_regions' => array_keys($uniqueRegions),
+                'primary_region' => $primaryRegion,
                 'first_seen' => $firstSeen,
                 'last_seen' => $lastSeen,
             ],

@@ -42,3 +42,4 @@ admin.setting.system.user_history_log.user_details: 'ユーザー詳細・行動
 admin.setting.system.user_history_log.back_to_all: '全ログ一覧に戻る'
 admin.setting.system.user_history_log.download_user_csv: 'ユーザー別CSVエクスポート'
 admin.setting.system.user_history_log.view_user_history: 'このユーザーの行動履歴を表示'
+admin.setting.system.user_history_log.region: '地域 / 国'

@@ -227,7 +227,22 @@ Part of EC-CUBE Customization - User History Logging
                                     Member Since: <strong>{{ customer.createDate|date('Y/m/d') }}</strong>
                                 </span>
                             {% endif %}
+                            {% if stats.primary_region %}
+                                <span class="user-stat-badge">
+                                    <i class="fa fa-map-marker me-1 text-danger"></i>
+                                    Location: <strong>{{ stats.primary_region }}</strong>
+                                </span>
+                            {% endif %}
                         </div>
+                    {% else %}
+                        {% if stats.primary_region %}
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <span class="user-stat-badge">
+                                    <i class="fa fa-map-marker me-1 text-danger"></i>
+                                    Location: <strong>{{ stats.primary_region }}</strong>
+                                </span>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -489,12 +504,18 @@ Part of EC-CUBE Customization - User History Logging
                                         {% endif %}
                                     </td>
 
-                                    {# IP #}
-                                    <td>
+                                    {# IP & Region #}
+                                    <td class="text-nowrap">
                                         <div class="d-flex align-items-center gap-1 font-monospace small">
-                                            <span>{{ item.ip }}</span>
+                                            <span class="fw-bold">{{ item.ip }}</span>
                                             <i class="fa fa-clone ip-copy-btn text-muted" title="Copy IP" onclick="copyText('{{ item.ip }}', this)"></i>
                                         </div>
+                                        {% if item.region %}
+                                            <div class="small text-muted d-flex align-items-center mt-1" style="font-size: 11px;" title="{{ item.region }}">
+                                                <i class="fa fa-map-marker text-danger me-1"></i>
+                                                <span class="text-truncate" style="max-width: 140px;">{{ item.region }}</span>
+                                            </div>
+                                        {% endif %}
                                     </td>
 
                                     {# Status #}
@@ -599,8 +620,9 @@ Part of EC-CUBE Customization - User History Logging
                         <div class="font-monospace small" id="modalStatus">-</div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="text-muted small">IP Address</div>
-                        <div class="font-monospace small" id="modalIp">-</div>
+                        <div class="text-muted small">IP & Location</div>
+                        <div class="font-monospace small fw-bold" id="modalIp">-</div>
+                        <div class="small text-muted" id="modalRegion" style="font-size: 11px;"></div>
                     </div>
                 </div>
 
@@ -656,6 +678,7 @@ Part of EC-CUBE Customization - User History Logging
         document.getElementById('modalEvent').innerText = data.event || '-';
         document.getElementById('modalStatus').innerText = (data.method || 'GET') + ' ' + (data.status_code || 200);
         document.getElementById('modalIp').innerText = data.ip || '-';
+        document.getElementById('modalRegion').innerText = data.region || '';
         document.getElementById('modalUrl').innerText = data.url || '-';
 
         currentModalJson = JSON.stringify(data, null, 2);
