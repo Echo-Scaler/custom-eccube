@@ -77,9 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ========================================================================
      4. Header Dropdowns (Categories / Location)
      ======================================================================== */
-  var headerDropdownToggles = document.querySelectorAll('.shopcart-dropdown__toggle');
-  headerDropdownToggles.forEach(function (toggle) {
-    toggle.addEventListener('click', function (e) {
+  document.addEventListener('click', function (e) {
+    var toggle = e.target.closest('.shopcart-dropdown__toggle');
+    if (toggle) {
+      e.preventDefault();
       e.stopPropagation();
       var dropdown = toggle.closest('.shopcart-dropdown');
       if (dropdown) {
@@ -95,7 +96,150 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         dropdown.classList.toggle('is-open');
       }
+    }
+  });
+
+  /* ========================================================================
+     4b. Seamless Header Navigation (Deals, What's New, Delivery)
+     ======================================================================== */
+  var isNavTransitioning = false;
+
+  function loadSpaPage(targetUrl, clickedLink) {
+    if (isNavTransitioning) return;
+
+    var currentUrlObj = new URL(window.location.href);
+    var targetUrlObj = new URL(targetUrl, window.location.origin);
+
+    // If clicking same page and same search query, just scroll to top
+    if (currentUrlObj.pathname === targetUrlObj.pathname && currentUrlObj.search === targetUrlObj.search) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    isNavTransitioning = true;
+
+    // Progress bar indicator
+    var progressBar = document.getElementById('shopcart-nav-progress');
+    if (!progressBar) {
+      progressBar = document.createElement('div');
+      progressBar.id = 'shopcart-nav-progress';
+      progressBar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:#003d29;width:0%;z-index:99999;transition:width 0.3s ease;box-shadow:0 0 8px rgba(0,61,41,0.5);';
+      document.body.appendChild(progressBar);
+    }
+    progressBar.style.width = '35%';
+
+    var mainContainer = document.querySelector('main.ec-layoutRole__main, main, .ec-layoutRole__contents');
+    if (mainContainer) {
+      mainContainer.style.transition = 'opacity 0.18s ease';
+      mainContainer.style.opacity = '0.4';
+    }
+
+    fetch(targetUrl, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function(res) {
+      progressBar.style.width = '75%';
+      return res.text();
+    })
+    .then(function(html) {
+      progressBar.style.width = '100%';
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+
+      // 1. Swap main content
+      var newMain = doc.querySelector('main.ec-layoutRole__main, main, .ec-layoutRole__contents');
+      if (newMain && mainContainer) {
+        mainContainer.innerHTML = newMain.innerHTML;
+        mainContainer.className = newMain.className;
+      }
+
+      // 2. Update document title
+      if (doc.title) {
+        document.title = doc.title;
+      }
+
+      // 3. Update body class and ID
+      if (doc.body) {
+        document.body.id = doc.body.id;
+        document.body.className = doc.body.className;
+      }
+
+      // 4. Update Header Nav Active States
+      document.querySelectorAll('.shopcart-nav-link, .shopcart-mobile-nav-link').forEach(function(l) {
+        l.classList.remove('is-active');
+      });
+      if (clickedLink) {
+        clickedLink.classList.add('is-active');
+      } else {
+        var path = targetUrlObj.pathname;
+        var matchingLink = document.querySelector('.shopcart-nav-link[href*="' + path + '"], .shopcart-mobile-nav-link[href*="' + path + '"]');
+        if (matchingLink) matchingLink.classList.add('is-active');
+      }
+
+      // 5. Update browser history URL
+      window.history.pushState(null, '', targetUrl);
+
+      // 6. Execute scripts from the new page
+      var newScripts = doc.querySelectorAll('main script, .deal-page-wrap script');
+      newScripts.forEach(function(s) {
+        try {
+          var scriptEl = document.createElement('script');
+          if (s.src) {
+            scriptEl.src = s.src;
+          } else {
+            scriptEl.textContent = s.textContent;
+          }
+          document.body.appendChild(scriptEl);
+          setTimeout(function() { scriptEl.remove(); }, 100);
+        } catch(e) {}
+      });
+
+      // 7. Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 8. Re-initialize wishlist buttons
+      if (window.initShopcartWishlist) {
+        window.initShopcartWishlist();
+      }
+
+      // Close mobile drawer if open
+      var drawer = document.querySelector('.shopcart-mobile-drawer');
+      if (drawer) drawer.classList.remove('is-open');
+      var backdrop = document.querySelector('.shopcart-mobile-backdrop');
+      if (backdrop) backdrop.classList.remove('is-open');
+    })
+    .catch(function(err) {
+      console.warn('Navigation fallback to standard load:', err);
+      window.location.href = targetUrl;
+    })
+    .finally(function() {
+      setTimeout(function() {
+        if (progressBar) progressBar.style.width = '0%';
+        if (mainContainer) mainContainer.style.opacity = '1';
+        isNavTransitioning = false;
+      }, 250);
     });
+  }
+
+  // Intercept clicks on header navigation menu (Deals, What's New, Delivery, etc.)
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('.shopcart-nav-link:not(.shopcart-dropdown__toggle), .shopcart-mobile-nav-link');
+    if (!link) return;
+
+    var href = link.getAttribute('href');
+    if (!href || href === '#' || href.indexOf('javascript:') === 0) return;
+
+    var targetUrl = new URL(href, window.location.origin);
+    // Only intercept internal links
+    if (targetUrl.origin === window.location.origin) {
+      e.preventDefault();
+      loadSpaPage(targetUrl.href, link);
+    }
+  });
+
+  // Handle browser back/forward buttons
+  window.addEventListener('popstate', function() {
+    loadSpaPage(window.location.href, null);
   });
 
   /* ========================================================================
@@ -640,96 +784,101 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Initialize wishlist buttons state from server / local storage
-  var wishlistButtons = document.querySelectorAll('.shopcart-wishlist-btn, .plp-card__wishlist');
-  var activeFavs = getActiveFavoriteIds();
+  function initShopcartWishlist() {
+    var wishlistButtons = document.querySelectorAll('.shopcart-wishlist-btn, .plp-card__wishlist');
+    var activeFavs = getActiveFavoriteIds();
 
-  wishlistButtons.forEach(function (btn) {
-    var pId = getProductIdForBtn(btn);
-    if (pId && activeFavs.indexOf(String(pId)) !== -1) {
-      updateWishlistButtonUI(btn, true);
-    }
-  });
-
-  // Attach click handler to wishlist buttons
-  wishlistButtons.forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Micro-animation bounce
-      btn.classList.add('is-animating');
-      setTimeout(function () { btn.classList.remove('is-animating'); }, 400);
-
+    wishlistButtons.forEach(function (btn) {
       var pId = getProductIdForBtn(btn);
-      if (!pId) {
-        // Fallback simple toggle if product ID not detectable
-        var icon = btn.querySelector('i');
-        if (icon) {
-          var willBeActive = icon.classList.contains('far');
-          updateWishlistButtonUI(btn, willBeActive);
-        }
-        return;
+      if (pId && activeFavs.indexOf(String(pId)) !== -1) {
+        updateWishlistButtonUI(btn, true);
       }
 
-      var mypageFavUrlMeta = document.querySelector('meta[name="eccube-mypage-favorite-url"]');
-      var mypageFavUrl = mypageFavUrlMeta ? mypageFavUrlMeta.getAttribute('content') : '/mypage/favorite';
-      var loginUrlMeta = document.querySelector('meta[name="eccube-login-url"]');
-      var loginUrl = loginUrlMeta ? loginUrlMeta.getAttribute('content') : '/mypage/login';
+      if (btn.dataset.wishlistBound === 'true') return;
+      btn.dataset.wishlistBound = 'true';
 
-      if (isLoggedIn) {
-        // Logged-in customer: Toggle with backend AJAX
-        fetch('/products/toggle_favorite/' + pId, {
-          method: 'POST',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-          }
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (data.success) {
-            if (data.is_favorite) {
-              if (serverFavoriteIds.indexOf(String(pId)) === -1) {
-                serverFavoriteIds.push(String(pId));
-              }
-              syncAllButtonsForProduct(pId, true);
-              showWishlistToast('Added to Favorites!', 'success', mypageFavUrl, 'View Favorites');
-            } else {
-              var idx = serverFavoriteIds.indexOf(String(pId));
-              if (idx !== -1) serverFavoriteIds.splice(idx, 1);
-              syncAllButtonsForProduct(pId, false);
-              showWishlistToast('Removed from Favorites.', 'removed');
-            }
-          } else if (data.require_login) {
-            window.location.href = data.login_url || loginUrl;
-          }
-        })
-        .catch(function () {
-          // If network error, toggle visually
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Micro-animation bounce
+        btn.classList.add('is-animating');
+        setTimeout(function () { btn.classList.remove('is-animating'); }, 400);
+
+        var pId = getProductIdForBtn(btn);
+        if (!pId) {
+          // Fallback simple toggle if product ID not detectable
           var icon = btn.querySelector('i');
-          var willBeActive = icon ? icon.classList.contains('far') : true;
-          syncAllButtonsForProduct(pId, willBeActive);
-        });
-      } else {
-        // Guest user: Save in localStorage + prompt to sign in
-        var guestList = getGuestFavorites().map(function (id) { return String(id); });
-        var existsIdx = guestList.indexOf(String(pId));
-        if (existsIdx !== -1) {
-          // Remove
-          guestList.splice(existsIdx, 1);
-          setGuestFavorites(guestList);
-          syncAllButtonsForProduct(pId, false);
-          showWishlistToast('Removed from Favorites.', 'removed');
-        } else {
-          // Add
-          guestList.push(String(pId));
-          setGuestFavorites(guestList);
-          syncAllButtonsForProduct(pId, true);
-          showWishlistToast('Added to wishlist! Sign in to sync your favorites across devices.', 'success', loginUrl, 'Sign In');
+          if (icon) {
+            var willBeActive = icon.classList.contains('far');
+            updateWishlistButtonUI(btn, willBeActive);
+          }
+          return;
         }
-      }
+
+        var mypageFavUrlMeta = document.querySelector('meta[name="eccube-mypage-favorite-url"]');
+        var mypageFavUrl = mypageFavUrlMeta ? mypageFavUrlMeta.getAttribute('content') : '/mypage/favorite';
+        var loginUrlMeta = document.querySelector('meta[name="eccube-login-url"]');
+        var loginUrl = loginUrlMeta ? loginUrlMeta.getAttribute('content') : '/mypage/login';
+
+        if (isLoggedIn) {
+          // Logged-in customer: Toggle with backend AJAX
+          fetch('/products/toggle_favorite/' + pId, {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+            }
+          })
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (data.success) {
+              if (data.is_favorite) {
+                if (serverFavoriteIds.indexOf(String(pId)) === -1) {
+                  serverFavoriteIds.push(String(pId));
+                }
+                syncAllButtonsForProduct(pId, true);
+                showWishlistToast('Added to Favorites!', 'success', mypageFavUrl, 'View Favorites');
+              } else {
+                var idx = serverFavoriteIds.indexOf(String(pId));
+                if (idx !== -1) serverFavoriteIds.splice(idx, 1);
+                syncAllButtonsForProduct(pId, false);
+                showWishlistToast('Removed from Favorites.', 'removed');
+              }
+            } else if (data.require_login) {
+              window.location.href = data.login_url || loginUrl;
+            }
+          })
+          .catch(function () {
+            // If network error, toggle visually
+            var icon = btn.querySelector('i');
+            var willBeActive = icon ? icon.classList.contains('far') : true;
+            syncAllButtonsForProduct(pId, willBeActive);
+          });
+        } else {
+          // Guest user: Save in localStorage + prompt to sign in
+          var guestList = getGuestFavorites().map(function (id) { return String(id); });
+          var existsIdx = guestList.indexOf(String(pId));
+          if (existsIdx !== -1) {
+            // Remove
+            guestList.splice(existsIdx, 1);
+            setGuestFavorites(guestList);
+            syncAllButtonsForProduct(pId, false);
+            showWishlistToast('Removed from Favorites.', 'removed');
+          } else {
+            // Add
+            guestList.push(String(pId));
+            setGuestFavorites(guestList);
+            syncAllButtonsForProduct(pId, true);
+            showWishlistToast('Added to wishlist! Sign in to sync your favorites across devices.', 'success', loginUrl, 'Sign In');
+          }
+        }
+      });
     });
-  });
+  }
+
+  window.initShopcartWishlist = initShopcartWishlist;
+  initShopcartWishlist();
 
   var addToCartBtns = document.querySelectorAll('.shopcart-add-cart-btn');
   addToCartBtns.forEach(function (btn) {

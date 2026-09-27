@@ -276,7 +276,8 @@ class CreateCategoryProductsCommand extends Command
                 $spread = $priceMax - $priceMin;
                 $step = ($spread / $countPerCategory);
                 $price02 = (float) round(($priceMin + ($i - 1) * $step) / 100) * 100;
-                $price01 = (float) round(($price02 * 1.15) / 100) * 100;
+                $discountMultiplier = 1.20 + ((($i * 7 + $catId) % 10) * 0.12);
+                $price01 = (float) round(($price02 * $discountMultiplier) / 100) * 100;
                 $stock = 25 + (($i * 3) % 76);
 
                 $imageFile = $images[($i - 1) % count($images)];

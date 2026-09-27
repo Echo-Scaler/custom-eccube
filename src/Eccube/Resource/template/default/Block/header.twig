@@ -29,7 +29,7 @@ file that was distributed with this source code.
             <div class="shopcart-topbar__center">
                 <span class="shopcart-topbar__promo-text">Get 50% Off on Selected Items</span>
                 <span class="shopcart-topbar__divider">|</span>
-                <a href="{{ url('product_list') }}" class="shopcart-topbar__shopnow">Shop Now</a>
+                <a href="{{ url('deal_page') }}" class="shopcart-topbar__shopnow">Shop Now</a>
             </div>
 
             <!-- Right: Language & Location Selectors -->
@@ -149,7 +149,7 @@ file that was distributed with this source code.
                 'Computer': 'လက်ပ်တော့'
                 } %}
                 <div class="shopcart-nav-item shopcart-dropdown shopcart-cat-dropdown">
-                    <a href="{{ url('product_list') }}" class="shopcart-nav-link shopcart-dropdown__toggle">
+                    <a href="javascript:void(0);" class="shopcart-nav-link shopcart-dropdown__toggle" role="button" aria-haspopup="true" aria-expanded="false">
                         <span>Categories</span>
                         <i class="fas fa-chevron-down shopcart-chevron"></i>
                     </a>
@@ -167,7 +167,7 @@ file that was distributed with this source code.
                         {% endif %}
                         <div class="shopcart-cat-group">
                             <a href="{{ url('product_list') }}?category_id={{ Category.id }}"
-                                class="shopcart-cat-parent">
+                                class="shopcart-cat-parent" data-category-id="{{ Category.id }}">
                                 <i class="fas fa-folder-open shopcart-cat-icon"></i>
                                 <span>{{ cat_display_name }}</span>
                             </a>
@@ -184,7 +184,7 @@ file that was distributed with this source code.
                                 {% set child_display_name = ChildCategory.name %}
                                 {% endif %}
                                 <a href="{{ url('product_list') }}?category_id={{ ChildCategory.id }}"
-                                    class="shopcart-cat-child">
+                                    class="shopcart-cat-child" data-category-id="{{ ChildCategory.id }}">
                                     {{ child_display_name }}
                                 </a>
                                 {% endfor %}
@@ -200,7 +200,7 @@ file that was distributed with this source code.
 
                 <!-- Deals Link -->
                 <div class="shopcart-nav-item">
-                    <a href="{{ url('product_list') }}" class="shopcart-nav-link">Deals</a>
+                    <a href="{{ url('deal_page') }}" class="shopcart-nav-link{% if app.request.attributes.get('_route') in ['deal_page', 'deal_page_alias'] %} is-active{% endif %}">Deals</a>
                 </div>
 
                 <!-- What's New Link -->
@@ -394,7 +394,7 @@ file that was distributed with this source code.
                         {% endfor %}
                     </div>
                 </div>
-                <a href="{{ url('product_list') }}" class="shopcart-mobile-nav-link">Deals</a>
+                <a href="{{ url('deal_page') }}" class="shopcart-mobile-nav-link{% if app.request.attributes.get('_route') in ['deal_page', 'deal_page_alias'] %} is-active{% endif %}">Deals</a>
                 <a href="{{ url('product_list') }}?orderby=1" class="shopcart-mobile-nav-link">What’s New</a>
                 <a href="{{ url('help_guide') }}" class="shopcart-mobile-nav-link">Delivery</a>
             </div>
