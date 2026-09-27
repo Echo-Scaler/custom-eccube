@@ -63,21 +63,12 @@ file that was distributed with this source code.
                         $('.add-cart').prop('disabled', true);
                     }
                 }).done(function(data) {
-                    // レスポンス内のメッセージをalertで表示
-                    $.each(data.messages, function() {
-                        $('#ec-modal-header').text(this);
-                    });
-
-                    $('.ec-modal').show()
-
-                    // カートブロックを更新する
-                    $.ajax({
-                        url: '{{ url('block_cart') }}',
-                        type: 'GET',
-                        dataType: 'html'
-                    }).done(function(html) {
-                        $('.ec-headerRole__cart').html(html);
-                    });
+                    if (data.done) {
+                        window.location.href = "{{ url('cart') }}";
+                    } else {
+                        var msg = (data.messages && data.messages.length > 0) ? data.messages.join("\n") : '{{ 'front.product.add_cart_error'|trans }}';
+                        alert(msg);
+                    }
                 }).fail(function(data) {
                     alert('{{ 'front.product.add_cart_error'|trans }}');
                 }).always(function(data) {
@@ -85,14 +76,6 @@ file that was distributed with this source code.
                     $('.add-cart').prop('disabled', false);
                 });
             });
-        });
-
-        $('.ec-modal-wrap').on('click', function(e) {
-            // モーダル内の処理は外側にバブリングさせない
-            e.stopPropagation();
-        });
-        $('.ec-modal-overlay, .ec-modal, .ec-modal-close, .ec-inlineBtn--cancel').on('click', function() {
-            $('.ec-modal').hide()
         });
     </script>
 {% endblock %}
@@ -267,12 +250,12 @@ file that was distributed with this source code.
                                 <p class="plp-card__price">
                                     {% if Product.hasProductClass %}
                                         {% if Product.getPrice02Min == Product.getPrice02Max %}
-                                            {{ Product.getPrice02IncTaxMin|price }}
+                                            {{ Product.getPrice02Min|price }}
                                         {% else %}
-                                            {{ Product.getPrice02IncTaxMin|price }} <span class="plp-card__price-sep">~</span> {{ Product.getPrice02IncTaxMax|price }}
+                                            {{ Product.getPrice02Min|price }} <span class="plp-card__price-sep">~</span> {{ Product.getPrice02Max|price }}
                                         {% endif %}
                                     {% else %}
-                                        {{ Product.getPrice02IncTaxMin|price }}
+                                        {{ Product.getPrice02Min|price }}
                                     {% endif %}
                                 </p>
 
@@ -320,21 +303,7 @@ file that was distributed with this source code.
                     {% endfor %}
                 </ul>
 
-                {# Add to cart modal #}
-                <div class="ec-modal">
-                    <div class="ec-modal-overlay">
-                        <div class="ec-modal-wrap">
-                            <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
-                            <div id="ec-modal-header" class="text-center">{{ 'front.product.add_cart_complete'|trans }}</div>
-                            <div class="ec-modal-box">
-                                <div class="ec-role">
-                                    <span class="ec-inlineBtn--cancel">{{ 'front.product.continue'|trans }}</span>
-                                    <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'common.go_to_cart'|trans }}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 {# Pagination #}
                 <div class="plp-pagination">

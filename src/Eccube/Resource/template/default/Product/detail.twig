@@ -17,140 +17,8 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}?v={{ 'now'|date('U') }}">
 {% endblock %}
 
-{# Curated Product Catalog for Dynamic Rich Experience #}
-{% set catalog = {
-    '1': {
-        'id': 1,
-        'name': 'Wireless Earbuds, IPX8',
-        'category': 'Earbuds',
-        'subtitle': 'Active noise cancelling & deep bass sound with IPX8 waterproof rating.',
-        'price': '89.00',
-        'monthly': '15.00',
-        'rating': '4.9',
-        'reviews': '145',
-        'stock': '24',
-        'main_img': asset('assets/img/top/prod_headphone_1.jpg'),
-        'thumbs': [
-            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Matte Black'},
-            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Ocean Blue'},
-            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Forest Green'},
-            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Silver White'}
-        ],
-        'swatches': [
-            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Matte Black'},
-            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Ocean Blue'},
-            {'class': 'green', 'color': 'green', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'title': 'Forest Green'},
-            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Silver White'}
-        ],
-        'desc_p1': 'High-performance wireless earbuds with premium audio drivers and crystal-clear voice calling with dual beamforming microphones.',
-        'desc_p2': 'IPX8 waterproof rated for intensive workouts and heavy rain. Includes compact fast-charging wireless case with up to 32 hours total battery life.'
-    },
-    '2': {
-        'id': 2,
-        'name': 'Airpods- Max',
-        'category': 'Shop Headphones by type',
-        'subtitle': 'a perfect balance of exhilarating high-fidelity audio and the effortless magic of AirPods.',
-        'price': '549.00',
-        'monthly': '99.99',
-        'rating': '5.0',
-        'reviews': '121',
-        'stock': '12',
-        'main_img': asset('assets/img/product/airpods_max_pink.jpg'),
-        'thumbs': [
-            {'color': 'pink', 'img': asset('assets/img/product/airpods_max_pink.jpg'), 'name': 'Pink / Coral'},
-            {'color': 'green', 'img': asset('assets/img/product/airpods_max_green.jpg'), 'name': 'Mint Green'},
-            {'color': 'black', 'img': asset('assets/img/product/airpods_max_black.jpg'), 'name': 'Space Gray'},
-            {'color': 'blue', 'img': asset('assets/img/product/airpods_max_blue.jpg'), 'name': 'Sky Blue'},
-            {'color': 'silver', 'img': asset('assets/img/product/airpods_max_silver.jpg'), 'name': 'Silver White'}
-        ],
-        'swatches': [
-            {'class': 'pink', 'color': 'pink', 'img': asset('assets/img/product/airpods_max_pink.jpg'), 'title': 'Pink / Coral'},
-            {'class': 'black', 'color': 'black', 'img': asset('assets/img/product/airpods_max_black.jpg'), 'title': 'Space Gray'},
-            {'class': 'green', 'color': 'green', 'img': asset('assets/img/product/airpods_max_green.jpg'), 'title': 'Mint Green'},
-            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/product/airpods_max_silver.jpg'), 'title': 'Silver'},
-            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/product/airpods_max_blue.jpg'), 'title': 'Sky Blue'}
-        ],
-        'desc_p1': 'The Apple-designed dynamic driver provides immersive high-fidelity audio. Computational audio combines custom acoustic design with the Apple H1 chip and software for breakthrough listening experiences.',
-        'desc_p2': 'Designed with a knit-mesh canopy and acoustically engineered memory foam ear cushions for an exceptional fit.'
-    },
-    '3': {
-        'id': 3,
-        'name': 'Bose BT Earphones',
-        'category': 'Over-Ear Headphones',
-        'subtitle': 'Comfortable cushioned over-ear headphones with superior sound clarity and active EQ.',
-        'price': '289.00',
-        'monthly': '49.00',
-        'rating': '4.8',
-        'reviews': '98',
-        'stock': '18',
-        'main_img': asset('assets/img/top/prod_headphone_3.jpg'),
-        'thumbs': [
-            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Triple Black'},
-            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Luxe Silver'},
-            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Midnight Blue'},
-            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Cypress Green'}
-        ],
-        'swatches': [
-            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'title': 'Triple Black'},
-            {'class': 'silver', 'color': 'silver', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Luxe Silver'},
-            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Midnight Blue'}
-        ],
-        'desc_p1': 'World-class noise cancelling technology measures outside noise and counters it with equal opposite signal for pure audio immersion.',
-        'desc_p2': 'Plush synthetic leather earcups and impact-resistant glass-filled nylon headband ensure luxury listening all day long.'
-    },
-    '4': {
-        'id': 4,
-        'name': 'VIVEFOX Headphones',
-        'category': 'On-Ear Headphones',
-        'subtitle': 'Wired stereo headsets with high definition built-in microphone and durable braided cable.',
-        'price': '39.00',
-        'monthly': '9.00',
-        'rating': '4.7',
-        'reviews': '84',
-        'stock': '35',
-        'main_img': asset('assets/img/top/prod_headphone_4.jpg'),
-        'thumbs': [
-            {'color': 'pink', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'name': 'Rose Gold'},
-            {'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Onyx Black'},
-            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Navy Blue'},
-            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Silver'}
-        ],
-        'swatches': [
-            {'class': 'pink', 'color': 'pink', 'img': asset('assets/img/top/prod_headphone_4.jpg'), 'title': 'Rose Gold'},
-            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Onyx Black'},
-            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Navy Blue'}
-        ],
-        'desc_p1': 'Lightweight foldable design with ultra-soft memory foam earmuffs for all-day comfortable study and commuting wear.',
-        'desc_p2': 'Universal 3.5mm gold-plated audio connector compatible with laptops, tablets, gaming consoles and mobile devices.'
-    },
-    '5': {
-        'id': 5,
-        'name': 'Gaming Pro Headset',
-        'category': 'Gaming Audio',
-        'subtitle': 'Immersive 7.1 surround sound with noise-cancelling microphone and RGB lighting.',
-        'price': '199.00',
-        'monthly': '35.00',
-        'rating': '4.9',
-        'reviews': '167',
-        'stock': '9',
-        'main_img': asset('assets/img/top/prod_gaming_headphone.jpg'),
-        'thumbs': [
-            {'color': 'black', 'img': asset('assets/img/top/prod_gaming_headphone.jpg'), 'name': 'Stealth Black'},
-            {'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'name': 'Razer Green'},
-            {'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'name': 'Cyber Blue'},
-            {'color': 'silver', 'img': asset('assets/img/top/prod_headphone_3.jpg'), 'name': 'Titanium'}
-        ],
-        'swatches': [
-            {'class': 'black', 'color': 'black', 'img': asset('assets/img/top/prod_gaming_headphone.jpg'), 'title': 'Stealth Black'},
-            {'class': 'green', 'color': 'green', 'img': asset('assets/img/top/prod_headphone_1.jpg'), 'title': 'Neon Green'},
-            {'class': 'blue', 'color': 'blue', 'img': asset('assets/img/top/prod_headphone_2.jpg'), 'title': 'Cyber Blue'}
-        ],
-        'desc_p1': 'Custom tuned 50mm neodymium audio drivers deliver an expansive positional soundscape for competitive esports dominance.',
-        'desc_p2': 'Detachable broadcast-quality microphone with voice isolation filtering for pristine, distortion-free team comms.'
-    }
-} %}
-
-{% set cur = catalog[Product.id ~ '']|default(catalog['2']) %}
+{% set hasImages = Product.ProductImage|length > 0 %}
+{% set firstImage = hasImages ? asset(Product.ProductImage[0].fileName, 'save_image') : asset('assets/img/top/no_image_product.png') %}
 
 {% block javascript %}
     <script>
@@ -175,44 +43,14 @@ file that was distributed with this source code.
     </script>
     <script>
         $(function() {
-            // bfcache無効化
-            $(window).bind('pageshow', function(event) {
-                if (event.originalEvent.persisted) {
-                    location.reload(true);
-                }
-            });
-
-            // Color Swatch & Thumbnail Interactive Switcher
-            function switchProductImage(src, colorName) {
-                var $mainImg = $('#mainShowcaseImg');
-                $mainImg.css('opacity', '0.4');
-                setTimeout(function() {
-                    $mainImg.attr('src', src).css('opacity', '1');
-                }, 150);
-            }
-
-            $('.shopcart-color-swatch').on('click', function() {
-                $('.shopcart-color-swatch').removeClass('is-active');
-                $(this).addClass('is-active');
-                var imgSrc = $(this).attr('data-img');
-                var colorVal = $(this).attr('data-color');
-                switchProductImage(imgSrc, colorVal);
-
-                // Update thumbnail active state
-                $('.shopcart-detail-thumb').removeClass('is-active');
-                $('.shopcart-detail-thumb[data-color="' + colorVal + '"]').addClass('is-active');
-            });
-
+            // Switch main image when thumbnail is clicked
             $('.shopcart-detail-thumb').on('click', function() {
                 $('.shopcart-detail-thumb').removeClass('is-active');
                 $(this).addClass('is-active');
                 var imgSrc = $(this).attr('data-img');
-                var colorVal = $(this).attr('data-color');
-                switchProductImage(imgSrc, colorVal);
-
-                // Update swatch active state
-                $('.shopcart-color-swatch').removeClass('is-active');
-                $('.shopcart-color-swatch[data-color="' + colorVal + '"]').addClass('is-active');
+                if (imgSrc) {
+                    $('#mainShowcaseImg').attr('src', imgSrc);
+                }
             });
 
             // Quantity Stepper Controls
@@ -298,31 +136,17 @@ file that was distributed with this source code.
                         $('.add-cart').prop('disabled', true);
                     }
                 }).done(function(data) {
-                    $.each(data.messages, function() {
-                        $('#ec-modal-header').text(this);
-                    });
-                    $('.ec-modal').show();
-
-                    // Update header cart count
-                    $.ajax({
-                        url: "{{ url('block_cart') }}",
-                        type: 'GET',
-                        dataType: 'html'
-                    }).done(function(html) {
-                        $('.ec-headerRole__cart').html(html);
-                    });
+                    if (data.done) {
+                        window.location.href = "{{ url('cart') }}";
+                    } else {
+                        var msg = (data.messages && data.messages.length > 0) ? data.messages.join("\n") : '{{ 'front.product.add_cart_error'|trans }}';
+                        alert(msg);
+                    }
                 }).fail(function(data) {
                     alert('{{ 'front.product.add_cart_error'|trans }}');
                 }).always(function(data) {
                     $('.add-cart').prop('disabled', false);
                 });
-            });
-
-            $('.ec-modal-wrap').on('click', function(e) {
-                e.stopPropagation();
-            });
-            $('.ec-modal-overlay, .ec-modal, .ec-modal-close, .ec-inlineBtn--cancel').on('click', function() {
-                $('.ec-modal').hide();
             });
         });
     </script>
@@ -332,15 +156,15 @@ file that was distributed with this source code.
         "@type": "Product",
         "name": "{{ Product.name }}",
         "image": [
-            "{{ app.request.schemeAndHttpHost }}{{ cur.main_img }}"
+            "{{ app.request.schemeAndHttpHost }}{{ firstImage }}"
         ],
-        "description": "{{ cur.subtitle }}",
+        "description": "{{ Product.description_list|default(Product.name)|e('js') }}",
         "offers": {
             "@type": "Offer",
             "url": "{{ url('product_detail', {'id': Product.id}) }}",
-            "priceCurrency": "USD",
-            "price": {{ cur.price }},
-            "availability": "InStock"
+            "priceCurrency": "{{ eccube_config.currency|default('JPY') }}",
+            "price": {{ Product.getPrice02IncTaxMin|default(0) }},
+            "availability": "{% if Product.stockFind %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
         }
     }
     </script>
@@ -351,13 +175,14 @@ file that was distributed with this source code.
         <div class="shopcart-container">
             <!-- Breadcrumb Navigation -->
             <nav class="shopcart-breadcrumb" aria-label="breadcrumb">
-                <a href="{{ url('homepage') }}">Electronics</a>
-                <span class="shopcart-breadcrumb__sep">/</span>
-                <a href="{{ url('product_list') }}?name=Audio">Audio</a>
-                <span class="shopcart-breadcrumb__sep">/</span>
-                <a href="{{ url('product_list') }}?name=Headphones">Headphones</a>
-                <span class="shopcart-breadcrumb__sep">/</span>
-                <a href="{{ url('product_list') }}?name=Headphones">{{ cur.category }}</a>
+                <a href="{{ url('homepage') }}"><i class="fas fa-home"></i> Home</a>
+                {% if Product.ProductCategories|length > 0 %}
+                    {% set firstCategory = Product.ProductCategories[0].Category %}
+                    {% for Path in firstCategory.path %}
+                        <span class="shopcart-breadcrumb__sep">/</span>
+                        <a href="{{ url('product_list') }}?category_id={{ Path.id }}">{{ Path.name }}</a>
+                    {% endfor %}
+                {% endif %}
                 <span class="shopcart-breadcrumb__sep">/</span>
                 <span class="shopcart-breadcrumb__current">{{ Product.name }}</span>
             </nav>
@@ -371,17 +196,20 @@ file that was distributed with this source code.
                         <button type="button" class="shopcart-wishlist-btn shopcart-wishlist-btn--showcase{% if is_favorite %} is-active{% endif %}" data-product-id="{{ Product.id }}" aria-label="Add to Wishlist" title="{{ 'front.product.add_favorite'|trans }}">
                             <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart"{% if is_favorite %} style="color: #ef4444;"{% endif %}></i>
                         </button>
-                        <img id="mainShowcaseImg" src="{{ cur.main_img }}" alt="{{ Product.name }}">
+                        <img id="mainShowcaseImg" src="{{ firstImage }}" alt="{{ Product.name }}">
                     </div>
 
                     <!-- Thumbnails -->
-                    <div class="shopcart-detail-thumbs">
-                        {% for thumb in cur.thumbs %}
-                            <div class="shopcart-detail-thumb{% if loop.first %} is-active{% endif %}" data-color="{{ thumb.color }}" data-img="{{ thumb.img }}" title="{{ thumb.name }}">
-                                <img src="{{ thumb.img }}" alt="{{ thumb.name }}">
-                            </div>
-                        {% endfor %}
-                    </div>
+                    {% if hasImages and Product.ProductImage|length > 1 %}
+                        <div class="shopcart-detail-thumbs">
+                            {% for pImage in Product.ProductImage %}
+                                {% set thumbSrc = asset(pImage.fileName, 'save_image') %}
+                                <div class="shopcart-detail-thumb{% if loop.first %} is-active{% endif %}" data-img="{{ thumbSrc }}" title="{{ Product.name }} - {{ loop.index }}">
+                                    <img src="{{ thumbSrc }}" alt="{{ Product.name }} - {{ loop.index }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
 
                 <!-- Right Column: Info & Purchase Box -->
@@ -389,8 +217,19 @@ file that was distributed with this source code.
                     <!-- Title -->
                     <h1 class="shopcart-detail-title">{{ Product.name }}</h1>
 
+                    <!-- Item Code (if available) -->
+                    {% if Product.code_min %}
+                        <div class="shopcart-product-code" style="font-size: 0.85rem; color: #64748b; margin-top: 4px; margin-bottom: 8px;">
+                            Item Code: <strong>{{ Product.code_min }}{% if Product.code_min != Product.code_max %} ～ {{ Product.code_max }}{% endif %}</strong>
+                        </div>
+                    {% endif %}
+
                     <!-- Subtitle / Short Description -->
-                    <p class="shopcart-detail-subtitle">{{ cur.subtitle }}</p>
+                    {% if Product.description_list %}
+                        <p class="shopcart-detail-subtitle">{{ Product.description_list }}</p>
+                    {% elseif Product.description_detail %}
+                        <p class="shopcart-detail-subtitle">{{ Product.description_detail|striptags|slice(0, 160) }}</p>
+                    {% endif %}
 
                     <!-- Rating Stars -->
                     <div class="shopcart-detail-rating">
@@ -401,57 +240,76 @@ file that was distributed with this source code.
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                         </div>
-                        <span class="shopcart-detail-review-count">({{ cur.reviews }})</span>
+                        <span class="shopcart-detail-review-count">(Verified Quality)</span>
                     </div>
 
                     <hr class="shopcart-detail-divider">
 
-                    <!-- Price & Financing -->
+                    <!-- Price -->
                     <div class="shopcart-detail-price-box">
                         <div class="shopcart-detail-price">
-                            ${{ cur.price }} <span class="shopcart-detail-monthly">or {{ cur.monthly }}/month</span>
-                        </div>
-                        <div class="shopcart-detail-financing">
-                            Suggested payments with 6 months special financing
+                            {% if Product.hasProductClass %}
+                                {% if Product.getPrice02Min == Product.getPrice02Max %}
+                                    {{ Product.getPrice02Min|price }}
+                                {% else %}
+                                    {{ Product.getPrice02Min|price }} ～ {{ Product.getPrice02Max|price }}
+                                {% endif %}
+                            {% else %}
+                                {{ Product.getPrice02Min|price }}
+                            {% endif %}
+                            {% if Product.getPrice01Min and Product.getPrice01Min > Product.getPrice02Min %}
+                                <span class="shopcart-detail-oldprice" style="text-decoration: line-through; color: #94a3b8; font-size: 1.1rem; margin-left: 10px; font-weight: 500;">
+                                    {{ Product.getPrice01Min|price }}
+                                </span>
+                            {% endif %}
                         </div>
                     </div>
 
                     <hr class="shopcart-detail-divider">
-
-                    <!-- Choose a Color -->
-                    <div class="shopcart-color-section">
-                        <div class="shopcart-color-title">Choose a Color</div>
-                        <div class="shopcart-color-swatches">
-                            {% for swatch in cur.swatches %}
-                                <button type="button" class="shopcart-color-swatch shopcart-color-swatch--{{ swatch.class }}{% if loop.first %} is-active{% endif %}" data-color="{{ swatch.color }}" data-img="{{ swatch.img }}" title="{{ swatch.title }}">
-                                    <span class="shopcart-color-swatch__circle"></span>
-                                </button>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <!-- Quantity Stepper & Stock Warning -->
-                    <div class="shopcart-qty-stock-row">
-                        <div class="shopcart-qty-stepper">
-                            <button type="button" class="shopcart-qty-btn" id="btnQtyMinus"><i class="fas fa-minus"></i></button>
-                            <span class="shopcart-qty-input" id="shopcartQtyDisplay">1</span>
-                            <button type="button" class="shopcart-qty-btn" id="btnQtyPlus"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="shopcart-stock-notice">
-                            Only <strong>{{ cur.stock }} Items</strong> Left!<br>Don't miss it
-                        </div>
-                    </div>
 
                     <!-- Purchase Form -->
                     <form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
+                        <!-- Variant Options (if product has classes) -->
                         {% if form.classcategory_id1 is defined %}
-                            <div style="display: none;">
-                                {{ form_widget(form.classcategory_id1) }}
+                            <div class="shopcart-variants-section" style="margin-bottom: 20px;">
+                                <div class="shopcart-variant-group">
+                                    <label class="shopcart-variant-label" style="font-weight: 600; display: block; margin-bottom: 6px;">
+                                        {{ form.classcategory_id1.vars.label|default('Option 1') }}
+                                    </label>
+                                    {{ form_widget(form.classcategory_id1, {'attr': {'class': 'form-select shopcart-variant-select', 'style': 'padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; width: 100%; max-width: 320px;'}}) }}
+                                    {{ form_errors(form.classcategory_id1) }}
+                                </div>
                                 {% if form.classcategory_id2 is defined %}
-                                    {{ form_widget(form.classcategory_id2) }}
+                                    <div class="shopcart-variant-group" style="margin-top: 12px;">
+                                        <label class="shopcart-variant-label" style="font-weight: 600; display: block; margin-bottom: 6px;">
+                                            {{ form.classcategory_id2.vars.label|default('Option 2') }}
+                                        </label>
+                                        {{ form_widget(form.classcategory_id2, {'attr': {'class': 'form-select shopcart-variant-select', 'style': 'padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; width: 100%; max-width: 320px;'}}) }}
+                                        {{ form_errors(form.classcategory_id2) }}
+                                    </div>
                                 {% endif %}
                             </div>
                         {% endif %}
+
+                        <!-- Quantity Stepper & Stock Warning -->
+                        <div class="shopcart-qty-stock-row">
+                            <div class="shopcart-qty-stepper">
+                                <button type="button" class="shopcart-qty-btn" id="btnQtyMinus"><i class="fas fa-minus"></i></button>
+                                <span class="shopcart-qty-input" id="shopcartQtyDisplay">1</span>
+                                <button type="button" class="shopcart-qty-btn" id="btnQtyPlus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="shopcart-stock-notice">
+                                {% if Product.stockFind %}
+                                    {% if Product.stockMin is not null and not Product.stockUnlimitedMin and Product.stockMin > 0 %}
+                                        Only <strong>{{ Product.stockMin }} Items</strong> Left!<br>Don't miss it
+                                    {% else %}
+                                        <strong>In Stock</strong> & Ready to Ship
+                                    {% endif %}
+                                {% else %}
+                                    <strong style="color: #ef4444;">Out of Stock</strong>
+                                {% endif %}
+                            </div>
+                        </div>
 
                         {# Actual Quantity input synced with stepper #}
                         {{ form_widget(form.quantity, {'id': 'quantity', 'attr': {'style': 'display:none;', 'value': '1'}}) }}
@@ -482,7 +340,7 @@ file that was distributed with this source code.
                             <div class="shopcart-delivery-text">
                                 <h4 class="shopcart-delivery-title">Free Delivery</h4>
                                 <p class="shopcart-delivery-sub">
-                                    <a href="#deliveryModal" onclick="event.preventDefault(); alert('Free expedited shipping available for your area on orders over $50.');">Enter your Postal code for Delivery Availability</a>
+                                    <a href="#deliveryModal" onclick="event.preventDefault(); alert('Free expedited shipping available for your area on orders over ¥5,000.');">Enter your Postal code for Delivery Availability</a>
                                 </p>
                             </div>
                         </div>
@@ -503,74 +361,67 @@ file that was distributed with this source code.
                         </div>
                     </div>
 
-                    <!-- Modal Confirmation for Add to Cart -->
-                    <div class="ec-modal">
-                        <div class="ec-modal-overlay">
-                            <div class="ec-modal-wrap">
-                                <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
-                                <div id="ec-modal-header" class="text-center">{{ 'front.product.add_cart_complete'|trans }}</div>
-                                <div class="ec-modal-box">
-                                    <div class="ec-role">
-                                        <span class="ec-inlineBtn--cancel">{{ 'front.product.continue'|trans }}</span>
-                                        <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'common.go_to_cart'|trans }}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Product Extra Details / Specifications -->
             <div class="shopcart-detail-extra">
-                <h3 class="shopcart-detail-extra-title">Product Description & Technical Specifications</h3>
+                <h3 class="shopcart-detail-extra-title">Product Description & Details</h3>
                 <div class="shopcart-detail-extra-content">
-                    <p>{{ cur.desc_p1 }}</p>
-                    <p>{{ cur.desc_p2 }}</p>
+                    {% if Product.description_detail %}
+                        <p>{{ Product.description_detail|raw|nl2br }}</p>
+                    {% elseif Product.description_list %}
+                        <p>{{ Product.description_list }}</p>
+                    {% else %}
+                        <p>High quality authentic item curated by Offmarket.</p>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Related / Similar Products Section -->
-            <div class="shopcart-related-section" style="margin-top: 56px; padding-top: 40px; border-top: 1px solid #e2e8f0;">
-                <div class="shopcart-section-header" style="margin-bottom: 28px;">
-                    <h2 class="shopcart-section-title">Similar Products You May Like</h2>
-                    <div class="shopcart-section-track">
-                        <div class="shopcart-section-track__bar"></div>
-                    </div>
-                </div>
-
-                <div class="shopcart-product-grid shopcart-related-grid">
-                    {% set count = 0 %}
-                    {% for rel_id, rel in catalog %}
-                        {% if rel_id != (Product.id ~ '') and count < 4 %}
-                            {% set count = count + 1 %}
-                            {% set price_parts = rel.price|split('.') %}
-                            <div class="shopcart-product-card">
-                                <div class="shopcart-product-thumb">
-                                    <button type="button" class="shopcart-wishlist-btn" data-product-id="{{ rel.id }}" aria-label="Add to Wishlist">
-                                        <i class="far fa-heart"></i>
-                                    </button>
-                                    <a href="{{ url('product_detail', {id: rel.id}) }}">
-                                        <img src="{{ rel.main_img }}" alt="{{ rel.name }}">
-                                    </a>
-                                </div>
-                                <div class="shopcart-product-info">
-                                    <div class="shopcart-product-head">
-                                        <a href="{{ url('product_detail', {id: rel.id}) }}" class="shopcart-product-name">{{ rel.name }}</a>
-                                        <span class="shopcart-product-price"><sup>$</sup>{{ price_parts[0] }}<sup>.{{ price_parts[1]|default('00') }}</sup></span>
-                                    </div>
-                                    <div class="shopcart-product-desc">{{ rel.subtitle }}</div>
-                                    <div class="shopcart-product-rating">
-                                        <span class="shopcart-stars">★★★★★</span>
-                                        <span class="shopcart-rating-count">({{ rel.reviews }})</span>
-                                    </div>
-                                    <a href="{{ url('product_detail', {id: rel.id}) }}" class="shopcart-add-cart-btn">Add to Cart</a>
-                                </div>
+            {% if Product.ProductCategories|length > 0 %}
+                {% set currentCat = Product.ProductCategories[0].Category %}
+                {% set similarItems = [] %}
+                {% for pc in currentCat.ProductCategories %}
+                    {% if pc.Product.id != Product.id and similarItems|length < 4 and pc.Product.Status.id == 1 %}
+                        {% set similarItems = similarItems|merge([pc.Product]) %}
+                    {% endif %}
+                {% endfor %}
+                {% if similarItems|length > 0 %}
+                    <div class="shopcart-related-section" style="margin-top: 56px; padding-top: 40px; border-top: 1px solid #e2e8f0;">
+                        <div class="shopcart-section-header" style="margin-bottom: 28px;">
+                            <h2 class="shopcart-section-title">Similar Products in {{ currentCat.name }}</h2>
+                            <div class="shopcart-section-track">
+                                <div class="shopcart-section-track__bar"></div>
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+                        </div>
+
+                        <div class="shopcart-product-grid shopcart-related-grid">
+                            {% for simProd in similarItems %}
+                                {% set simImg = simProd.ProductImage|length > 0 ? asset(simProd.ProductImage[0].fileName, 'save_image') : asset('assets/img/top/no_image_product.png') %}
+                                <div class="shopcart-product-card">
+                                    <div class="shopcart-product-thumb">
+                                        <button type="button" class="shopcart-wishlist-btn" data-product-id="{{ simProd.id }}" aria-label="Add to Wishlist">
+                                            <i class="far fa-heart"></i>
+                                        </button>
+                                        <a href="{{ url('product_detail', {id: simProd.id}) }}">
+                                            <img src="{{ simImg }}" alt="{{ simProd.name }}">
+                                        </a>
+                                    </div>
+                                    <div class="shopcart-product-info">
+                                        <div class="shopcart-product-head">
+                                            <a href="{{ url('product_detail', {id: simProd.id}) }}" class="shopcart-product-name">{{ simProd.name }}</a>
+                                            <span class="shopcart-product-price">{{ simProd.getPrice02Min|price }}</span>
+                                        </div>
+                                        <div class="shopcart-product-desc">{{ simProd.description_list|default(simProd.description_detail|striptags|slice(0, 60)) }}</div>
+                                        <a href="{{ url('product_detail', {id: simProd.id}) }}" class="shopcart-add-cart-btn">View Details</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
     </section>
 {% endblock %}

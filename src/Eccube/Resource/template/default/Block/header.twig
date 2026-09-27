@@ -122,43 +122,31 @@ file that was distributed with this source code.
                 <!-- Categories Dropdown -->
                 {% set current_loc = app.request.get('_locale')|default(app.request.locale) %}
                 {% set category_en_map = {
-                'Gelato': 'Gelato',
-                'New Arrivals': 'New Arrivals',
-                'Color Desserts': 'Color Desserts',
-                'CUBE': 'CUBE',
-                'Ice Cream Sandwiches': 'Ice Cream Sandwiches',
-                'Fruits': 'Fruits',
-                'ジェラート': 'Gelato',
-                '新入荷': 'New Arrivals',
-                '彩のデザート': 'Color Desserts',
-                'アイスサンド': 'Ice Cream Sandwiches',
-                'フルーツ': 'Fruits'
+                'Furniture': 'Furniture',
+                'Headphone': 'Headphone',
+                'Shoe': 'Shoe',
+                'Bag': 'Bag',
+                'Laptop': 'Laptop',
+                'Book': 'Book',
+                'Computer': 'Laptop'
                 } %}
                 {% set category_ja_map = {
-                'Gelato': 'ジェラート',
-                'New Arrivals': '新入荷',
-                'Color Desserts': '彩のデザート',
-                'CUBE': 'CUBE',
-                'Ice Cream Sandwiches': 'アイスサンド',
-                'Fruits': 'フルーツ',
-                'ジェラート': 'ジェラート',
-                '新入荷': '新入荷',
-                '彩のデザート': '彩のデザート',
-                'アイスサンド': 'アイスサンド',
-                'フルーツ': 'フルーツ'
+                'Furniture': '家具',
+                'Headphone': 'ヘッドフォン',
+                'Shoe': '靴',
+                'Bag': 'バッグ',
+                'Laptop': 'ノートパソコン',
+                'Book': '本',
+                'Computer': 'ノートパソコン'
                 } %}
                 {% set category_my_map = {
-                'Gelato': 'ဂျယ်လာတို',
-                'New Arrivals': 'ပစ္စည်းအသစ်များ',
-                'Color Desserts': 'အချိုပွဲစုံ',
-                'CUBE': 'CUBE',
-                'Ice Cream Sandwiches': 'အအေးမုန့်ညှပ်',
-                'Fruits': 'သစ်သီးများ',
-                'ジェラート': 'ဂျယ်လာတို',
-                '新入荷': 'ပစ္စည်းအသစ်များ',
-                '彩のデザート': 'အချိုပွဲစုံ',
-                'アイスサンド': 'အအေးမုန့်ညှပ်',
-                'フルーツ': 'သစ်သီးများ'
+                'Furniture': 'ပရိဘောဂ',
+                'Headphone': 'နားကြပ်',
+                'Shoe': 'ဖိနပ်',
+                'Bag': 'အိတ်',
+                'Laptop': 'လက်ပ်တော့',
+                'Book': 'စာအုပ်',
+                'Computer': 'လက်ပ်တော့'
                 } %}
                 <div class="shopcart-nav-item shopcart-dropdown shopcart-cat-dropdown">
                     <a href="{{ url('product_list') }}" class="shopcart-nav-link shopcart-dropdown__toggle">
