@@ -31,6 +31,7 @@ use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -256,8 +257,9 @@ class ProductController extends AbstractController
     }
 
     /**
-     * お気に入り追加.
+     * お気に入り追加・トグル (AJAX & Non-AJAX)
      *
+     * @Route("/products/toggle_favorite/{id}", name="product_toggle_favorite", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      * @Route("/products/add_favorite/{id}", name="product_add_favorite", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
     public function addFavorite(Request $request, Product $Product)
@@ -272,8 +274,38 @@ class ProductController extends AbstractController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_FAVORITE_ADD_INITIALIZE);
 
+        $isAjax = $request->isXmlHttpRequest()
+            || $request->query->get('ajax')
+            || $request->request->get('ajax')
+            || strpos($request->headers->get('Accept', ''), 'application/json') !== false;
+
         if ($this->isGranted('ROLE_USER')) {
             $Customer = $this->getUser();
+            $isFav = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+
+            // If toggle route was requested and product is already favorited, remove it
+            if ($request->get('_route') === 'product_toggle_favorite' && $isFav) {
+                $CustomerFavoriteProduct = $this->customerFavoriteProductRepository->findOneBy([
+                    'Customer' => $Customer,
+                    'Product' => $Product,
+                ]);
+                if ($CustomerFavoriteProduct) {
+                    $this->customerFavoriteProductRepository->delete($CustomerFavoriteProduct);
+                }
+
+                if ($isAjax) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'is_favorite' => false,
+                        'action' => 'removed',
+                        'productId' => $Product->getId(),
+                        'message' => 'Removed from Favorites',
+                    ]);
+                }
+
+                return $this->redirectToRoute('product_detail', ['id' => $Product->getId()]);
+            }
+
             $this->customerFavoriteProductRepository->addFavorite($Customer, $Product);
             $this->session->getFlashBag()->set('product_detail.just_added_favorite', $Product->getId());
 
@@ -285,10 +317,19 @@ class ProductController extends AbstractController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_FAVORITE_ADD_COMPLETE);
 
+            if ($isAjax) {
+                return new JsonResponse([
+                    'success' => true,
+                    'is_favorite' => true,
+                    'action' => 'added',
+                    'productId' => $Product->getId(),
+                    'message' => 'Added to Favorites',
+                ]);
+            }
+
             return $this->redirectToRoute('product_detail', ['id' => $Product->getId()]);
         } else {
             // 非会員の場合、ログイン画面を表示
-            //  ログイン後の画面遷移先を設定
             $this->setLoginTargetPath($this->generateUrl('product_add_favorite', ['id' => $Product->getId()], UrlGeneratorInterface::ABSOLUTE_URL));
             $this->session->getFlashBag()->set('eccube.add.favorite', true);
 
@@ -300,8 +341,43 @@ class ProductController extends AbstractController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_FAVORITE_ADD_COMPLETE);
 
+            if ($isAjax) {
+                return new JsonResponse([
+                    'success' => false,
+                    'require_login' => true,
+                    'login_url' => $this->generateUrl('mypage_login'),
+                    'productId' => $Product->getId(),
+                    'message' => 'Please sign in to save items to your favorites.',
+                ]);
+            }
+
             return $this->redirectToRoute('mypage_login');
         }
+    }
+
+    /**
+     * 登録中のお気に入り商品ID一覧取得 (AJAX)
+     *
+     * @Route("/products/favorite_ids", name="product_favorite_ids", methods={"GET"})
+     */
+    public function favoriteIds(Request $request)
+    {
+        $favoriteIds = [];
+        $isLoggedIn = $this->isGranted('ROLE_USER');
+        if ($isLoggedIn) {
+            $Customer = $this->getUser();
+            $favs = $this->customerFavoriteProductRepository->findBy(['Customer' => $Customer]);
+            foreach ($favs as $fav) {
+                if ($fav->getProduct()) {
+                    $favoriteIds[] = $fav->getProduct()->getId();
+                }
+            }
+        }
+
+        return new JsonResponse([
+            'is_logged_in' => $isLoggedIn,
+            'favorite_ids' => $favoriteIds,
+        ]);
     }
 
     /**
@@ -430,7 +506,7 @@ class ProductController extends AbstractController
      *
      * @param  array|null $searchData
      *
-     * @return str
+     * @return string
      */
     protected function getPageTitle($searchData)
     {

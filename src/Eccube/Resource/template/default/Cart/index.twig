@@ -578,11 +578,27 @@ $(function () {
     // Bind AJAX Delete Item
     $(document).on('click', '.sc-qty-remove', function (e) {
         e.preventDefault();
-        var msg = $(this).data('message') || 'Are you sure you want to remove this item from your cart?';
-        if (!confirm(msg)) return;
-        var pid = $(this).data('product-class-id');
-        var url = $(this).data('url');
-        updateCartItem(this, 'remove', pid, url);
+        var $btn = $(this);
+        var msg = $btn.data('message') || 'Are you sure you want to remove this item from your cart?';
+        var pid = $btn.data('product-class-id');
+        var url = $btn.data('url');
+
+        if (window.showEccubeConfirm) {
+            window.showEccubeConfirm({
+                title: 'Remove from Cart?',
+                message: msg,
+                iconType: 'cart-delete',
+                confirmText: 'Yes, Remove',
+                cancelText: 'Keep Item',
+                isDanger: true,
+                onConfirm: function() {
+                    updateCartItem($btn[0], 'remove', pid, url);
+                }
+            });
+        } else {
+            if (!confirm(msg)) return;
+            updateCartItem($btn[0], 'remove', pid, url);
+        }
     });
 
     // ==========================================

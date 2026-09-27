@@ -241,7 +241,7 @@ file that was distributed with this source code.
                                      class="plp-card__img"
                                      {% if loop.index > 6 %} loading="lazy"{% endif %}>
                                 {# Wishlist button overlay #}
-                                <button type="button" class="plp-card__wishlist" aria-label="Add to Wishlist">
+                                <button type="button" class="plp-card__wishlist shopcart-wishlist-btn" data-product-id="{{ Product.id }}" aria-label="Add to Wishlist">
                                     <i class="far fa-heart"></i>
                                 </button>
                                 {% if not Product.stock_find %}

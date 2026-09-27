@@ -368,6 +368,9 @@ file that was distributed with this source code.
                 <div class="shopcart-detail-gallery">
                     <!-- Main Showcase Display -->
                     <div class="shopcart-detail-main-showcase">
+                        <button type="button" class="shopcart-wishlist-btn shopcart-wishlist-btn--showcase{% if is_favorite %} is-active{% endif %}" data-product-id="{{ Product.id }}" aria-label="Add to Wishlist" title="{{ 'front.product.add_favorite'|trans }}">
+                            <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart"{% if is_favorite %} style="color: #ef4444;"{% endif %}></i>
+                        </button>
                         <img id="mainShowcaseImg" src="{{ cur.main_img }}" alt="{{ Product.name }}">
                     </div>
 
@@ -461,6 +464,9 @@ file that was distributed with this source code.
                             <button type="submit" class="shopcart-btn-addcart add-cart">
                                 Add to Cart
                             </button>
+                            <button type="button" class="shopcart-wishlist-btn shopcart-btn-favorite-action{% if is_favorite %} is-active{% endif %}" data-product-id="{{ Product.id }}" aria-label="Add to Wishlist" title="{{ 'front.product.add_favorite'|trans }}">
+                                <i class="{% if is_favorite %}fas{% else %}far{% endif %} fa-heart"{% if is_favorite %} style="color: #ef4444;"{% endif %}></i>
+                            </button>
                         </div>
 
                         {{ form_rest(form) }}
@@ -541,7 +547,7 @@ file that was distributed with this source code.
                             {% set price_parts = rel.price|split('.') %}
                             <div class="shopcart-product-card">
                                 <div class="shopcart-product-thumb">
-                                    <button type="button" class="shopcart-wishlist-btn" aria-label="Add to Wishlist">
+                                    <button type="button" class="shopcart-wishlist-btn" data-product-id="{{ rel.id }}" aria-label="Add to Wishlist">
                                         <i class="far fa-heart"></i>
                                     </button>
                                     <a href="{{ url('product_detail', {id: rel.id}) }}">

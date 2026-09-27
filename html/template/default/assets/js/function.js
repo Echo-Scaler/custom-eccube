@@ -177,10 +177,198 @@ function getAncestorOfTagType(elem, type) {
 // Twigには以下のように埋め込む
 // <a href="PATH" {{ csrf_token_for_anchor() }} data-method="(put/delete/postのうちいずれか)" data-confirm="xxxx" data-message="xxxx">
 //
-// オプション要素
-// data-confirm : falseを定義すると確認ダイアログを出さない。デフォルトはダイアログを出す
-// data-message : 確認ダイアログを出す際のメッセージをデフォルトから変更する
-//
+// ==========================================================================
+// Modern Custom Alert & Confirm Modal System
+// ==========================================================================
+window.showEccubeConfirm = function(options) {
+    options = options || {};
+    var title = options.title || 'Are you sure?';
+    var message = options.message || 'Do you want to continue?';
+    var confirmText = options.confirmText || 'Confirm';
+    var cancelText = options.cancelText || 'Cancel';
+    var isDanger = (options.isDanger !== false);
+    var iconType = options.iconType || (isDanger ? 'delete' : 'warning');
+    var onConfirm = options.onConfirm || function() {};
+    var onCancel = options.onCancel || function() {};
+
+    // Remove any existing confirm dialogs
+    $('.ec-confirm-modal-overlay').remove();
+
+    var iconHtml = '<i class="fas fa-trash-alt"></i>';
+    var iconClass = 'is-danger';
+    if (iconType === 'favorite') {
+        iconHtml = '<i class="fas fa-heart-broken"></i>';
+        iconClass = 'is-favorite';
+    } else if (iconType === 'cart-delete') {
+        iconHtml = '<i class="fas fa-cart-arrow-down"></i>';
+        iconClass = 'is-danger';
+    } else if (iconType === 'warning') {
+        iconHtml = '<i class="fas fa-exclamation-triangle"></i>';
+        iconClass = 'is-warning';
+    } else if (iconType === 'info') {
+        iconHtml = '<i class="fas fa-info-circle"></i>';
+        iconClass = 'is-info';
+    } else if (iconType === 'success') {
+        iconHtml = '<i class="fas fa-check"></i>';
+        iconClass = 'is-success';
+    }
+
+    var $overlay = $(
+        '<div class="ec-confirm-modal-overlay" role="dialog" aria-modal="true" tabindex="-1">' +
+        '  <div class="ec-confirm-modal-backdrop"></div>' +
+        '  <div class="ec-confirm-modal-box">' +
+        '    <button type="button" class="ec-confirm-modal-close-btn" aria-label="Close">' +
+        '      <i class="fas fa-times"></i>' +
+        '    </button>' +
+        '    <div class="ec-confirm-modal-icon-badge ' + iconClass + '">' +
+        '      ' + iconHtml +
+        '    </div>' +
+        '    <h3 class="ec-confirm-modal-title">' + title + '</h3>' +
+        '    <p class="ec-confirm-modal-message">' + message + '</p>' +
+        '    <div class="ec-confirm-modal-actions">' +
+        '      <button type="button" class="ec-confirm-btn ec-confirm-btn--cancel">' + cancelText + '</button>' +
+        '      <button type="button" class="ec-confirm-btn ' + (isDanger ? 'ec-confirm-btn--danger' : 'ec-confirm-btn--primary') + '">' + confirmText + '</button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>'
+    );
+
+    $('body').append($overlay);
+    $('body').addClass('ec-confirm-modal-open');
+
+    // Smooth entrance
+    setTimeout(function() {
+        $overlay.addClass('is-active');
+        $overlay.find('.' + (isDanger ? 'ec-confirm-btn--danger' : 'ec-confirm-btn--primary')).focus();
+    }, 20);
+
+    var closed = false;
+    var closeModal = function(confirmed) {
+        if (closed) return;
+        closed = true;
+        $overlay.removeClass('is-active');
+        $('body').removeClass('ec-confirm-modal-open');
+        $(document).off('keydown.ecConfirm');
+        setTimeout(function() {
+            $overlay.remove();
+            if (confirmed) {
+                onConfirm();
+            } else {
+                onCancel();
+            }
+        }, 260);
+    };
+
+    $overlay.find('.ec-confirm-btn--danger, .ec-confirm-btn--primary').on('click', function(e) {
+        e.preventDefault();
+        closeModal(true);
+    });
+
+    $overlay.find('.ec-confirm-btn--cancel, .ec-confirm-modal-close-btn, .ec-confirm-modal-backdrop').on('click', function(e) {
+        e.preventDefault();
+        closeModal(false);
+    });
+
+    $(document).on('keydown.ecConfirm', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+            closeModal(false);
+        }
+    });
+};
+
+window.showEccubeAlert = function(options) {
+    options = options || {};
+    var title = options.title || 'Notice';
+    var message = options.message || '';
+    var btnText = options.btnText || 'Got it';
+    var iconType = options.iconType || 'info';
+    var onClose = options.onClose || function() {};
+
+    $('.ec-confirm-modal-overlay').remove();
+
+    var iconHtml = '<i class="fas fa-info-circle"></i>';
+    var iconClass = 'is-info';
+    if (iconType === 'success') {
+        iconHtml = '<i class="fas fa-check"></i>';
+        iconClass = 'is-success';
+    } else if (iconType === 'warning') {
+        iconHtml = '<i class="fas fa-exclamation-triangle"></i>';
+        iconClass = 'is-warning';
+    } else if (iconType === 'error') {
+        iconHtml = '<i class="fas fa-times-circle"></i>';
+        iconClass = 'is-danger';
+    }
+
+    var $overlay = $(
+        '<div class="ec-confirm-modal-overlay" role="dialog" aria-modal="true" tabindex="-1">' +
+        '  <div class="ec-confirm-modal-backdrop"></div>' +
+        '  <div class="ec-confirm-modal-box">' +
+        '    <button type="button" class="ec-confirm-modal-close-btn" aria-label="Close">' +
+        '      <i class="fas fa-times"></i>' +
+        '    </button>' +
+        '    <div class="ec-confirm-modal-icon-badge ' + iconClass + '">' +
+        '      ' + iconHtml +
+        '    </div>' +
+        '    <h3 class="ec-confirm-modal-title">' + title + '</h3>' +
+        '    <p class="ec-confirm-modal-message">' + message + '</p>' +
+        '    <div class="ec-confirm-modal-actions">' +
+        '      <button type="button" class="ec-confirm-btn ec-confirm-btn--primary" style="width: 100%;">' + btnText + '</button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>'
+    );
+
+    $('body').append($overlay);
+    $('body').addClass('ec-confirm-modal-open');
+
+    setTimeout(function() {
+        $overlay.addClass('is-active');
+        $overlay.find('.ec-confirm-btn--primary').focus();
+    }, 20);
+
+    var closed = false;
+    var closeModal = function() {
+        if (closed) return;
+        closed = true;
+        $overlay.removeClass('is-active');
+        $('body').removeClass('ec-confirm-modal-open');
+        $(document).off('keydown.ecAlert');
+        setTimeout(function() {
+            $overlay.remove();
+            onClose();
+        }, 260);
+    };
+
+    $overlay.find('.ec-confirm-btn--primary, .ec-confirm-modal-close-btn, .ec-confirm-modal-backdrop').on('click', function(e) {
+        e.preventDefault();
+        closeModal();
+    });
+
+    $(document).on('keydown.ecAlert', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+            closeModal();
+        }
+    });
+};
+
+// Global alert override to route any alert(...) calls to the redesigned modal
+try {
+    var _nativeAlert = window.alert;
+    window.alert = function(msg) {
+        if (window.showEccubeAlert) {
+            window.showEccubeAlert({
+                title: 'Notice',
+                message: msg || '',
+                iconType: 'info'
+            });
+        } else {
+            _nativeAlert(msg);
+        }
+    };
+} catch (e) {
+    // Ignore if window.alert cannot be overwritten in certain environments
+}
+
 $(function() {
     var createForm = function(action, data) {
         var $form = $('<form action="' + action + '" method="post"></form>');
@@ -196,21 +384,77 @@ $(function() {
         e.preventDefault();
         var $this = $(this);
         var data = $this.data();
+
+        var submitAction = function() {
+            loadingOverlay();
+            var $form = createForm($this.attr('href'), {
+                _token: $this.attr('token-for-anchor'),
+                _method: data.method
+            }).hide();
+
+            $('body').append($form); // Firefox requires form to be on the page to allow submission
+            $form.submit();
+        };
+
         if (data.confirm != false) {
-            if (!confirm(data.message ? data.message : eccube_lang['common.delete_confirm'] )) {
+            var defaultMsg = (typeof eccube_lang !== 'undefined' && eccube_lang['common.delete_confirm']) 
+                ? eccube_lang['common.delete_confirm'] 
+                : 'Do you want to continue?';
+            var msg = data.message ? data.message : defaultMsg;
+
+            // Context-sensitive customization for title, icon, and buttons
+            var isFavorite = $this.closest('.ec-favoriteRole').length > 0 || window.location.pathname.indexOf('favorite') !== -1;
+            var isDelivery = $this.closest('.ec-addressList').length > 0 || window.location.pathname.indexOf('delivery') !== -1;
+            var isDelete = (data.method || '').toLowerCase() === 'delete';
+
+            var title = 'Confirm Action';
+            var iconType = 'warning';
+            var confirmBtnText = 'Confirm';
+
+            if (isFavorite) {
+                title = 'Remove from Favorites?';
+                iconType = 'favorite';
+                confirmBtnText = 'Yes, Remove';
+                if (!data.message) {
+                    // Try to grab item title if inside favorite list
+                    var itemTitle = $this.closest('.ec-favoriteRole__item').find('.ec-favoriteRole__itemTitle').text().trim();
+                    if (itemTitle) {
+                        msg = 'Are you sure you want to remove "' + itemTitle + '" from your favorites?';
+                    } else {
+                        msg = 'Are you sure you want to remove this product from your favorites?';
+                    }
+                }
+            } else if (isDelivery) {
+                title = 'Delete Delivery Address?';
+                iconType = 'delete';
+                confirmBtnText = 'Delete Address';
+                if (!data.message) {
+                    msg = 'Are you sure you want to remove this delivery address from your account?';
+                }
+            } else if (isDelete) {
+                title = 'Confirm Deletion';
+                iconType = 'delete';
+                confirmBtnText = 'Yes, Delete';
+            }
+
+            if (window.showEccubeConfirm) {
+                window.showEccubeConfirm({
+                    title: title,
+                    message: msg,
+                    iconType: iconType,
+                    confirmText: confirmBtnText,
+                    cancelText: 'Cancel',
+                    isDanger: isDelete,
+                    onConfirm: submitAction
+                });
                 return false;
+            } else {
+                if (!confirm(msg)) {
+                    return false;
+                }
             }
         }
 
-        // 削除時はオーバーレイ処理を入れる
-        loadingOverlay();
-
-        var $form = createForm($this.attr('href'), {
-            _token: $this.attr('token-for-anchor'),
-            _method: data.method
-        }).hide();
-
-        $('body').append($form); // Firefox requires form to be on the page to allow submission
-        $form.submit();
+        submitAction();
     });
 });

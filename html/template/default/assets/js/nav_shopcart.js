@@ -164,10 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
      6. Live Product Filtering & Sorting System
      ======================================================================== */
   var productGrid = document.getElementById('shopcartProductGrid');
-  if (!productGrid) return;
-
-  var productCards = Array.from(productGrid.querySelectorAll('.shopcart-product-card'));
-  if (productCards.length === 0) return;
+  if (productGrid) {
+    var productCards = Array.from(productGrid.querySelectorAll('.shopcart-product-card'));
+    if (productCards.length > 0) {
 
   // Store initial index for default "featured" sort
   productCards.forEach(function (card, idx) {
@@ -501,32 +500,232 @@ document.addEventListener('DOMContentLoaded', function () {
     applyFiltersAndSort();
   }
 
-  var resetBtn = document.getElementById('shopcartResetFiltersBtn');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      resetAllFilters();
-    });
+      var resetBtn = document.getElementById('shopcartResetFiltersBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          resetAllFilters();
+        });
+      }
+    }
   }
 
   /* ========================================================================
-     7. Interactive Wishlist & Add-to-Cart Actions
+     7. Interactive Wishlist System (Integrated with EC-CUBE & LocalStorage)
      ======================================================================== */
-  var wishlistBtns = document.querySelectorAll('.shopcart-wishlist-btn');
-  wishlistBtns.forEach(function (btn) {
+  var isLoggedInMeta = document.querySelector('meta[name="eccube-is-logged-in"]');
+  var isLoggedIn = isLoggedInMeta ? isLoggedInMeta.getAttribute('content') === '1' : false;
+  var favoriteMeta = document.querySelector('meta[name="eccube-favorite-ids"]');
+  var serverFavoriteIds = [];
+  try {
+    if (favoriteMeta && favoriteMeta.getAttribute('content')) {
+      serverFavoriteIds = JSON.parse(favoriteMeta.getAttribute('content')).map(function (id) {
+        return String(id);
+      });
+    }
+  } catch (err) {
+    serverFavoriteIds = [];
+  }
+
+  // Guest favorites in localStorage
+  function getGuestFavorites() {
+    try {
+      var raw = localStorage.getItem('eccube_guest_favorites');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function setGuestFavorites(arr) {
+    try {
+      localStorage.setItem('eccube_guest_favorites', JSON.stringify(arr));
+    } catch (e) {}
+  }
+
+  function getActiveFavoriteIds() {
+    if (isLoggedIn) {
+      return serverFavoriteIds;
+    }
+    return getGuestFavorites().map(function (id) {
+      return String(id);
+    });
+  }
+
+  function getProductIdForBtn(btn) {
+    if (btn.getAttribute('data-product-id')) {
+      return String(btn.getAttribute('data-product-id'));
+    }
+    // Search in parent card for detail link
+    var card = btn.closest('.shopcart-product-card, .plp-card, .shopcart-detail-grid, .shopcart-detail-gallery');
+    if (card) {
+      var link = card.querySelector('a[href*="/products/detail/"]');
+      if (link) {
+        var match = link.getAttribute('href').match(/\/products\/detail\/(\d+)/);
+        if (match) return String(match[1]);
+      }
+    }
+    // Check page URL if on product detail page
+    var urlMatch = window.location.pathname.match(/\/products\/detail\/(\d+)/);
+    if (urlMatch) return String(urlMatch[1]);
+    return null;
+  }
+
+  function updateWishlistButtonUI(btn, isFav) {
+    if (isFav) {
+      btn.classList.add('is-active');
+      var icon = btn.querySelector('i');
+      if (icon) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        icon.style.color = '#ef4444';
+      }
+    } else {
+      btn.classList.remove('is-active');
+      var icon = btn.querySelector('i');
+      if (icon) {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        icon.style.color = '';
+      }
+    }
+  }
+
+  function syncAllButtonsForProduct(prodId, isFav) {
+    var allBtns = document.querySelectorAll('.shopcart-wishlist-btn, .plp-card__wishlist');
+    allBtns.forEach(function (b) {
+      var bId = getProductIdForBtn(b);
+      if (bId === String(prodId)) {
+        updateWishlistButtonUI(b, isFav);
+      }
+    });
+  }
+
+  function showWishlistToast(message, type, actionUrl, actionText) {
+    var existingToast = document.querySelector('.shopcart-wishlist-toast');
+    if (existingToast) existingToast.remove();
+
+    var toast = document.createElement('div');
+    toast.className = 'shopcart-wishlist-toast' + (type ? ' ' + type : '');
+    
+    var iconHtml = (type === 'success' || type === 'added')
+      ? '<i class="fas fa-heart" style="color:#ef4444;"></i>' 
+      : (type === 'removed' ? '<i class="far fa-heart" style="color:#64748b;"></i>' : '<i class="fas fa-info-circle" style="color:#3b82f6;"></i>');
+
+    var html = '<div class="shopcart-wishlist-toast__icon">' + iconHtml + '</div>' +
+               '<div class="shopcart-wishlist-toast__msg">' + message + '</div>';
+    if (actionUrl && actionText) {
+      html += '<a href="' + actionUrl + '" class="shopcart-wishlist-toast__action">' + actionText + '</a>';
+    }
+    html += '<button type="button" class="shopcart-wishlist-toast__close" aria-label="Close">&times;</button>';
+    
+    toast.innerHTML = html;
+    document.body.appendChild(toast);
+
+    setTimeout(function () { toast.classList.add('is-show'); }, 10);
+
+    var timer = setTimeout(function () {
+      toast.classList.remove('is-show');
+      setTimeout(function () { toast.remove(); }, 300);
+    }, 4000);
+
+    var closeBtn = toast.querySelector('.shopcart-wishlist-toast__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        clearTimeout(timer);
+        toast.classList.remove('is-show');
+        setTimeout(function () { toast.remove(); }, 300);
+      });
+    }
+  }
+
+  // Initialize wishlist buttons state from server / local storage
+  var wishlistButtons = document.querySelectorAll('.shopcart-wishlist-btn, .plp-card__wishlist');
+  var activeFavs = getActiveFavoriteIds();
+
+  wishlistButtons.forEach(function (btn) {
+    var pId = getProductIdForBtn(btn);
+    if (pId && activeFavs.indexOf(String(pId)) !== -1) {
+      updateWishlistButtonUI(btn, true);
+    }
+  });
+
+  // Attach click handler to wishlist buttons
+  wishlistButtons.forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      var icon = btn.querySelector('i');
-      if (icon) {
-        if (icon.classList.contains('far')) {
-          icon.classList.remove('far');
-          icon.classList.add('fas');
-          icon.style.color = '#ef4444';
+
+      // Micro-animation bounce
+      btn.classList.add('is-animating');
+      setTimeout(function () { btn.classList.remove('is-animating'); }, 400);
+
+      var pId = getProductIdForBtn(btn);
+      if (!pId) {
+        // Fallback simple toggle if product ID not detectable
+        var icon = btn.querySelector('i');
+        if (icon) {
+          var willBeActive = icon.classList.contains('far');
+          updateWishlistButtonUI(btn, willBeActive);
+        }
+        return;
+      }
+
+      var mypageFavUrlMeta = document.querySelector('meta[name="eccube-mypage-favorite-url"]');
+      var mypageFavUrl = mypageFavUrlMeta ? mypageFavUrlMeta.getAttribute('content') : '/mypage/favorite';
+      var loginUrlMeta = document.querySelector('meta[name="eccube-login-url"]');
+      var loginUrl = loginUrlMeta ? loginUrlMeta.getAttribute('content') : '/mypage/login';
+
+      if (isLoggedIn) {
+        // Logged-in customer: Toggle with backend AJAX
+        fetch('/products/toggle_favorite/' + pId, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+          }
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.success) {
+            if (data.is_favorite) {
+              if (serverFavoriteIds.indexOf(String(pId)) === -1) {
+                serverFavoriteIds.push(String(pId));
+              }
+              syncAllButtonsForProduct(pId, true);
+              showWishlistToast('Added to Favorites!', 'success', mypageFavUrl, 'View Favorites');
+            } else {
+              var idx = serverFavoriteIds.indexOf(String(pId));
+              if (idx !== -1) serverFavoriteIds.splice(idx, 1);
+              syncAllButtonsForProduct(pId, false);
+              showWishlistToast('Removed from Favorites.', 'removed');
+            }
+          } else if (data.require_login) {
+            window.location.href = data.login_url || loginUrl;
+          }
+        })
+        .catch(function () {
+          // If network error, toggle visually
+          var icon = btn.querySelector('i');
+          var willBeActive = icon ? icon.classList.contains('far') : true;
+          syncAllButtonsForProduct(pId, willBeActive);
+        });
+      } else {
+        // Guest user: Save in localStorage + prompt to sign in
+        var guestList = getGuestFavorites().map(function (id) { return String(id); });
+        var existsIdx = guestList.indexOf(String(pId));
+        if (existsIdx !== -1) {
+          // Remove
+          guestList.splice(existsIdx, 1);
+          setGuestFavorites(guestList);
+          syncAllButtonsForProduct(pId, false);
+          showWishlistToast('Removed from Favorites.', 'removed');
         } else {
-          icon.classList.remove('fas');
-          icon.classList.add('far');
-          icon.style.color = '';
+          // Add
+          guestList.push(String(pId));
+          setGuestFavorites(guestList);
+          syncAllButtonsForProduct(pId, true);
+          showWishlistToast('Added to wishlist! Sign in to sync your favorites across devices.', 'success', loginUrl, 'Sign In');
         }
       }
     });

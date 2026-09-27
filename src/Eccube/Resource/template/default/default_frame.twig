@@ -34,6 +34,18 @@ file that was distributed with this source code.
     {% if Page.meta_robots is not empty %}
     <meta name="robots" content="{{ Page.meta_robots }}">
     {% endif %}
+    {% set favorite_product_ids = [] %}
+    {% if is_granted('ROLE_USER') and app.user and app.user.CustomerFavoriteProducts is defined %}
+        {% for fav in app.user.CustomerFavoriteProducts %}
+            {% if fav.Product %}
+                {% set favorite_product_ids = favorite_product_ids|merge([fav.Product.id]) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <meta name="eccube-favorite-ids" content="{{ favorite_product_ids|json_encode }}">
+    <meta name="eccube-is-logged-in" content="{{ is_granted('ROLE_USER') ? '1' : '0' }}">
+    <meta name="eccube-login-url" content="{{ url('mypage_login') }}">
+    <meta name="eccube-mypage-favorite-url" content="{{ url('mypage_favorite') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -186,8 +198,8 @@ file that was distributed with this source code.
     </div>
     <div class="ec-blockTopBtn pagetop">{{'common.pagetop'|trans}}</div>
     {% include('@common/lang.twig') %}
-    <script src="{{ asset('assets/js/function.js') }}"></script>
-    <script src="{{ asset('assets/js/eccube.js') }}"></script>
+    <script src="{{ asset('assets/js/function.js') }}?v={{ 'now'|date('U') }}"></script>
+    <script src="{{ asset('assets/js/eccube.js') }}?v={{ 'now'|date('U') }}"></script>
     {% block javascript %}{% endblock %}
     {# Layout: CLOSE_BODY_BEFORE #}
     {% if Layout.CloseBodyBefore %}
